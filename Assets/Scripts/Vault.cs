@@ -12,11 +12,11 @@ public class Vault : MonoBehaviour
     [Inject]
     public void Construct(Character character)
     {
-        character.onKill.AddListener((combatant) =>
-        {
-            if (combatant is Mob mob)
-                souls.value.Value += mob.MobStats.soulReward;
-        });
+        // character.onKill.AddListener((combatant) =>
+        // {
+        //     if (combatant is Mob mob)
+        //         souls.value.Value += mob.MobStats.soulReward;
+        // });
     }
     void Awake()
     {

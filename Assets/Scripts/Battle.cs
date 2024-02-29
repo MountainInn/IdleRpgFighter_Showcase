@@ -20,59 +20,59 @@ public class Battle : MonoBehaviour
 
     void Start()
     {
-        mobHealthView.gameObject.SetActive(false);
+        // mobHealthView.gameObject.SetActive(false);
 
-        character.onFoundMob.AsObservable()
-            .Subscribe(mob => StartBattle(mob))
-            .AddTo(this);
+        // character.onFoundMob.AsObservable()
+        //     .Subscribe(mob => StartBattle(mob))
+        //     .AddTo(this);
     }
 
     void StartBattle(Mob mob)
     {
-        mobHealthView.Subscribe(mob.gameObject, mob.health);
-        mobHealthView.gameObject.SetActive(true);
+        // mobHealthView.Subscribe(mob.gameObject, mob.health);
+        // mobHealthView.gameObject.SetActive(true);
 
-        mob.onDie
-            .AsObservable()
-            .Take(1)
-            .Subscribe(_ =>
-            {
-                mobHealthView.gameObject.SetActive(false);
+        // mob.onDie
+        //     .AsObservable()
+        //     .Take(1)
+        //     .Subscribe(_ =>
+        //     {
+        //         mobHealthView.gameObject.SetActive(false);
 
-                onBattleWon?.Invoke();
-            })
-            .AddTo(this);
+        //         onBattleWon?.Invoke();
+        //     })
+        //     .AddTo(this);
 
-        character.onDie
-            .AsObservable()
-            .Take(1)
-            .Subscribe(_ => onBattleLost?.Invoke())
-            .AddTo(this);
+        // character.onDie
+        //     .AsObservable()
+        //     .Take(1)
+        //     .Subscribe(_ => onBattleLost?.Invoke())
+        //     .AddTo(this);
 
-        battleTarget.Value = mob;
+        // battleTarget.Value = mob;
 
-        StartCoroutine(BattleCoroutine());
+        // StartCoroutine(BattleCoroutine());
 
-        onBattleStarted?.Invoke();
+        // onBattleStarted?.Invoke();
 
-        IEnumerator BattleCoroutine()
-        {
-            var combatants = new Combatant[] { character, mob };
+        // IEnumerator BattleCoroutine()
+        // {
+        //     var combatants = new Combatant[] { character, mob };
 
-            while (character.IsAlive && mob.IsAlive)
-            {
-                if (character.AttackTimerTick(Time.deltaTime))
-                {
-                }
+        //     while (character.IsAlive && mob.IsAlive)
+        //     {
+        //         if (character.AttackTimerTick(Time.deltaTime))
+        //         {
+        //         }
 
-                if (mob.AttackTimerTick(Time.deltaTime))
-                {
-                }
+        //         if (mob.AttackTimerTick(Time.deltaTime))
+        //         {
+        //         }
 
-                yield return null;
-            }
+        //         yield return null;
+        //     }
 
-            battleTarget.Value = null;
-        }
+        //     battleTarget.Value = null;
+        // }
     }
 }

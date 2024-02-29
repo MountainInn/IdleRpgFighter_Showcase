@@ -13,9 +13,10 @@ abstract public class Combatant : MonoBehaviour
     [Space]
     [SerializeField] protected StatsSO stats;
     [Space]
+    [SerializeField] public FloatingTextSpawner takeDamagFloatingTextSpawner;
+    [Space]
     [SerializeField] public UnityEvent onDie;
     [SerializeField] public UnityEvent<Combatant> onKill;
-    [SerializeField] public FloatingTextSpawner floatingTextSpawner;
 
     [HideInInspector] public int defense;
 
@@ -43,7 +44,7 @@ abstract public class Combatant : MonoBehaviour
         health.ObserveChange()
             .Subscribe(change =>
             {
-                floatingTextSpawner.Float(change.ToString("F1"));
+                takeDamagFloatingTextSpawner.Float(change.ToString("F1"));
             })
             .AddTo(this);
     }

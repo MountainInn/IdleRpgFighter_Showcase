@@ -358,6 +358,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2073245746691195547}
+  - component: {fileID: 7263531279332549572}
   m_Layer: 0
   m_Name: Character
   m_TagString: Untagged
@@ -385,6 +386,49 @@ Transform:
   - {fileID: 4050634747657101375}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7263531279332549572
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 382121612185808959}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bdbb48855b3a184d811829aeeefc4cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health:
+    maximum:
+      value: 0
+    current:
+      value: 0
+  attackTimer:
+    maximum:
+      value: 0
+    current:
+      value: 0
+  stats: {fileID: 0}
+  takeDamagFloatingTextSpawner: {fileID: 0}
+  onDie:
+    m_PersistentCalls:
+      m_Calls: []
+  onKill:
+    m_PersistentCalls:
+      m_Calls: []
+  defense: 0
+  preAttack:
+    m_PersistentCalls:
+      m_Calls: []
+  preTakeDamage:
+    m_PersistentCalls:
+      m_Calls: []
+  postTakeDamage:
+    m_PersistentCalls:
+      m_Calls: []
+  postAttack:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &405605751099959016
 GameObject:
   m_ObjectHideFlags: 0
@@ -1050,7 +1094,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.00000014901161}
+  m_AnchoredPosition: {x: 0, y: -0.00000017881393}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &7546481307619845621
