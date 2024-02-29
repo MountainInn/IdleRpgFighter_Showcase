@@ -4,44 +4,48 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using Zenject;
+using UniRx;
 
 abstract public class Combatant : MonoBehaviour
 {
     [SerializeField] public Volume health;
+    [SerializeField] public Volume attackTimer;
     [Space]
     [SerializeField] protected StatsSO stats;
-    [SerializeField] public List<Weapon> weapons;
-    [SerializeField] protected LayerMask targetLayers;
     [Space]
     [SerializeField] public UnityEvent onDie;
     [SerializeField] public UnityEvent<Combatant> onKill;
+    [SerializeField] public FloatingTextSpawner floatingTextSpawner;
+
     [HideInInspector] public int defense;
 
-    [Inject] DiContainer container;
-
     public StatsSO Stats => stats;
-    public LayerMask TargetLayers => targetLayers;
 
-    public Action<DamageArgs>
+
+    public UnityEvent<DamageArgs>
         preAttack,
         preTakeDamage,
         postTakeDamage,
         postAttack;
 
-    protected void Awake()
+    public void Construct(StatsSO stats)
     {
-        stats = Instantiate(stats);
-       
-        health = new Volume(stats.health);
+        this.stats = Instantiate(stats);
 
-        weapons =
-            weapons
-            .Select(prefabWeapon =>
-                    container.InstantiatePrefabForComponent<Weapon>(prefabWeapon,
-                                                                    transform))
-            .ToList();
+        health.ResizeAndRefill(stats.health);
+        attackTimer.Resize(stats.attackSpeed);
 
-        weapons ??= new();
+        // preAttack += (args) =>
+        // {
+        // stats.attackEffectSystem.Play();
+        // };
+
+        health.ObserveChange()
+            .Subscribe(change =>
+            {
+                floatingTextSpawner.Float(change.ToString("F1"));
+            })
+            .AddTo(this);
     }
 
     protected void OnEnable()
@@ -49,25 +53,21 @@ abstract public class Combatant : MonoBehaviour
         health.Refill();
     }
 
-    public Weapon EquipWeapon(Weapon prefabWeapon)
+    public bool AttackTimerTick(float delta)
     {
-        Weapon instantiatedWeapon =
-            container
-            .InstantiatePrefabForComponent<Weapon>(prefabWeapon,
-                                                   transform);
-        weapons.Add(instantiatedWeapon);
+        attackTimer.Add(delta);
 
-        return instantiatedWeapon;
+        bool isFull = attackTimer.IsFull;
+
+        if (isFull)
+            attackTimer.ResetToZero();
+
+        return isFull;
     }
 
-    public void RemoveWeapon(Weapon prefabWeapon)
+    public void InflictDamage(Combatant defender)
     {
-        Weapon firstSimilarWeapon =
-            weapons.First(w => w.stats == prefabWeapon.stats);
-
-        weapons.Remove(firstSimilarWeapon);
-
-        GameObject.Destroy(firstSimilarWeapon.gameObject);
+        InflictDamage(defender, stats.attackDamage);
     }
 
     public void InflictDamage(Combatant defender, float damage)

@@ -25,6 +25,22 @@ static public class IntegerExtension
     }
 }
 
+static public class Vector3Extensions
+{
+    static public Vector3 WithX(this Vector3 v, float x)
+    {
+        return new Vector3(x, v.y, v.z);
+    }
+    static public Vector3 WithY(this Vector3 v, float y)
+    {
+        return new Vector3(v.x, y, v.z);
+    }
+    static public Vector3 WithZ(this Vector3 v, float z)
+    {
+        return new Vector3(v.x, v.y, z);
+    }
+}
+
 static public class TransformExtension
 {
     static public Vector3 DirectionTo(this Transform from, Transform to)
@@ -395,7 +411,7 @@ static public class IEnumerableExt
             (!source.Any())
             ? "Empty"
             : source
-            .Select(item => item.ToString())
+            .Select(item => item?.ToString() ?? "NULL")
             .Aggregate((a, b) => a + ", " + b);
 
         Debug.Log(prefixMessage + ": " + str);

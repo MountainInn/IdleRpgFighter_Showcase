@@ -6,13 +6,13 @@ using System;
 public class Buyable<T>
 {
     public List<Price> prices;
-    public Action onBuy;
-    public T obj;
+    public Action<T> onBuy;
+    public T ware;
 
-    public Buyable(Action onBuy, Price[] prices, T obj)
+    public Buyable(T ware, Action<T> onBuy, params Price[] prices)
     {
         this.prices = prices.ToList();
-        this.obj = obj;
+        this.ware = ware;
         this.onBuy = onBuy;
     }
 
@@ -21,7 +21,7 @@ public class Buyable<T>
         return prices.All(price => price.IsAffordable());
     }
 
-    public IObservable<bool> IsAffordableObservable()
+    public IObservable<bool> ObserveIsAffordable()
     {
         return
             Observable
@@ -47,6 +47,6 @@ public class Buyable<T>
     public void Buy()
     {
         prices.Map(price => price.Pay());
-        onBuy?.Invoke();
+        onBuy?.Invoke(ware);
     }
 }

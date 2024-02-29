@@ -10,6 +10,7 @@ public class Volume
         maximum,
         current;
 
+
     public float Unfilled => maximum.Value - current.Value;
     public bool IsFullZeroes =>
         current.Value == 0 && maximum.Value == 0;
@@ -27,7 +28,7 @@ public class Volume
         this.maximum = new FloatReactiveProperty(maximum);
     }
 
-    public IObservable<(float, float, float)> ObserveRatio() =>
+    public IObservable<(float current, float maximum, float ratio)> ObserveAll() =>
         Observable.CombineLatest(
             current, maximum,
             (cur , max) => (cur, max, Ratio));
@@ -47,6 +48,10 @@ public class Volume
         .Select(fulls =>
                 !IsFullZeroes &&
                 fulls.Previous == false && fulls.Current == true);
+
+    public IObservable<float> ObserveChange() =>
+        current
+        .Pairwise((a, b) => b - a);
 
     public bool IsFull => (current.Value == maximum.Value);
     public bool IsEmpty => (current.Value == 0);
@@ -120,5 +125,10 @@ public class Volume
     float Clamp(float amount)
     {
         return Mathf.Clamp(amount, 0, maximum.Value);
+    }
+
+    public override string ToString()
+    {
+        return $"{current.Value}/{maximum.Value}";
     }
 }

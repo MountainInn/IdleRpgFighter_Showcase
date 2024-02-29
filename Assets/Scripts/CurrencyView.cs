@@ -2,11 +2,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using UniRx;
 using System;
+using TMPro;
 
 public class CurrencyView : MonoBehaviour
 {
     [SerializeField] Image icon;
-    [SerializeField] TMPro.TextMeshProUGUI label;
+    [SerializeField] TextMeshProUGUI label;
 
     CompositeDisposable disposables = new();
 
@@ -41,15 +42,15 @@ public class CurrencyView : MonoBehaviour
     {
         Init(currency);
 
-        currency.amount
-            .Subscribe(v => label.text = currency.amount.Value.ToString())
+        currency.value
+            .Subscribe(v => label.text = currency.value.Value.ToString())
             .AddTo(disposables);
     }
 
     public void Init(Currency currency)
     {
         icon.sprite = currency.sprite;
-        label.text = currency.amount.Value.ToString();
+        label.text = currency.value.Value.ToString();
     }
 
     public void InitAndSubscribe(Price price)
