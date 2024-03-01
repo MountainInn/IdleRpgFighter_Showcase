@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using System;
 using System.Linq;
 using System.Collections.Generic;
@@ -70,6 +71,55 @@ static public class TransformExtension
 
 static public class StringExtension
 {
+    static public string JoinAsString(this IEnumerable<string> strs, string delimeter)
+    {
+        return string.Join(delimeter, strs);
+    }
+    static public string JoinAsString(this IEnumerable<char> chars)
+    {
+        return string.Join("", chars);
+    }
+
+    static public string UnLines(this IEnumerable<string> strs)
+    {
+        return string.Concat(strs);
+    }
+    static public IEnumerable<string> Lines(this string str)
+    {
+        var res = str.Split("\n").ToArray();
+        return res;
+    }
+
+    static public IEnumerable<string> Between(this string str, string left, string right)
+    {
+        string s = str;
+
+        while (s.Contains(left) && s.Contains(right))
+        {
+            s = s.Split(left,
+                        2,
+                        System.StringSplitOptions.None)
+                .Last().JoinAsString();
+
+            s = s.Split(right,
+                        2,
+                        System.StringSplitOptions.None)
+                .First().JoinAsString();
+
+            yield return s;
+        }
+    }
+
+    private static readonly Regex sWhitespace = new Regex(@"\s+");
+
+    public static string ReplaceWhitespace(string input, string replacement)
+    {
+        if (input == null)
+            return "";
+
+        return sWhitespace.Replace(input, replacement);
+    }
+
     static public string GetFileName(this string str)
     {
         return str.Split('/').Last().Split('.').First();
