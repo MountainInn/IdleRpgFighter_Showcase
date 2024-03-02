@@ -132,7 +132,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 201865192}
-  - component: {fileID: 201865193}
   m_Layer: 0
   m_Name: Character
   m_TagString: Untagged
@@ -156,53 +155,6 @@ Transform:
   - {fileID: 2002178788243499294}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &201865193
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 201865191}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5bdbb48855b3a184d811829aeeefc4cd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health:
-    maximum:
-      value: 0
-    current:
-      value: 0
-  attackTimer:
-    maximum:
-      value: 0
-    current:
-      value: 0
-  targetLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  stats: {fileID: 11400000, guid: d0e442beebc999444b21e0eae96363c0, type: 2}
-  onDie:
-    m_PersistentCalls:
-      m_Calls: []
-  onKill:
-    m_PersistentCalls:
-      m_Calls: []
-  combatantAnimator: {fileID: 2002178788243499292}
-  attackTriggerName: attackTrigger
-  defense: 0
-  preAttack:
-    m_PersistentCalls:
-      m_Calls: []
-  preTakeDamage:
-    m_PersistentCalls:
-      m_Calls: []
-  postTakeDamage:
-    m_PersistentCalls:
-      m_Calls: []
-  postAttack:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &625098845
 GameObject:
   m_ObjectHideFlags: 0
@@ -317,7 +269,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 627937261}
-  - component: {fileID: 627937260}
   m_Layer: 0
   m_Name: Mob
   m_TagString: Untagged
@@ -325,64 +276,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &627937260
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 627937259}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f690156fb9448af4a81fd68250debded, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health:
-    maximum:
-      value: 0
-    current:
-      value: 0
-  attackTimer:
-    maximum:
-      value: 0
-    current:
-      value: 0
-  targetLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  stats: {fileID: 11400000, guid: 28a472cb699e2ec42904c4f4ef42addb, type: 2}
-  onDie:
-    m_PersistentCalls:
-      m_Calls: []
-  onKill:
-    m_PersistentCalls:
-      m_Calls: []
-  combatantAnimator: {fileID: 1989227070}
-  attackTriggerName: attackTrigger
-  defense: 0
-  preAttack:
-    m_PersistentCalls:
-      m_Calls: []
-  preTakeDamage:
-    m_PersistentCalls:
-      m_Calls: []
-  postTakeDamage:
-    m_PersistentCalls:
-      m_Calls: []
-  postAttack:
-    m_PersistentCalls:
-      m_Calls: []
-  meshRenderer: {fileID: 0}
-  onAskedToReturnToPool:
-    m_PersistentCalls:
-      m_Calls: []
-  onEnterPreparationState:
-    m_PersistentCalls:
-      m_Calls: []
-  onExitPreparationState:
-    m_PersistentCalls:
-      m_Calls: []
-  mobStats: {fileID: 11400000, guid: 28a472cb699e2ec42904c4f4ef42addb, type: 2}
 --- !u!4 &627937261
 Transform:
   m_ObjectHideFlags: 0
@@ -708,6 +601,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 85.8, y: -93.8, z: 0}
+--- !u!1 &1625764582 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7742388400055726337, guid: c9fd4e2aec3475748818bd634ce450ec, type: 3}
+  m_PrefabInstance: {fileID: 1989227066}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1658152995
 GameObject:
   m_ObjectHideFlags: 0
@@ -821,6 +719,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 85.8, y: -93.8, z: 0}
+--- !u!1 &1922918813 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7742388400055726337, guid: c9fd4e2aec3475748818bd634ce450ec, type: 3}
+  m_PrefabInstance: {fileID: 2002178788243499291}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1989227066
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -900,7 +803,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7742388400055726337, guid: c9fd4e2aec3475748818bd634ce450ec, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1989227071}
   m_SourcePrefab: {fileID: 100100000, guid: c9fd4e2aec3475748818bd634ce450ec, type: 3}
 --- !u!4 &1989227067 stripped
 Transform:
@@ -912,6 +818,64 @@ Animator:
   m_CorrespondingSourceObject: {fileID: 7648667056562281007, guid: c9fd4e2aec3475748818bd634ce450ec, type: 3}
   m_PrefabInstance: {fileID: 1989227066}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1989227071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1625764582}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f690156fb9448af4a81fd68250debded, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health:
+    maximum:
+      value: 0
+    current:
+      value: 0
+  attackTimer:
+    maximum:
+      value: 0
+    current:
+      value: 0
+  targetLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  stats: {fileID: 11400000, guid: 28a472cb699e2ec42904c4f4ef42addb, type: 2}
+  onDie:
+    m_PersistentCalls:
+      m_Calls: []
+  onKill:
+    m_PersistentCalls:
+      m_Calls: []
+  combatantAnimator: {fileID: 1989227070}
+  attackTriggerName: attackTrigger
+  defense: 0
+  preAttack:
+    m_PersistentCalls:
+      m_Calls: []
+  preTakeDamage:
+    m_PersistentCalls:
+      m_Calls: []
+  postTakeDamage:
+    m_PersistentCalls:
+      m_Calls: []
+  postAttack:
+    m_PersistentCalls:
+      m_Calls: []
+  meshRenderer: {fileID: 0}
+  onAskedToReturnToPool:
+    m_PersistentCalls:
+      m_Calls: []
+  onEnterPreparationState:
+    m_PersistentCalls:
+      m_Calls: []
+  onExitPreparationState:
+    m_PersistentCalls:
+      m_Calls: []
+  mobStats: {fileID: 11400000, guid: 28a472cb699e2ec42904c4f4ef42addb, type: 2}
 --- !u!1001 &2002178788243499291
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -991,7 +955,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7742388400055726337, guid: c9fd4e2aec3475748818bd634ce450ec, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2002178788243499295}
   m_SourcePrefab: {fileID: 100100000, guid: c9fd4e2aec3475748818bd634ce450ec, type: 3}
 --- !u!95 &2002178788243499292 stripped
 Animator:
@@ -1003,6 +970,53 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7744470303579231963, guid: c9fd4e2aec3475748818bd634ce450ec, type: 3}
   m_PrefabInstance: {fileID: 2002178788243499291}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2002178788243499295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1922918813}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bdbb48855b3a184d811829aeeefc4cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health:
+    maximum:
+      value: 0
+    current:
+      value: 0
+  attackTimer:
+    maximum:
+      value: 0
+    current:
+      value: 0
+  targetLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  stats: {fileID: 11400000, guid: d0e442beebc999444b21e0eae96363c0, type: 2}
+  onDie:
+    m_PersistentCalls:
+      m_Calls: []
+  onKill:
+    m_PersistentCalls:
+      m_Calls: []
+  combatantAnimator: {fileID: 2002178788243499292}
+  attackTriggerName: attackTrigger
+  defense: 0
+  preAttack:
+    m_PersistentCalls:
+      m_Calls: []
+  preTakeDamage:
+    m_PersistentCalls:
+      m_Calls: []
+  postTakeDamage:
+    m_PersistentCalls:
+      m_Calls: []
+  postAttack:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
