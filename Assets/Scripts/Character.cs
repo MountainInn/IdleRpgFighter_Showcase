@@ -10,28 +10,32 @@ using Zenject;
 
 public class Character : Combatant
 {
+    [Header("Speedup")]
+    [SerializeField] int clicksToSpeedupLevel = 2;
+    [SerializeField] float speedupPerLevel = 0.2f;
+    [Space]
+    [SerializeField] string attackAnimationTag = "attack";
+    [SerializeField] string attackSpeedParameter = "speed";
+
     int attackInQueue;
     bool isPlaying;
+    int attackSpeedParameterId;
+    int attackAnimationTagId;
 
     void Start()
     {
         base.Construct(Stats);
 
+        attackSpeedParameterId = Animator.StringToHash(attackSpeedParameter);
+        attackAnimationTagId = Animator.StringToHash(attackAnimationTag);
+
         ObserveStateMachine
             .OnStateExitAsObservable()
             .Subscribe(exit =>
             {
-                bool isAttack = exit.StateInfo.IsName("standing melee attack downward");
-
-                if (isAttack)
-                {
-                    InflictDamage(target);
-
-                    if (--attackInQueue > 0)
-                    {
-                        combatantAnimator.SetTrigger(attackTriggerId);
-                    }
-                }
+                float speed = 1 + (attackInQueue / clicksToSpeedupLevel) * speedupPerLevel;
+               
+                combatantAnimator.SetFloat(attackSpeedParameterId, speed);
             })
             .AddTo(this);
 
@@ -59,8 +63,20 @@ public class Character : Combatant
     public void EnterAttackState()
     {
         attackInQueue++;
+        Debug.Log($"queu: {attackInQueue}");
 
         if (!isPlaying)
             combatantAnimator.SetTrigger(attackTriggerId);
+    }
+
+    public void InflictDamage_OnAnimEvent()
+    {
+        InflictDamage(target);
+
+        if (--attackInQueue > 0)
+        {
+            Debug.Log($"queu: {attackInQueue}");
+            combatantAnimator.SetTrigger(attackTriggerId);
+        }
     }
 }

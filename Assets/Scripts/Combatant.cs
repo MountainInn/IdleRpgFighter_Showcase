@@ -68,11 +68,6 @@ abstract public class Combatant : MonoBehaviour
         return isFull;
     }
 
-    public void InflictDamage_OnAnimEvent()
-    {
-        InflictDamage(target, stats.attackDamage);
-    }
-
     public void InflictDamage(Combatant defender)
     {
         InflictDamage(defender, stats.attackDamage);
