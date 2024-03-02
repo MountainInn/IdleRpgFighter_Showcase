@@ -23,7 +23,7 @@ public class CritFloatingText : FloatingTextBase
         {
             item.transform.position = startingPosition;
             item.label.text = text;
-            item.label.alpha = 1;
+            item.canvasGroup.alpha = 1;
             item.duration = duration;
             item.velocity = velocity;
 
