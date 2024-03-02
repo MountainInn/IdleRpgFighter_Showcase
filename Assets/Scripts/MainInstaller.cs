@@ -63,6 +63,12 @@ public class MainInstaller : MonoInstaller
             .Bind<Combatant>().To<Character>()
             .FromResolve()
             .WhenInjectedInto<Mob>();
+
+        Container
+            .Bind(typeof(DamageModifier), typeof(IInitializable))
+            .To(t => t.AllTypes().DerivingFrom<DamageModifier>())
+            .AsTransient()
+            .NonLazy();
     }
 
     void BindView<T>(T prefabView, Transform parent)

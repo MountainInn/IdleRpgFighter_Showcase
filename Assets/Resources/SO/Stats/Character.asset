@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Character
   m_EditorClassIdentifier: 
   health: 10000000
-  movementSpeed: 0
-  attackSpeed: 0
-  attackRange: 0
   attackDamage: 10
+  attackSpeed: 0
+  critChance: 0.5
+  critMult: 2
