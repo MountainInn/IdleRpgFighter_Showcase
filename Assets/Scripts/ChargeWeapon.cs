@@ -13,7 +13,7 @@ public class ChargeWeapon : Weapon
             .Subscribe(isPreparing => canTick = isPreparing)
             .AddTo(this);
 
-        attackTimer.ObserveFull()
+        owner.attackTimer.ObserveFull()
             .Subscribe(isFull =>
             {
                 if (isFull)

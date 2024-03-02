@@ -41,59 +41,60 @@ public class MainInstaller : MonoInstaller
     //         .Map(Container.Inject);
     // }
 
-    // override public void InstallBindings()
-    // {
-    //     Container
-    //         .Bind(typeof(Vault),
-    //               typeof(Character),
-    //               typeof(DungeonGuide),
-    //               typeof(MobSpawner),
-    //               typeof(Battle),
-    //               typeof(Corridor),
-    //               typeof(HitAnimation)
-    //         )
-    //         .FromComponentInHierarchy()
-    //         .AsSingle();
+    override public void InstallBindings()
+    {
+        Container
+            .Bind(
+                // typeof(Vault),
+                typeof(Character)
+                // typeof(DungeonGuide),
+                // typeof(MobSpawner),
+                // typeof(Battle),
+                // typeof(Corridor),
+                // typeof(HitAnimation)
+            )
+            .FromComponentInHierarchy()
+            .AsSingle();
 
 
-    //     BindView(prefabTalentView, talentViewParent);
-    //     BindView(prefabAbilityView, talentViewParent);
+        //     BindView(prefabTalentView, talentViewParent);
+        //     BindView(prefabAbilityView, talentViewParent);
 
-    //     BindView(prefabAbilityButton, abilityButtonParent);
+        //     BindView(prefabAbilityButton, abilityButtonParent);
 
-    //     Container
-    //         .Bind<StatsSO>()
-    //         .FromMethod(() => mobStatSOs.GetRandom())
-    //         .AsTransient();
+        //     Container
+        //         .Bind<StatsSO>()
+        //         .FromMethod(() => mobStatSOs.GetRandom())
+        //         .AsTransient();
 
-    //     Container
-    //         .Bind<StatsSO>()
-    //         .FromMethod(() => characterStats)
-    //         .AsSingle()
-    //         .WhenInjectedInto<Character>();
+        //     Container
+        //         .Bind<StatsSO>()
+        //         .FromMethod(() => characterStats)
+        //         .AsSingle()
+        //         .WhenInjectedInto<Character>();
 
-    //     Container
-    //         .Bind<ProgressBar>()
-    //         .FromMethod(() => mobHealthView)
-    //         .AsSingle();
+        //     Container
+        //         .Bind<ProgressBar>()
+        //         .FromMethod(() => mobHealthView)
+        //         .AsSingle();
 
-    //     Container
-    //         .Bind<BoxCollider>()
-    //         .FromMethod(() => characterHitBox)
-    //         .AsSingle();
+        //     Container
+        //         .Bind<BoxCollider>()
+        //         .FromMethod(() => characterHitBox)
+        //         .AsSingle();
 
-    //     Container
-    //         .BindMemoryPool<FloatingText, FloatingText.Pool>()
-    //         .WithInitialSize(10)
-    //         .FromComponentInNewPrefab(prefabFloatingText)
-    //         .UnderTransform(canvasTransform);
+        //     Container
+        //         .BindMemoryPool<FloatingText, FloatingText.Pool>()
+        //         .WithInitialSize(10)
+        //         .FromComponentInNewPrefab(prefabFloatingText)
+        //         .UnderTransform(canvasTransform);
 
-    //     Container
-    //         .Bind<FloatingTextSpawner>()
-    //         .FromMethod(_ => mobDamagedFloatingText)
-    //         .AsSingle()
-    //         .WhenInjectedInto<Mob>();
-    // }
+        //     Container
+        //         .Bind<FloatingTextSpawner>()
+        //         .FromMethod(_ => mobDamagedFloatingText)
+        //         .AsSingle()
+        //         .WhenInjectedInto<Mob>();
+    }
 
     void BindView<T>(T prefabView, Transform parent)
         where T : Component

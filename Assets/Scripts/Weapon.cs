@@ -18,12 +18,11 @@ public abstract class Weapon : MonoBehaviour
     protected Volume attackTimer;
     protected bool canTick;
 
-    [Inject]
-    public void Construct(Combatant owner)
+    void Awake()
     {
-        this.owner = owner;
+        this.owner = GetComponent<Combatant>();
 
-        hurtbox.SetLayers(owner.gameObject.GetLayerMask(), owner.TargetLayers);
+        // hurtbox.SetLayers(owner.gameObject.GetLayerMask(), owner.TargetLayers);
 
         Subscribe();
     }
@@ -52,14 +51,14 @@ public abstract class Weapon : MonoBehaviour
         attackStart.AsObservable()
             .Subscribe(_ =>
             {
-                hurtbox.targets
-                    .ObserveAdd()
-                    .TakeUntil( attackEnd.AsObservable() )
-                    .Subscribe(ev =>
-                    {
-                        Attack(ev.Value);
-                    })
-                    .AddTo(this);
+                // hurtbox.targets
+                //     .ObserveAdd()
+                //     .TakeUntil( attackEnd.AsObservable() )
+                //     .Subscribe(ev =>
+                //     {
+                //         Attack(ev.Value);
+                //     })
+                //     .AddTo(this);
             })
             .AddTo(this);
     }
@@ -77,7 +76,7 @@ public abstract class Weapon : MonoBehaviour
     {
         return new[]
         {
-            attackTimer.ObserveFull(),
+            owner.attackTimer.ObserveFull(),
             ObserveAttackNotOngoing(),
         };
     }

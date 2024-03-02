@@ -12,34 +12,27 @@ public partial class Mob : Combatant
     [SerializeField] MeshRenderer meshRenderer;
     [SerializeField] public UnityEvent onDied;
     [SerializeField] public UnityEvent onAskedToReturnToPool;
+    [SerializeField] public UnityEvent onEnterPreparationState;
+    [SerializeField] public UnityEvent onExitPreparationState;
     [Space]
     [Header("Mob")]
     [SerializeField] StatsSO mobStats;
     [SerializeField] ProgressBar healthBar;
     [SerializeField] ProgressBar attackTimerBar;
     [SerializeField] FloatingTextSpawner floatingTextSpawner;
-    [HeaderAttribute("Animations")]
-    [SerializeField] Animator animator;
-    [SerializeField] string attackTriggerName;
-    [SerializeField] public UnityEvent onEnterPreparationState;
-    [SerializeField] public UnityEvent onExitPreparationState;
     [Header("Weapon")]
     [SerializeField] ChargeWeapon weapon;
 
     public StatsSO MobStats => mobStats;
 
     Color baseColor;
-    int attackTriggerId;
 
     [Inject]
-    public void Construct(StatsSO mobStatSO,
-                          Character character, FloatingTextSpawner floatingTextSpawner)
+    public void Construct(Character character)
     {
         base.Construct(mobStats);
 
         this.mobStats = (StatsSO)this.stats;
-
-        attackTriggerId = Animator.StringToHash(attackTriggerName);
 
         healthBar.Subscribe(gameObject, health);
         attackTimerBar.Subscribe(gameObject, attackTimer);
@@ -55,9 +48,6 @@ public partial class Mob : Combatant
             .WhereEqual(true)
             .Subscribe(_ => animator.SetTrigger(attackTriggerId))
             .AddTo(this);
-
-
-        this.floatingTextSpawner = floatingTextSpawner;
     }
 
     public void EnterPreparationState()
