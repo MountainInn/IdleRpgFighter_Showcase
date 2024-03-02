@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using Zenject;
 using UniRx;
+using UniRx.Triggers;
 using System;
 using System.Collections;
 using DG.Tweening;
@@ -11,65 +12,63 @@ public partial class Mob : Combatant
     [SerializeField] MeshRenderer meshRenderer;
     [SerializeField] public UnityEvent onDied;
     [SerializeField] public UnityEvent onAskedToReturnToPool;
+    [SerializeField] public UnityEvent onEnterPreparationState;
+    [SerializeField] public UnityEvent onExitPreparationState;
     [Space]
     [Header("Mob")]
     [SerializeField] StatsSO mobStats;
-    [SerializeField] float dyingDuration;
-    [SerializeField] int shiverLoops = 6;
-    [SerializeField] float gettingHitDuration;
+    [SerializeField] ProgressBar healthBar;
+    [SerializeField] ProgressBar attackTimerBar;
+    [SerializeField] FloatingTextSpawner floatingTextSpawner;
+    [Header("Weapon")]
+    [SerializeField] ChargeWeapon weapon;
 
     public StatsSO MobStats => mobStats;
 
-    int baseMapProp = Shader.PropertyToID("_BaseMap");
-    ParticleSystem ps;
-
     Color baseColor;
 
-    [Inject] DiContainer Container;
-
     [Inject]
-    public void Construct(StatsSO mobStatSO,
-                          Character character, FloatingTextSpawner floatingTextSpawner)
+    public void Construct(Character character)
     {
-        // base.Construct(mobStats);
+        base.Construct(mobStats);
 
-        // this.mobStats = (StatsSO)this.stats;
+        this.mobStats = (StatsSO)this.stats;
 
-        // meshRenderer.material.SetTexture(baseMapProp, mobStatSO.texture);
+        healthBar.Subscribe(gameObject, health);
+        attackTimerBar.Subscribe(gameObject, attackTimer);
 
-        // ps = Container
-        //     .InstantiatePrefabForComponent<ParticleSystem>(mobStatSO.attackEffectSystem,
-        //                                                    transform);
-        // ps.transform.localPosition = Vector3.zero;
+        health.ObserveChange()
+            .Subscribe(change =>
+            {
+                floatingTextSpawner.Float(change.ToString("F1"));
+            })
+            .AddTo(this);
 
-        // ps
-        //     .GetComponent<ProjectileParticles>()
-        //     .onParticleHitCharacter
-        //     .AddListener(() => Attack(character));
-
-        // attackTimer.ObserveFull()
-        //     .WhereEqual(true)
-        //     .Subscribe(_ => ps.Emit(1))
-        //     .AddTo(this);
-
-        // baseColor = meshRenderer.material.color;
-
-        // postTakeDamage.AsObservable()
-        //     .SelectMany( GettingHit )
-        //     .Subscribe()
-        //     .AddTo(this);
-
-        // onDie.AsObservable()
-        //     .SelectMany( Dying )
-        //     .Subscribe(_ => onDied?.Invoke())
-        //     .AddTo(this);
-
-        // this.floatingTextSpawner = floatingTextSpawner;
+        attackTimer.ObserveFull()
+            .WhereEqual(true)
+            .Subscribe(_ => animator.SetTrigger(attackTriggerId))
+            .AddTo(this);
     }
+
+    public void EnterPreparationState()
+    {
+        weapon.preparationStart.Invoke();
+    }
+
+    public void EnterAttackState()
+    {
+        weapon.preparationEnd.Invoke();
+    }
+
+    public void EnterDamagedState()
+    {
+        weapon.preparationEnd.Invoke();
+
+    }
+
 
     public void ReturnToPool()
     {
         onAskedToReturnToPool.Invoke();
     }
 }
-

@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
-using Zenject;
 using UniRx;
 
 abstract public class Combatant : MonoBehaviour
 {
     [SerializeField] public Volume health;
     [SerializeField] public Volume attackTimer;
+    [SerializeField] protected LayerMask targetLayers;
     [Space]
     [SerializeField] protected StatsSO stats;
     [Space]
@@ -17,10 +17,14 @@ abstract public class Combatant : MonoBehaviour
     [Space]
     [SerializeField] public UnityEvent onDie;
     [SerializeField] public UnityEvent<Combatant> onKill;
+    [HeaderAttribute("Animations")]
+    [SerializeField] protected Animator animator;
+    [SerializeField] protected string attackTriggerName;
 
     [HideInInspector] public int defense;
 
     public StatsSO Stats => stats;
+    public LayerMask TargetLayers => targetLayers;
 
 
     public UnityEvent<DamageArgs>
@@ -29,6 +33,8 @@ abstract public class Combatant : MonoBehaviour
         postTakeDamage,
         postAttack;
 
+    protected int attackTriggerId;
+
     public void Construct(StatsSO stats)
     {
         this.stats = Instantiate(stats);
@@ -36,15 +42,12 @@ abstract public class Combatant : MonoBehaviour
         health.ResizeAndRefill(stats.health);
         attackTimer.Resize(stats.attackSpeed);
 
-        // preAttack += (args) =>
-        // {
-        // stats.attackEffectSystem.Play();
-        // };
+        attackTriggerId = Animator.StringToHash(attackTriggerName);
 
         health.ObserveChange()
             .Subscribe(change =>
             {
-                takeDamagFloatingTextSpawner.Float(change.ToString("F1"));
+                takeDamagFloatingTextSpawner?.Float(change.ToString("F1"));
             })
             .AddTo(this);
     }
