@@ -1,6 +1,10 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Animations/Animations Clips.meta
 guid: d9da44369c8263440a893facb2cf50f6
 folderAsset: yes
+========
+guid: 8645273165cb7f54290d6eaa1e10ab37
+>>>>>>>> feat/combat-system:Assets/Plugins/Zenject/Source/Zenject.csproj.meta
 DefaultImporter:
   externalObjects: {}
   userData: 
