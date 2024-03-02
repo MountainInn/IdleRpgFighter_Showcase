@@ -796,6 +796,10 @@ PrefabInstance:
       value: 5.35
       objectReference: {fileID: 0}
     - target: {fileID: 8029588788404100436, guid: f4adf421a9d80454eb144bf9de635d39, type: 3}
+      propertyPath: underFillDelay
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8029588788404100436, guid: f4adf421a9d80454eb144bf9de635d39, type: 3}
       propertyPath: underFillColor.b
       value: 0
       objectReference: {fileID: 0}
