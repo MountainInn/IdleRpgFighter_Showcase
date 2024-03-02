@@ -2249,6 +2249,10 @@ MonoBehaviour:
   postAttack:
     m_PersistentCalls:
       m_Calls: []
+  clicksToSpeedupLevel: 2
+  speedupPerLevel: 0.2
+  attackAnimationTag: attack
+  attackSpeedParameter: speed
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
