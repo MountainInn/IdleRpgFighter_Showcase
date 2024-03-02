@@ -10,6 +10,7 @@ abstract public class Combatant : MonoBehaviour
 {
     [SerializeField] public Volume health;
     [SerializeField] public Volume attackTimer;
+    [SerializeField] protected LayerMask targetLayers;
     [Space]
     [SerializeField] protected StatsSO stats;
     [Space]
@@ -21,6 +22,7 @@ abstract public class Combatant : MonoBehaviour
     [HideInInspector] public int defense;
 
     public StatsSO Stats => stats;
+    public LayerMask TargetLayers => targetLayers;
 
 
     public UnityEvent<DamageArgs>

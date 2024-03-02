@@ -8,144 +8,126 @@ using Zenject;
 
 public abstract class Weapon : MonoBehaviour
 {
-    // [SerializeField] public StatsSO stats;
-    // [SerializeField] protected Sights_Combatant sights;
-    // [SerializeField] public UnityEvent attackStart;
-    // [SerializeField] public UnityEvent attackEnd;
-    // [SerializeField] protected float attackDuration;
-    // // [SerializeField] protected HurtBox hurtbox;
+    [SerializeField] public UnityEvent attackStart;
+    [SerializeField] public UnityEvent attackEnd;
+    [SerializeField] public UnityEvent preparationStart;
+    [SerializeField] public UnityEvent preparationEnd;
+    [SerializeField] protected HurtBox hurtbox;
 
-    // public Sights_Combatant Sights => sights;
+    protected Combatant owner;
+    protected Volume attackTimer;
+    protected bool canTick;
 
-    // protected Combatant owner;
-    // protected Volume attackTimer;
-    // protected bool canTick;
+    [Inject]
+    public void Construct(Combatant owner)
+    {
+        this.owner = owner;
 
-    // protected void OnValidate()
-    // {
-    //     sights ??= GetComponentInChildren<Sights_Combatant>();
-    //     if (sights == null)
-    //     {
-    //         sights = new GameObject("Sights").AddComponent<Sights_Combatant>();
+        hurtbox.SetLayers(owner.gameObject.GetLayerMask(), owner.TargetLayers);
 
-    //         sights.transform.SetParent(transform);
-    //         sights.transform.localPosition = Vector3.zero;
-    //         sights.transform.localScale = Vector3.one;
-    //     }
-    // }
+        Subscribe();
+    }
 
-    // [Inject]
-    // public void Construct(Combatant owner)
-    // {
-    //     this.owner = owner;
+    protected void Update()
+    {
+        if (canTick)
+            AttackTimerTick(Time.deltaTime);
+    }
 
-    //     stats = Instantiate(stats);
-    //     // stats.Multiply(owner.Stats);
+    protected virtual void Subscribe()
+    {
+        ObserveCanAttack()
+            .WhereEqual(true)
+            .Subscribe(_ =>
+            {
+                attackTimer.ResetToZero();
+            })
+            .AddTo(this);
 
-    //     Sights.SetLayers(owner.gameObject.GetLayerMask(), owner.TargetLayers);
-    //     Sights.Collider.radius = stats.attackRange;
+        SubscribeHurtbox();
+    }
 
-    //     attackTimer = new Volume(stats.attackSpeed);
+    protected void SubscribeHurtbox()
+    {
+        attackStart.AsObservable()
+            .Subscribe(_ =>
+            {
+                hurtbox.targets
+                    .ObserveAdd()
+                    .TakeUntil( attackEnd.AsObservable() )
+                    .Subscribe(ev =>
+                    {
+                        Attack(ev.Value);
+                    })
+                    .AddTo(this);
+            })
+            .AddTo(this);
+    }
 
-    //     Subscribe();
-    // }
+    protected IObservable<bool> ObserveCanAttack()
+    {
+        return
+            Observable
+            .CombineLatest( GetCanAttackObservables() )
+            .Select(bools =>
+                    bools.All(b => b == true));
+    }
 
-    // protected void Update()
-    // {
-    //     if (canTick)
-    //         AttackTimerTick(Time.deltaTime);
-    // }
+    protected virtual IEnumerable<IObservable<bool>> GetCanAttackObservables()
+    {
+        return new[]
+        {
+            attackTimer.ObserveFull(),
+            ObserveAttackNotOngoing(),
+        };
+    }
 
-    // protected virtual void Subscribe()
-    // {
-    //     ObserveCanAttack()
-    //         .WhereEqual(true)
-    //         .Subscribe(_ =>
-    //         {
-    //             var aliveTargets = sights.targets.Where(m => m.IsAlive);
+    protected virtual void Attack(Combatant target)
+    {
+        owner.InflictDamage(target, owner.Stats.attackDamage);
+    }
 
-    //             if (aliveTargets.Any())
-    //             {
-    //                 Combatant closestTarget = SelectTarget(aliveTargets);
+    protected virtual Combatant SelectTarget(IEnumerable<Combatant> aliveTargets)
+    {
+        return
+            aliveTargets
+            .OrderBy(transform.DistanceSqrTo)
+            .First();
+    }
 
-    //                 Attack(closestTarget);
+    public void AttackTimerTick(float deltaTime)
+    {
+        if (!attackTimer.IsFull)
+        {
+            attackTimer.Add(deltaTime);
+        }
+    }
 
-    //                 attackTimer.ResetToZero();
-    //             }
-    //         })
-    //         .AddTo(this);
+    public IObservable<bool> ObservePreparationOngoing()
+    {
+        return
+            Observable
+            .Merge(preparationStart.AsObservable().Select(_ => true),
+                   preparationEnd.AsObservable().Select(_ => false))
+            .StartWith(false);
+    }
 
-    //     SubscribeHurtbox();
-    // }
+    public IObservable<bool> ObservePreparationNotOngoing()
+    {
+        return ObservePreparationOngoing() .Select(b => !b);
+    }
 
-    // protected void SubscribeHurtbox()
-    // {
-    //     attackStart.AsObservable()
-    //         .Subscribe(_ =>
-    //         {
-    //             hurtbox.targets
-    //                 .ObserveAdd()
-    //                 .TakeUntil( attackEnd.AsObservable() )
-    //                 .Subscribe(ev =>
-    //                 {
-    //                     owner.InflictDamage(ev.Value, stats.attackDamage);
-    //                 })
-    //                 .AddTo(this);
-    //         })
-    //         .AddTo(this);
-    // }
+    public IObservable<bool> ObserveAttackOngoing()
+    {
+        return
+            Observable
+            .Merge(attackStart.AsObservable().Select(_ => true),
+                   attackEnd.AsObservable().Select(_ => false))
+            .StartWith(false);
+    }
 
-    // protected IObservable<bool> ObserveCanAttack()
-    // {
-    //     return
-    //         Observable
-    //         .CombineLatest( GetCanAttackObservables() )
-    //         .Select(bools =>
-    //                 bools.All(b => b == true));
-    // }
-
-    // protected virtual IEnumerable<IObservable<bool>> GetCanAttackObservables()
-    // {
-    //     return new[]
-    //     {
-    //         attackTimer.ObserveFull(),
-    //         sights.ObserveHasTargets(),
-    //         ObserveAttackNotOngoing(),
-    //     };
-    // }
-
-    // protected virtual void Attack(Combatant target)
-    // {
-    //     owner.InflictDamage(target, stats.attackDamage);
-    // }
-
-    // protected virtual Combatant SelectTarget(IEnumerable<Combatant> aliveTargets)
-    // {
-    //     return
-    //         aliveTargets
-    //         .OrderBy(transform.DistanceSqrTo)
-    //         .First();
-    // }
-
-    // public void AttackTimerTick(float deltaTime)
-    // {
-    //     if (!attackTimer.IsFull)
-    //     {
-    //         attackTimer.Add(deltaTime);
-    //     }
-    // }
-
-    // public IObservable<bool> ObserveAttackOngoing()
-    // {
-    //     return
-    //         Observable
-    //         .Merge(attackStart.AsObservable().Select(_ => true),
-    //                attackEnd.AsObservable().Select(_ => false))
-    //         .StartWith(false);
-    // }
-
-    // public IObservable<bool> ObserveAttackNotOngoing()
-    // {
-    //     return ObserveAttackOngoing() .Select(b => !b);
-    // }
+    public IObservable<bool> ObserveAttackNotOngoing()
+    {
+        return ObserveAttackOngoing() .Select(b => !b);
+    }
 }

@@ -7,4 +7,8 @@ using UnityEngine.UIElements;
 
 public class Character : Combatant
 {
+    public void EnterAttackState()
+    {
+
+    }
 }
