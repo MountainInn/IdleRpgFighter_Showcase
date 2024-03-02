@@ -6,18 +6,19 @@ using System.Linq;
 
 public class FloatingTextSpawner : MonoBehaviour
 {
-    [SerializeField] float duration;
-    [SerializeField] Vector3 velocity;
-    [SerializeField] Vector3 offset;
-    [SerializeField] int anglePerActive = -4;
-    [SerializeField] int maxCount = 24;
+    [SerializeField] protected float duration;
+    [SerializeField] protected Vector3 velocity;
+    [SerializeField] protected Vector3 offset;
+    [SerializeField] protected int anglePerActive = -4;
+    [SerializeField] protected int maxCount = 24;
 
-    [Inject] FloatingText.Pool floatingTextPool;
+    [Inject] protected FloatingText.Pool floatingTextPool;
+    [Inject] protected CritFloatingText.Pool critFloatingTextPool;
 
-    int active;
-    int halfMaxCount => maxCount / 2;
+    protected int active;
+    protected int halfMaxCount => maxCount / 2;
 
-    void OnDrawGizmos()
+    protected void OnDrawGizmos()
     {
         Gizmos.color = Color.blue;
        
@@ -35,10 +36,34 @@ public class FloatingTextSpawner : MonoBehaviour
         }
     }
 
-    // [Inject] void SubscribeToBattle(Battle battle)
-    // {
-    //     battle.onBattleStarted.AddListener(() => active = 0);
-    // }
+    public void FloatDamage(DamageArgs args)
+    {
+        string text = args.damage.ToString("F1");
+
+        int i = active - halfMaxCount;
+
+        Vector3 privateVelocity = GetVelocity(i);
+
+        Vector3 privateOffset = GetOffset(i);
+
+        FloatingTextBase floatingText =
+            (args.isCrit)?
+            critFloatingTextPool.Spawn(text,
+                                       transform.position + privateOffset,
+                                       duration,
+                                       privateVelocity)
+            :
+            floatingTextPool.Spawn(text,
+                                   transform.position + privateOffset,
+                                   duration,
+                                   privateVelocity)
+            ;
+
+        floatingText.StartTween();
+
+        active++;
+        active %= maxCount;
+    }
 
     public void Float(string text)
     {
@@ -63,12 +88,12 @@ public class FloatingTextSpawner : MonoBehaviour
         active %= maxCount;
     }
 
-    private Vector3 GetOffset(int i)
+    protected Vector3 GetOffset(int i)
     {
         return i * offset + UnityEngine.Random.onUnitSphere;
     }
 
-    Vector3 GetVelocity(int i)
+    protected Vector3 GetVelocity(int i)
     {
         int angle = i * anglePerActive;
 

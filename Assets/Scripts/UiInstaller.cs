@@ -6,7 +6,9 @@ using UnityEngine.UI;
 public class UiInstaller : MonoInstaller
 {
     [SerializeField] FloatingText prefabFloatingText;
+    [SerializeField] CritFloatingText prefabCritFloatingText;
     [SerializeField] FloatingTextSpawner mobDamagedFloatingText;
+    [Space]
     [SerializeField] Transform canvasTransform;
     [Space]
     [SerializeField] TextMeshProUGUI dpsLabel;
@@ -14,7 +16,6 @@ public class UiInstaller : MonoInstaller
     [SerializeField] MobView mobView;
     [Space]
     [SerializeField] Button attackButton;
-
 
     override public void InstallBindings()
     {
@@ -34,10 +35,17 @@ public class UiInstaller : MonoInstaller
             .AsSingle()
             .WhenInjectedInto<DPSMeter>();
 
+
         Container
             .BindMemoryPool<FloatingText, FloatingText.Pool>()
-            .WithInitialSize(10)
+            .WithInitialSize(5)
             .FromComponentInNewPrefab(prefabFloatingText)
+            .UnderTransform(canvasTransform);
+
+        Container
+            .BindMemoryPool<CritFloatingText, CritFloatingText.Pool>()
+            .WithInitialSize(3)
+            .FromComponentInNewPrefab(prefabCritFloatingText)
             .UnderTransform(canvasTransform);
 
         Container
@@ -45,5 +53,6 @@ public class UiInstaller : MonoInstaller
             .FromMethod(_ => mobDamagedFloatingText)
             .AsSingle()
             .WhenInjectedInto<Mob>();
+
     }
 }

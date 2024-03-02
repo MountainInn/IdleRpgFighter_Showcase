@@ -4,6 +4,9 @@ using UnityEngine;
 public class StatsSO : ScriptableObject
 {
     [SerializeField] public float health;
-    [SerializeField] public float attackSpeed;
     [SerializeField] public float attackDamage;
+    [SerializeField] public float attackSpeed;
+    [SerializeField] public float critChance;
+    [SerializeField] public float critMult;
 }
+

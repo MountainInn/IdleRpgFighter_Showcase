@@ -51,10 +51,10 @@ public partial class Mob : Combatant
             })
             .AddTo(this);
 
-        health.ObserveChange()
-            .Subscribe(change =>
+        postTakeDamage.AsObservable()
+            .Subscribe(args =>
             {
-                takeDamagFloatingTextSpawner?.Float(change.ToString("F1"));
+                takeDamagFloatingTextSpawner?.FloatDamage(args);
             })
             .AddTo(this);
     }
