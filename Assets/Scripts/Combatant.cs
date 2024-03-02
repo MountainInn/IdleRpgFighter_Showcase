@@ -18,7 +18,7 @@ abstract public class Combatant : MonoBehaviour
     [SerializeField] public UnityEvent onDie;
     [SerializeField] public UnityEvent<Combatant> onKill;
     [HeaderAttribute("Animations")]
-    [SerializeField] protected Animator animator;
+    [SerializeField] protected Animator combatantAnimator;
     [SerializeField] protected string attackTriggerName;
 
     [HideInInspector] public int defense;

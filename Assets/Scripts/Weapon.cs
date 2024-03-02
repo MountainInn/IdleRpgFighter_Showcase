@@ -10,15 +10,18 @@ public abstract class Weapon : MonoBehaviour
 {
     [SerializeField] public UnityEvent attackStart;
     [SerializeField] public UnityEvent attackEnd;
-    [SerializeField] public UnityEvent preparationStart;
-    [SerializeField] public UnityEvent preparationEnd;
     [SerializeField] protected HurtBox hurtbox;
 
     protected Combatant owner;
     protected Volume attackTimer;
-    protected bool canTick;
+    protected bool canTick = true;
 
-    void Awake()
+    public void SetAttackTimer(Volume attackTimer)
+    {
+        this.attackTimer = attackTimer;
+    }
+
+    void Start()
     {
         this.owner = GetComponent<Combatant>();
 
@@ -102,19 +105,19 @@ public abstract class Weapon : MonoBehaviour
         }
     }
 
-    public IObservable<bool> ObservePreparationOngoing()
-    {
-        return
-            Observable
-            .Merge(preparationStart.AsObservable().Select(_ => true),
-                   preparationEnd.AsObservable().Select(_ => false))
-            .StartWith(false);
-    }
+    // public IObservable<bool> ObservePreparationOngoing()
+    // {
+    //     return
+    //         Observable
+    //         .Merge(preparationStart.AsObservable().Select(_ => true),
+    //                preparationEnd.AsObservable().Select(_ => false))
+    //         .StartWith(false);
+    // }
 
-    public IObservable<bool> ObservePreparationNotOngoing()
-    {
-        return ObservePreparationOngoing() .Select(b => !b);
-    }
+    // public IObservable<bool> ObservePreparationNotOngoing()
+    // {
+    //     return ObservePreparationOngoing() .Select(b => !b);
+    // }
 
     public IObservable<bool> ObserveAttackOngoing()
     {

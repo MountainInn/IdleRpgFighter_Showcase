@@ -9,15 +9,15 @@ public class ChargeWeapon : Weapon
     {
         base.Subscribe();
 
-        ObservePreparationOngoing()
-            .Subscribe(isPreparing => canTick = isPreparing)
-            .AddTo(this);
+        // ObservePreparationOngoing()
+        //     .Subscribe(isPreparing => canTick = isPreparing)
+        //     .AddTo(this);
 
         owner.attackTimer.ObserveFull()
             .Subscribe(isFull =>
             {
-                if (isFull)
-                    preparationEnd.Invoke();
+                // if (isFull)
+                //     preparationEnd.Invoke();
             })
             .AddTo(this);
     }
@@ -36,7 +36,7 @@ public class ChargeWeapon : Weapon
     {
         return
             base.GetCanAttackObservables()
-            .Append( ObservePreparationNotOngoing() )
+            // .Append( ObservePreparationNotOngoing() )
             .Append( owner.health.ObserveEmpty().Select(e => !e) );
     }
 }
