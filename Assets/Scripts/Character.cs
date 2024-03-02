@@ -69,9 +69,9 @@ public class Character : Combatant
             combatantAnimator.SetTrigger(attackTriggerId);
     }
 
-    public void InflictDamage_OnAnimEvent()
+    public new void InflictDamage_OnAnimEvent()
     {
-        InflictDamage(target);
+        base.InflictDamage_OnAnimEvent();
 
         if (--attackInQueue > 0)
         {
