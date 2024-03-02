@@ -34,6 +34,8 @@ public partial class Mob : Combatant
 
         this.mobStats = (StatsSO)this.stats;
 
+        weapon.SetAttackTimer(attackTimer);
+
         healthBar.Subscribe(gameObject, health);
         attackTimerBar.Subscribe(gameObject, attackTimer);
 
@@ -43,21 +45,6 @@ public partial class Mob : Combatant
             .AddTo(this);
     }
 
-    public void EnterPreparationState()
-    {
-        weapon.preparationStart.Invoke();
-    }
-
-    public void EnterAttackState()
-    {
-        weapon.preparationEnd.Invoke();
-    }
-
-    public void EnterDamagedState()
-    {
-        weapon.preparationEnd.Invoke();
-
-    }
 
 
     public void ReturnToPool()
