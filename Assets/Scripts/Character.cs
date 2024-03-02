@@ -10,18 +10,12 @@ using Zenject;
 
 public class Character : Combatant
 {
-    [Inject] Mob mob;
-
-    ObservableStateMachineTrigger ObserveStateMachine;
-
     int attackInQueue;
     bool isPlaying;
 
     void Start()
     {
         base.Construct(Stats);
-
-        ObserveStateMachine = combatantAnimator.GetBehaviour<ObservableStateMachineTrigger>();
 
         ObserveStateMachine
             .OnStateExitAsObservable()
@@ -31,11 +25,10 @@ public class Character : Combatant
 
                 if (isAttack)
                 {
-                    InflictDamage(mob);
+                    InflictDamage(target);
 
                     if (--attackInQueue > 0)
                     {
-                        Debug.Log($"Sub {attackInQueue}");
                         combatantAnimator.SetTrigger(attackTriggerId);
                     }
                 }
@@ -44,6 +37,13 @@ public class Character : Combatant
 
         ObserveIsPlaying()
             .Subscribe(isPlaying => this.isPlaying = isPlaying)
+            .AddTo(this);
+
+        postTakeDamage.AsObservable()
+            .Subscribe(args =>
+            {
+                Debug.Log($"You Ded");
+            })
             .AddTo(this);
     }
 
@@ -60,7 +60,6 @@ public class Character : Combatant
     {
         attackInQueue++;
 
-        Debug.Log($"Add {attackInQueue}");
         if (!isPlaying)
             combatantAnimator.SetTrigger(attackTriggerId);
     }

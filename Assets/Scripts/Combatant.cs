@@ -4,6 +4,8 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using UniRx;
+using UniRx.Triggers;
+using Zenject;
 
 abstract public class Combatant : MonoBehaviour
 {
@@ -13,8 +15,6 @@ abstract public class Combatant : MonoBehaviour
     [Space]
     [SerializeField] protected StatsSO stats;
     [Space]
-    [SerializeField] public FloatingTextSpawner takeDamagFloatingTextSpawner;
-    [Space]
     [SerializeField] public UnityEvent onDie;
     [SerializeField] public UnityEvent<Combatant> onKill;
     [HeaderAttribute("Animations")]
@@ -22,6 +22,8 @@ abstract public class Combatant : MonoBehaviour
     [SerializeField] protected string attackTriggerName;
 
     [HideInInspector] public int defense;
+
+    [Inject] protected Combatant target;
 
     public StatsSO Stats => stats;
     public LayerMask TargetLayers => targetLayers;
@@ -35,21 +37,18 @@ abstract public class Combatant : MonoBehaviour
 
     protected int attackTriggerId;
 
+    protected ObservableStateMachineTrigger ObserveStateMachine;
+
     public void Construct(StatsSO stats)
     {
+        ObserveStateMachine = combatantAnimator.GetBehaviour<ObservableStateMachineTrigger>();
+
         this.stats = Instantiate(stats);
 
         health.ResizeAndRefill(stats.health);
         attackTimer.Resize(stats.attackSpeed);
 
         attackTriggerId = Animator.StringToHash(attackTriggerName);
-
-        health.ObserveChange()
-            .Subscribe(change =>
-            {
-                takeDamagFloatingTextSpawner?.Float(change.ToString("F1"));
-            })
-            .AddTo(this);
     }
 
     protected void OnEnable()

@@ -2,11 +2,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using UniRx;
+using Zenject;
 
 public class CharacterController : MonoBehaviour
 {
-    [SerializeField] Button attackButton;
-    [SerializeField] Character character;
+    [Inject] Button attackButton;
+    [Inject] Character character;
 
     void Awake()
     {

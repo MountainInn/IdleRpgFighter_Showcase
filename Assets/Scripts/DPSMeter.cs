@@ -5,26 +5,49 @@ using System;
 using System.Linq;
 using Zenject;
 using TMPro;
+using System.Collections.Generic;
 
 public class DPSMeter : MonoBehaviour
 {
     [SerializeField] int seconds = 10;
 
-    [HideInInspector] ReactiveProperty<float> dps = new();
+    Queue<float> damageSecondsQueue = new();
+    TextMeshProUGUI dpsLabel;
 
-    [Inject] void Construct(UnityEvent<DamageArgs> damageEvent, TextMeshProUGUI dpsLabel)
+    void Awake()
     {
-        damageEvent.AsObservable()
+        SetText(0);
+    }
+
+    [Inject] void Construct(Mob mob, TextMeshProUGUI dpsLabel)
+    {
+        this.dpsLabel = dpsLabel;
+       
+        mob.postTakeDamage.AsObservable()
             .Select(args => args.damage)
             .Buffer(TimeSpan.FromSeconds(1))
-            .Select(argsInSecond =>
-                    argsInSecond.DefaultIfEmpty(0).Sum())
-            .TakeLast(seconds)
-            .ToList()
-            .Subscribe(d =>
+            .Select(damagesInSecond =>
+                    damagesInSecond.DefaultIfEmpty(0).Sum())
+            .Subscribe(damageSecond =>
             {
-                dps.Value = d.Sum() / d.Count;
+                int count = damageSecondsQueue.Count;
+
+                if (count >= seconds)
+                    damageSecondsQueue.Dequeue();
+
+                damageSecondsQueue.Enqueue(damageSecond);
+
+                count += 1;
+
+                float dps = damageSecondsQueue.Sum() / count;
+
+                SetText(dps);
             })
             .AddTo(this);
+    }
+
+    void SetText(float dps)
+    {
+        dpsLabel.text = $"DPS: {dps:F0}";
     }
 }

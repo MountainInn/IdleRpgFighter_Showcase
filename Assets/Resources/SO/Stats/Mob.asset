@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47ce28d9a11fd124397affa39c282cbd, type: 3}
   m_Name: Mob
   m_EditorClassIdentifier: 
-  health: 100
+  health: 10000000
   movementSpeed: 0
   attackSpeed: 4
   attackRange: 0
-  attackDamage: 1000
+  attackDamage: 1

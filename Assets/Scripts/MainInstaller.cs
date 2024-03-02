@@ -1,10 +1,12 @@
 using System.Linq;
 using UnityEngine;
 using Zenject;
-using TMPro;
+using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 public class MainInstaller : MonoInstaller
 {
+    
     // [SerializeField] TalentView prefabTalentView;
     // [SerializeField] Transform talentViewParent;
     // [Space]
@@ -16,10 +18,6 @@ public class MainInstaller : MonoInstaller
     // [SerializeField] ProgressBar mobHealthView;
     // [Space]
     // [SerializeField] BoxCollider characterHitBox;
-    // [Space]
-    // [SerializeField] FloatingText prefabFloatingText;
-    // [SerializeField] FloatingTextSpawner mobDamagedFloatingText;
-    // [SerializeField] Transform canvasTransform;
 
     // StatsSO[] mobStatSOs;
     // Talent[] talents;
@@ -56,44 +54,15 @@ public class MainInstaller : MonoInstaller
             .FromComponentInHierarchy()
             .AsSingle();
 
+        Container
+            .Bind<Combatant>().To<Mob>()
+            .FromResolve()
+            .WhenInjectedInto<Character>();
 
-        //     BindView(prefabTalentView, talentViewParent);
-        //     BindView(prefabAbilityView, talentViewParent);
-
-        //     BindView(prefabAbilityButton, abilityButtonParent);
-
-        //     Container
-        //         .Bind<StatsSO>()
-        //         .FromMethod(() => mobStatSOs.GetRandom())
-        //         .AsTransient();
-
-        //     Container
-        //         .Bind<StatsSO>()
-        //         .FromMethod(() => characterStats)
-        //         .AsSingle()
-        //         .WhenInjectedInto<Character>();
-
-        //     Container
-        //         .Bind<ProgressBar>()
-        //         .FromMethod(() => mobHealthView)
-        //         .AsSingle();
-
-        //     Container
-        //         .Bind<BoxCollider>()
-        //         .FromMethod(() => characterHitBox)
-        //         .AsSingle();
-
-        //     Container
-        //         .BindMemoryPool<FloatingText, FloatingText.Pool>()
-        //         .WithInitialSize(10)
-        //         .FromComponentInNewPrefab(prefabFloatingText)
-        //         .UnderTransform(canvasTransform);
-
-        //     Container
-        //         .Bind<FloatingTextSpawner>()
-        //         .FromMethod(_ => mobDamagedFloatingText)
-        //         .AsSingle()
-        //         .WhenInjectedInto<Mob>();
+        Container
+            .Bind<Combatant>().To<Character>()
+            .FromResolve()
+            .WhenInjectedInto<Mob>();
     }
 
     void BindView<T>(T prefabView, Transform parent)
