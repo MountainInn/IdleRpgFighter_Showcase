@@ -37,16 +37,9 @@ public partial class Mob : Combatant
         healthBar.Subscribe(gameObject, health);
         attackTimerBar.Subscribe(gameObject, attackTimer);
 
-        health.ObserveChange()
-            .Subscribe(change =>
-            {
-                floatingTextSpawner.Float(change.ToString("F1"));
-            })
-            .AddTo(this);
-
         attackTimer.ObserveFull()
             .WhereEqual(true)
-            .Subscribe(_ => animator.SetTrigger(attackTriggerId))
+            .Subscribe(_ => combatantAnimator.SetTrigger(attackTriggerId))
             .AddTo(this);
     }
 

@@ -470,7 +470,7 @@ MonoBehaviour:
   onKill:
     m_PersistentCalls:
       m_Calls: []
-  animator: {fileID: 2002178788243499292}
+  combatantAnimator: {fileID: 2002178788243499292}
   attackTriggerName: attackTrigger
   defense: 0
   preAttack:
@@ -799,7 +799,7 @@ MonoBehaviour:
   onKill:
     m_PersistentCalls:
       m_Calls: []
-  animator: {fileID: 1989227070}
+  combatantAnimator: {fileID: 1989227070}
   attackTriggerName: attackTrigger
   defense: 0
   preAttack:
@@ -2030,70 +2030,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7742388400055726337, guid: c9fd4e2aec3475748818bd634ce450ec, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1989227069}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c9fd4e2aec3475748818bd634ce450ec, type: 3}
 --- !u!4 &1989227067 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7744470303579231963, guid: c9fd4e2aec3475748818bd634ce450ec, type: 3}
   m_PrefabInstance: {fileID: 1989227066}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1989227068 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7742388400055726337, guid: c9fd4e2aec3475748818bd634ce450ec, type: 3}
-  m_PrefabInstance: {fileID: 1989227066}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1989227069
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1989227068}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5bdbb48855b3a184d811829aeeefc4cd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health:
-    maximum:
-      value: 0
-    current:
-      value: 0
-  attackTimer:
-    maximum:
-      value: 0
-    current:
-      value: 0
-  targetLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  stats: {fileID: 11400000, guid: d0e442beebc999444b21e0eae96363c0, type: 2}
-  takeDamagFloatingTextSpawner: {fileID: 0}
-  onDie:
-    m_PersistentCalls:
-      m_Calls: []
-  onKill:
-    m_PersistentCalls:
-      m_Calls: []
-  animator: {fileID: 0}
-  attackTriggerName: 
-  defense: 0
-  preAttack:
-    m_PersistentCalls:
-      m_Calls: []
-  preTakeDamage:
-    m_PersistentCalls:
-      m_Calls: []
-  postTakeDamage:
-    m_PersistentCalls:
-      m_Calls: []
-  postAttack:
-    m_PersistentCalls:
-      m_Calls: []
-  ObserveStateMachine: {fileID: 0}
 --- !u!95 &1989227070 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 7648667056562281007, guid: c9fd4e2aec3475748818bd634ce450ec, type: 3}

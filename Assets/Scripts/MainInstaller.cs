@@ -45,7 +45,7 @@ public class MainInstaller : MonoInstaller
     {
         Container
             .Bind(
-                // typeof(Vault),
+                typeof(Mob),
                 typeof(Character)
                 // typeof(DungeonGuide),
                 // typeof(MobSpawner),
