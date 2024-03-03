@@ -3,10 +3,10 @@ using UnityEngine;
 using Zenject;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class MainInstaller : MonoInstaller
 {
-    
     // [SerializeField] TalentView prefabTalentView;
     // [SerializeField] Transform talentViewParent;
     // [Space]
@@ -22,30 +22,30 @@ public class MainInstaller : MonoInstaller
     // StatsSO[] mobStatSOs;
     // Talent[] talents;
 
-    // void Awake()
-    // {
-    //     mobStatSOs = Resources.LoadAll<StatsSO>("SO/MobStats");
+    List<T> InstantiateSOs<T>(string path)
+        where T : ScriptableObject
+    {
+        var objects = Resources.LoadAll<T>(path);
 
-    //     InstantiateSOs<Talent>("SO/Talents");
-    //     InstantiateSOs<Ability>("SO/Abilities");
-    // }
-
-    // void InstantiateSOs<T>(string path)
-    //     where T : ScriptableObject
-    // {
-    //     var objects = Resources.LoadAll<T>(path);
-    //     objects
-    //         .Select(t => Instantiate(t))
-    //         .Map(Container.Inject);
-    // }
+        return
+            objects
+            .Select(t => Instantiate(t))
+            .Map(Container.Inject)
+            .ToList();
+    }
 
     override public void InstallBindings()
     {
         Container
+            .Bind<List<Talent>>()
+            .FromMethod(() => InstantiateSOs<Talent>("SO/Talents/"))
+            ;
+
+        Container
             .Bind(
                 typeof(Mob),
-                typeof(Character)
-                // typeof(DungeonGuide),
+                typeof(Character),
+                typeof(Vault)
                 // typeof(MobSpawner),
                 // typeof(Battle),
                 // typeof(Corridor),
@@ -69,16 +69,5 @@ public class MainInstaller : MonoInstaller
             .To(t => t.AllTypes().DerivingFrom<DamageModifier>())
             .AsTransient()
             .NonLazy();
-    }
-
-    void BindView<T>(T prefabView, Transform parent)
-        where T : Component
-    {
-        Container
-            .Bind<T>()
-            .FromComponentInNewPrefab(prefabView)
-            .AsTransient()
-            .OnInstantiated<T>((ctx, view) =>
-                               view.transform.SetParent(parent));
     }
 }

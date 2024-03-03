@@ -17,10 +17,14 @@ public class Character : Combatant
     [SerializeField] string attackAnimationTag = "attack";
     [SerializeField] string attackSpeedParameter = "speed";
 
+    [Inject] List<Talent> talents;
+
     int attackInQueue;
     bool isPlaying;
     int attackSpeedParameterId;
     int attackAnimationTagId;
+
+
 
     void Start()
     {

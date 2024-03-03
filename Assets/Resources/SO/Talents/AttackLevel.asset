@@ -9,11 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47ce28d9a11fd124397affa39c282cbd, type: 3}
-  m_Name: Mob
+  m_Script: {fileID: 11500000, guid: 9da6be333fd558e499300b54ecf297b2, type: 3}
+  m_Name: AttackLevel
   m_EditorClassIdentifier: 
-  health: 100
-  attackDamage: 1
-  attackSpeed: 12
-  critChance: 0
-  critMult: 0
+  sprite: {fileID: 21300000, guid: 3eea92b60b81945068925f98ef44b940, type: 3}
+  fields:
+  - attack: 11
+    price: 10
+  - attack: 15
+    price: 15
+  - attack: 20
+    price: 20
