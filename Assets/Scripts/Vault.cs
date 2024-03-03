@@ -7,7 +7,7 @@ public class Vault : MonoBehaviour
     static public Vault instance => _inst ??= FindObjectOfType<Vault>();
     static Vault _inst;
 
-    [SerializeField] public Currency souls;
+    [SerializeField] public Currency gold;
 
     [Inject]
     public void Construct(Character character)
@@ -20,6 +20,6 @@ public class Vault : MonoBehaviour
     }
     void Awake()
     {
-        souls.value.Value = 0;
+        gold.value.Value = 0;
     }
 }

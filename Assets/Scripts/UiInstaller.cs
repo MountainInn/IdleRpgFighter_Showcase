@@ -16,9 +16,14 @@ public class UiInstaller : MonoInstaller
     [SerializeField] MobView mobView;
     [Space]
     [SerializeField] Button attackButton;
+    [Space]
+    [SerializeField] TalentView talentViewPrefab;
+    [SerializeField] Transform talentsParent;
 
     override public void InstallBindings()
     {
+        BindView(talentViewPrefab, talentsParent);
+
         Container
             .Bind<Button>()
             .FromMethod(() => attackButton)
@@ -53,6 +58,17 @@ public class UiInstaller : MonoInstaller
             .FromMethod(_ => mobDamagedFloatingText)
             .AsSingle()
             .WhenInjectedInto<Mob>();
-
     }
+
+    void BindView<T>(T prefabView, Transform parent)
+        where T : Component
+    {
+        Container
+            .Bind<T>()
+            .FromComponentInNewPrefab(prefabView)
+            .AsTransient()
+            .OnInstantiated<T>((ctx, view) =>
+                               view.transform.SetParent(parent));
+    }
+
 }
