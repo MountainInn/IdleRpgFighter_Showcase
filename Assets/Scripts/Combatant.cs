@@ -16,6 +16,7 @@ abstract public class Combatant : MonoBehaviour
     [SerializeField] protected StatsSO stats;
     [Space]
     [SerializeField] public UnityEvent onDie;
+    [SerializeField] public UnityEvent onRespawn;
     [SerializeField] public UnityEvent<Combatant> onKill;
     [HeaderAttribute("Animations")]
     [SerializeField] protected Animator combatantAnimator;
@@ -108,6 +109,19 @@ abstract public class Combatant : MonoBehaviour
         health.Subtract(args.damage);
 
         postTakeDamage?.Invoke(args);
+    }
+
+    public void Respawn()
+    {
+        health.Refill();
+        attackTimer.ResetToZero();
+
+        onRespawn?.Invoke();
+    }
+
+    protected bool CanContinueBattle()
+    {
+        return IsAlive && target.IsAlive;
     }
 
     public bool IsAlive => health.current.Value > 0;

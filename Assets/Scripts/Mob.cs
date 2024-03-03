@@ -61,7 +61,8 @@ public partial class Mob : Combatant
 
     void Update()
     {
-        AttackTimerTick(Time.deltaTime);
+        if (CanContinueBattle())
+            AttackTimerTick(Time.deltaTime);
     }
 
     public void ReturnToPool()
