@@ -28,17 +28,17 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 427033299672808261}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0.0000019073486}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2390248533517782600}
   m_Father: {fileID: 8830046722293741442}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.000020980835, y: -0.000061035156}
-  m_SizeDelta: {x: 343.23, y: 90.19}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -0.000015258789, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1494534939934633693
 MonoBehaviour:
@@ -56,8 +56,8 @@ MonoBehaviour:
   maskSprite: {fileID: 21300000, guid: fa824809422204d7eb808fecfdd896bd, type: 3}
   fillSprite: {fileID: 21300000, guid: fa824809422204d7eb808fecfdd896bd, type: 3}
   underFillDelay: 0.5
-  fillAmount: 0.73200005
-  pixelsPerUnit: 1.56
+  fillAmount: 0.773
+  pixelsPerUnit: 0.71
   borderColor: {r: 0.4433962, g: 0.4433962, b: 0.4433962, a: 1}
   fillColor: {r: 1, g: 0.73936063, b: 0, a: 1}
   borderImage: {fileID: 5714431726332624317}
@@ -96,7 +96,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1.56
+  m_PixelsPerUnitMultiplier: 0.71
 --- !u!114 &882676728115094226
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -144,7 +144,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0.73200005
+  m_Value: 0.773
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -213,11 +213,11 @@ MonoBehaviour:
   borderSprite: {fileID: 21300000, guid: fa824809422204d7eb808fecfdd896bd, type: 3}
   maskSprite: {fileID: 21300000, guid: fa824809422204d7eb808fecfdd896bd, type: 3}
   fillSprite: {fileID: 21300000, guid: fa824809422204d7eb808fecfdd896bd, type: 3}
-  underFillDelay: 0.5
-  fillAmount: 0.632
-  pixelsPerUnit: 1.56
+  underFillDelay: 2
+  fillAmount: 0.673
+  pixelsPerUnit: 0.71
   borderColor: {r: 0.4433962, g: 0.4433962, b: 0.4433962, a: 1}
-  fillColor: {r: 1, g: 0.18550496, b: 0.14528298, a: 1}
+  fillColor: {r: 1, g: 0.048537053, b: 0, a: 1}
   borderImage: {fileID: 8646945147961036088}
   maskImage: {fileID: 7141871046090662604}
   fillImage: {fileID: 5180603948933498430}
@@ -254,7 +254,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1.56
+  m_PixelsPerUnitMultiplier: 0.71
 --- !u!114 &406869403357707751
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -302,7 +302,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0.632
+  m_Value: 0.673
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -390,7 +390,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1.56
+  m_PixelsPerUnitMultiplier: 0.71
 --- !u!114 &1306988775373353623
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -462,7 +462,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.18550496, b: 0.14528298, a: 1}
+  m_Color: {r: 1, g: 0.048537053, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -478,7 +478,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1.56
+  m_PixelsPerUnitMultiplier: 0.71
 --- !u!1 &4460571293424976107
 GameObject:
   m_ObjectHideFlags: 0
@@ -555,7 +555,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1.56
+  m_PixelsPerUnitMultiplier: 0.71
 --- !u!114 &304842094835029783
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -643,7 +643,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1.56
+  m_PixelsPerUnitMultiplier: 0.71
 --- !u!1 &6725844667156214091
 GameObject:
   m_ObjectHideFlags: 0
