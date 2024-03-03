@@ -9,54 +9,75 @@ using DG.Tweening;
 
 public class ProgressBar : MonoBehaviour
 {
-    [SerializeField] Sprite sprite;
-    [SerializeField] [Range(0,1f)] float fillAmount;
-    [SerializeField] float pixelsPerUnit;
-    [SerializeField] Color fillColor;
-    [SerializeField] Color underFillColor;
-    [SerializeField] Color underImageColor;
-    [Space]
-    [SerializeField] Image underImage;
-    [Space]
-    [SerializeField] Image fillMask;
-    [SerializeField] Image fillImage;
-    [Space]
-    [SerializeField] Image underFillMask;
-    [SerializeField] Image underFillImage;
+    [SerializeField] Sprite borderSprite;
+    [SerializeField] Sprite maskSprite;
+    [SerializeField] Sprite fillSprite;
     [SerializeField] float underFillDelay;
     [Space]
+    [SerializeField] [Range(0,1f)] float fillAmount;
+    [SerializeField] float pixelsPerUnit;
+    [SerializeField] Color borderColor;
+    [SerializeField] Color fillColor;
+    [Space]
+    [SerializeField] Image borderImage;
+    [SerializeField] Image maskImage;
+    [SerializeField] Image fillImage;
+    [Space]
     [SerializeField] TextMeshProUGUI label;
+    [Header("Afterimage")]
+    [SerializeField] ProgressBar afterimage;
+    [SerializeField] Sprite afterimageSprite;
+    [SerializeField] Color afterimageColor;
+
+    Slider slider;
 
     Queue<Tween> queue = new();
 
     void OnValidate()
     {
+        slider = GetComponent<Slider>();
+
+        if (slider)
+        {
+            slider.value = fillAmount;
+        }
+
+
+        if (afterimage)
+        {
+            afterimage.fillSprite = afterimageSprite;
+            afterimage.pixelsPerUnit = pixelsPerUnit;
+            afterimage.fillColor = afterimageColor;
+            afterimage.borderColor = borderColor;
+            afterimage.fillAmount = fillAmount + .1f;
+            afterimage.maskSprite = maskSprite;
+            afterimage.borderSprite = borderSprite;
+
+            afterimage.OnValidate();
+        }
+
         if (fillImage)
         {
-            fillImage.sprite = sprite;
+            fillImage.sprite = fillSprite;
             fillImage.pixelsPerUnitMultiplier = pixelsPerUnit;
             fillImage.color = fillColor;
+            fillImage.type = Image.Type.Sliced;
         }
 
-        if (underFillImage)
+        if (maskImage)
         {
-            underFillImage.sprite = sprite;
-            underFillImage.pixelsPerUnitMultiplier = pixelsPerUnit;
-            underFillImage.color = underFillColor;
+            maskImage.sprite = maskSprite;
+            maskImage.pixelsPerUnitMultiplier = pixelsPerUnit;
+            maskImage.type = Image.Type.Sliced;
         }
 
-        if (underImage)
+        if (borderImage)
         {
-            underImage.sprite = sprite;
-            underImage.pixelsPerUnitMultiplier = pixelsPerUnit;
-            underImage.color = underImageColor;
+            borderImage.sprite = borderSprite;
+            borderImage.pixelsPerUnitMultiplier = pixelsPerUnit;
+            borderImage.color = borderColor;
+            borderImage.type = Image.Type.Sliced;
         }
-
-        if (fillMask)
-            fillMask.fillAmount = fillAmount;
-
-        if (underFillMask)
-            underFillMask.fillAmount = fillAmount + .1f;
     }
 
     public void Subscribe(GameObject volumeOwner, Volume volume)
@@ -69,9 +90,9 @@ public class ProgressBar : MonoBehaviour
                 if (label)
                     label.text = volume.ToString();
 
-                fillMask.fillAmount = tup.ratio;
+                slider.value = tup.ratio;
 
-                var tween = underFillMask.DOFillAmount(tup.ratio, underFillDelay);
+                var tween = afterimage.slider.DOValue(tup.ratio, underFillDelay);
 
                 QueueTween(tween);
             })
