@@ -43,7 +43,7 @@ public class Character : Combatant
             .Subscribe(isPlaying => this.isPlaying = isPlaying)
             .AddTo(this);
 
-        postTakeDamage.AsObservable()
+        onDie.AsObservable()
             .Subscribe(args =>
             {
                 Debug.Log($"You Ded");
@@ -62,6 +62,9 @@ public class Character : Combatant
 
     public void EnterAttackState()
     {
+        if (!CanContinueBattle())
+            return;
+
         attackInQueue++;
         Debug.Log($"queu: {attackInQueue}");
 
