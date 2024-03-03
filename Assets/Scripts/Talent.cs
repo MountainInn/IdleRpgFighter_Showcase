@@ -14,11 +14,6 @@ public abstract class Talent : ScriptableObject
     public abstract IObservable<string> ObserveDescription();
 
 
-    [Inject] protected void ConnectToView(TalentView talentView)
-    {
-        talentView.ConnectBase(this);
-    }
-
     [Inject] protected void InitializeBuyableLevel(Vault vault)
     {
         Price price = new Price(vault.gold);
@@ -27,5 +22,10 @@ public abstract class Talent : ScriptableObject
         buyableLevel = new Buyable<Level>(level,
                                           level => level.Up(),
                                           price);
+    }
+
+    [Inject] protected void ConnectToView(TalentView talentView)
+    {
+        talentView.ConnectBase(this);
     }
 }

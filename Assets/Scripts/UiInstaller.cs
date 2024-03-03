@@ -19,10 +19,16 @@ public class UiInstaller : MonoInstaller
     [Space]
     [SerializeField] TalentView talentViewPrefab;
     [SerializeField] Transform talentsParent;
+    [Space]
+    [SerializeField] VaultView vaultView;
 
     override public void InstallBindings()
     {
         BindView(talentViewPrefab, talentsParent);
+
+        Container
+            .Bind<VaultView>()
+            .FromMethod(() => vaultView);
 
         Container
             .Bind<Button>()
@@ -68,7 +74,10 @@ public class UiInstaller : MonoInstaller
             .FromComponentInNewPrefab(prefabView)
             .AsTransient()
             .OnInstantiated<T>((ctx, view) =>
-                               view.transform.SetParent(parent));
+            {
+                view.transform.SetParent(parent);
+                view.transform.localScale = Vector3.one;
+            });
     }
 
 }

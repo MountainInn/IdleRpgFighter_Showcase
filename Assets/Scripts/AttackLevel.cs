@@ -7,8 +7,7 @@ using Zenject;
 [CreateAssetMenu(fileName = "AttackLevel", menuName = "SO/AttackLevel")]
 public class AttackLevel : Talent
 {
-    [SerializeField] List<int> attackOnLevel;
-    [SerializeField] List<int> priceOnLevel;
+    [SerializeField] List<Field> fields;
 
     [Inject] Character character;
 
@@ -18,11 +17,11 @@ public class AttackLevel : Talent
             this.buyableLevel.ware.level
             .Select(l =>
             {
-                int currentDamage = attackOnLevel[l];
+                int currentDamage = fields[l].attack;
                 string nextDamage;
 
-                if (attackOnLevel.Count > l + 1)
-                    nextDamage = $"{attackOnLevel[l+1]}";
+                if (fields.Count > l + 1)
+                    nextDamage = $"{fields[l+1].attack}";
                 else
                     nextDamage = "MAX";
 
@@ -32,7 +31,13 @@ public class AttackLevel : Talent
 
     protected override void OnLevelUp(int level, Price price)
     {
-        price.cost.Value = priceOnLevel[level];
-        character.Stats.attackDamage = attackOnLevel[level];
+        price.cost.Value = fields[level].price;
+        character.Stats.attackDamage = fields[level].attack;
+    }
+
+    [Serializable]
+    struct Field
+    {
+        public int attack, price;
     }
 }

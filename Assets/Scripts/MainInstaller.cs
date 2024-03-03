@@ -3,6 +3,7 @@ using UnityEngine;
 using Zenject;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class MainInstaller : MonoInstaller
 {
@@ -21,22 +22,25 @@ public class MainInstaller : MonoInstaller
     // StatsSO[] mobStatSOs;
     // Talent[] talents;
 
-    void Awake()
-    {
-        InstantiateSOs<Talent>("SO/Talents");
-    }
-
-    void InstantiateSOs<T>(string path)
+    List<T> InstantiateSOs<T>(string path)
         where T : ScriptableObject
     {
         var objects = Resources.LoadAll<T>(path);
-        objects
+
+        return
+            objects
             .Select(t => Instantiate(t))
-            .Map(Container.Inject);
+            .Map(Container.Inject)
+            .ToList();
     }
 
     override public void InstallBindings()
     {
+        Container
+            .Bind<List<Talent>>()
+            .FromMethod(() => InstantiateSOs<Talent>("SO/Talents/"))
+            ;
+
         Container
             .Bind(
                 typeof(Mob),

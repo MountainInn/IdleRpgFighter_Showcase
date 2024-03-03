@@ -8,8 +8,8 @@ using DG.Tweening;
 public class Fade : MonoBehaviour
 {
     [SerializeField] CanvasGroup canvasGroup;
-
     [SerializeField] bool visible;
+    [SerializeField] float duration;
 
     void Awake()
     {
@@ -32,7 +32,7 @@ public class Fade : MonoBehaviour
         canvasGroup.DOKill();
 
         canvasGroup
-            .DOFade(1, 0.25f)
+            .DOFade(1, duration)
             .SetEase(Ease.OutQuad)
             .OnKill(() =>
             {
@@ -47,7 +47,7 @@ public class Fade : MonoBehaviour
         canvasGroup.DOKill();
 
         canvasGroup
-            .DOFade(0, 0.25f)
+            .DOFade(0, duration)
             .SetEase(Ease.OutQuad)
             .OnStart(() =>
             {
