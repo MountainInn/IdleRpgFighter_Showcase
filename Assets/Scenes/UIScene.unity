@@ -978,6 +978,7 @@ MonoBehaviour:
   talentViewPrefab: {fileID: 1806308915050764445, guid: 698620675062b224181cdccbd6117588, type: 3}
   talentsParent: {fileID: 3437564141346624879}
   vaultView: {fileID: 737390043}
+  shopPanel: {fileID: 237966270}
 --- !u!114 &1517091957
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1677,6 +1678,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 16085518722853075, guid: 74b7f497f3d35e64ca8bf66cf1db4e5a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4592361657857304214, guid: 74b7f497f3d35e64ca8bf66cf1db4e5a, type: 3}
+      propertyPath: m_Alpha
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6814614465157636042, guid: 74b7f497f3d35e64ca8bf66cf1db4e5a, type: 3}

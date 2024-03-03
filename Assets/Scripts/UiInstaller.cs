@@ -21,6 +21,14 @@ public class UiInstaller : MonoInstaller
     [SerializeField] Transform talentsParent;
     [Space]
     [SerializeField] VaultView vaultView;
+    [Space]
+    [SerializeField] Transform shopPanel;
+
+    new void Start()
+    {
+        base.Start();
+        shopPanel.gameObject.SetActive(true);
+    }
 
     override public void InstallBindings()
     {
