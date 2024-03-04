@@ -247,6 +247,16 @@ static public class IntExt
 
 static public class IEnumerableExt
 {
+    public static IEnumerable<IEnumerable<T>> Chunks<T>(this IEnumerable<T> source, int size)
+    {
+        return
+            source
+            .Select((obj, i) => (obj, chunkIndex: i / size))
+            .GroupBy(tuple => tuple.chunkIndex)
+            .Select(gr =>
+                    gr.Select(tuple => tuple.obj));
+    }
+
     public static void DestroyAll<T>(this IEnumerable<T> source)
         where T : Component
     {
