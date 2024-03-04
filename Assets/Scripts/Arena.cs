@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.Events;
 using DG.Tweening;
 using Zenject;
+using System;
+using UniRx;
 
 public class Arena : MonoBehaviour
 {
@@ -25,21 +27,19 @@ public class Arena : MonoBehaviour
     [Inject] Character character;
     [Inject] Mob mob;
   
-    [Inject] public void Construct()
+    void Start()
     {
-        character.onDie.AddListener( SlideCharacter );
+        character.afterDeathAnimation
+            .AddListener( SlideCharacter );
 
-        mob.onDie.AddListener( SlideMob );
+        mob.afterDeathAnimation
+            .AddListener( SlideMob );
 
-        onCharacterReset.AddListener(() =>
-        {
-            character.Respawn();
-        });
+        onCharacterReset
+            .AddListener( character.Respawn );
 
-        onMobReset.AddListener(() =>
-        {
-            mob.Respawn();
-        });
+        onMobReset
+            .AddListener( mob.Respawn );
     }
 
     public void SlideCharacter()
@@ -76,6 +76,8 @@ public class Arena : MonoBehaviour
     {
         characterRoot.position = characterRespawn.position;
 
+        character.combatantAnimator.SetTrigger("respawn");
+
         characterRoot
             .DOLocalMove(Vector3.zero, returnDuration)
             .OnKill( onCharacterReset.Invoke );
@@ -84,6 +86,8 @@ public class Arena : MonoBehaviour
     void ResetMob()
     {
         mobRoot.position = mobRespawn.position;
+
+        mob.combatantAnimator.SetTrigger("respawn");
 
         mobRoot
             .DOLocalMove(Vector3.zero, returnDuration)

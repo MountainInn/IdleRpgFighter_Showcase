@@ -13,10 +13,11 @@ abstract public class Combatant : MonoBehaviour
     [SerializeField] protected StatsSO stats;
     [Space]
     [SerializeField] public UnityEvent onDie;
+    [SerializeField] public UnityEvent afterDeathAnimation;
     [SerializeField] public UnityEvent onRespawn;
     [SerializeField] public UnityEvent<Combatant> onKill;
     [HeaderAttribute("Animations")]
-    [SerializeField] protected Animator combatantAnimator;
+    [SerializeField] public Animator combatantAnimator;
     [SerializeField] protected string attackTriggerName;
 
     [HideInInspector] public int defense;
@@ -47,6 +48,8 @@ abstract public class Combatant : MonoBehaviour
         attackTimer.Resize(stats.attackSpeed);
 
         attackTriggerId = Animator.StringToHash(attackTriggerName);
+
+        onDie.AddListener(() => combatantAnimator.SetTrigger("death Trigger"));
     }
 
     protected void OnEnable()
@@ -106,6 +109,11 @@ abstract public class Combatant : MonoBehaviour
         health.Subtract(args.damage);
 
         postTakeDamage?.Invoke(args);
+    }
+
+    public void Die()
+    {
+        afterDeathAnimation?.Invoke();
     }
 
     public void Respawn()

@@ -26,7 +26,7 @@ public class Character : Combatant
 
 
 
-    void Start()
+    void Awake()
     {
         base.Construct(Stats);
 
@@ -37,6 +37,7 @@ public class Character : Combatant
             .OnStateExitAsObservable()
             .Subscribe(exit =>
             {
+               
                 float speed = 1 + (attackInQueue / clicksToSpeedupLevel) * speedupPerLevel;
                
                 combatantAnimator.SetFloat(attackSpeedParameterId, speed);
