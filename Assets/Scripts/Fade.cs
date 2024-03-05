@@ -9,6 +9,7 @@ public class Fade : MonoBehaviour
 {
     [SerializeField] CanvasGroup canvasGroup;
     [SerializeField] bool visible;
+    [SerializeField] bool interactable;
     [SerializeField] float duration;
 
     void Awake()
@@ -27,7 +28,7 @@ public class Fade : MonoBehaviour
             FadeIn();
     }
 
-    void FadeIn()
+    public void FadeIn()
     {
         canvasGroup.DOKill();
 
@@ -36,13 +37,13 @@ public class Fade : MonoBehaviour
             .SetEase(Ease.OutQuad)
             .OnKill(() =>
             {
-                visible =
-                    canvasGroup.blocksRaycasts =
-                    canvasGroup.interactable = true;
+                visible = true;
+
+                ToggleInteractable();
             });
     }
 
-    void FadeOut()
+    public void FadeOut()
     {
         canvasGroup.DOKill();
 
@@ -51,9 +52,15 @@ public class Fade : MonoBehaviour
             .SetEase(Ease.OutQuad)
             .OnStart(() =>
             {
-                visible =
-                    canvasGroup.blocksRaycasts =
-                    canvasGroup.interactable = false;
+                visible = false;
+
+                ToggleInteractable();
             });
+    }
+
+    void ToggleInteractable()
+    {
+canvasGroup.blocksRaycasts =
+                    canvasGroup.interactable = (visible && interactable);
     }
 }

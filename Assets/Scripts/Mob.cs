@@ -44,6 +44,14 @@ public partial class Mob : Combatant
         onRespawn.AddListener(() => mobCanAttack = true);
     }
 
+    [Inject] void SubToView(MobView mobView)
+    {
+        var fade = mobView.GetComponent<Fade>();
+
+        afterDeathAnimation.AddListener(fade.FadeOut);
+        onRespawn.AddListener(fade.FadeIn);
+    }
+
     public void SetStats(MobStatsSO mobStats)
     {
         base.SetStats(mobStats);
