@@ -45,11 +45,11 @@ public class MainInstaller : MonoInstaller
             .Bind(
                 typeof(Mob),
                 typeof(Character),
-                typeof(Vault)
+                typeof(Vault),
                 // typeof(MobSpawner),
                 // typeof(Battle),
                 // typeof(Corridor),
-                // typeof(HitAnimation)
+                typeof(Arena)
             )
             .FromComponentInHierarchy()
             .AsSingle();

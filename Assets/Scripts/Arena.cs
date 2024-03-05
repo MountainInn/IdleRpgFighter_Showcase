@@ -21,8 +21,10 @@ public class Arena : MonoBehaviour
     [SerializeField] Transform mobRespawn, mobHatch;
     [SerializeField] Transform characterRespawn, characterHatch;
     [Space]
-    [SerializeField] UnityEvent onCharacterReset;
-    [SerializeField] UnityEvent onMobReset;
+    [SerializeField] public UnityEvent onCharacterMovedToRespawnPosition;
+    [SerializeField] public UnityEvent onCharacterReset;
+    [SerializeField] public UnityEvent onMobMovedToRespawnPosition;
+    [SerializeField] public UnityEvent onMobReset;
    
     [Inject] Character character;
     [Inject] Mob mob;
@@ -76,6 +78,8 @@ public class Arena : MonoBehaviour
     {
         characterRoot.position = characterRespawn.position;
 
+        onCharacterMovedToRespawnPosition?.Invoke();
+
         character.combatantAnimator.SetTrigger("respawn");
 
         characterRoot
@@ -86,6 +90,8 @@ public class Arena : MonoBehaviour
     void ResetMob()
     {
         mobRoot.position = mobRespawn.position;
+
+        onMobMovedToRespawnPosition?.Invoke();
 
         mob.combatantAnimator.SetTrigger("respawn");
 

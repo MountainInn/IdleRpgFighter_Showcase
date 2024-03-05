@@ -13,6 +13,7 @@ public class MobSpawner : MonoBehaviour
     [SerializeField] MobQueue mobQueue;
 
     [Inject] Mob mob;
+    [Inject] Arena arena;
     [Inject]
     public void Construct()
     {
@@ -23,18 +24,13 @@ public class MobSpawner : MonoBehaviour
     {
         foreach(var so in mobQueue.Next())
         {
-            Debug.Log($"Random: {so.name}");
-
             mob.SetStats(so);
 
             yield return
-                mob.afterDeathAnimation
+                arena.onMobMovedToRespawnPosition
                 .AsObservable()
                 .Take(1)
                 .ToYieldInstruction();
-
-            Debug.Log($"After Death");
         }
     }
-
 }
