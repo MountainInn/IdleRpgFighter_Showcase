@@ -24,8 +24,6 @@ public class Character : Combatant
     int attackSpeedParameterId;
     int attackAnimationTagId;
 
-
-
     void Awake()
     {
         base.Construct();
@@ -34,17 +32,6 @@ public class Character : Combatant
 
         attackSpeedParameterId = Animator.StringToHash(attackSpeedParameter);
         attackAnimationTagId = Animator.StringToHash(attackAnimationTag);
-
-        ObserveStateMachine
-            .OnStateExitAsObservable()
-            .Subscribe(exit =>
-            {
-               
-                float speed = 1 + (attackInQueue / clicksToSpeedupLevel) * speedupPerLevel;
-               
-                combatantAnimator.SetFloat(attackSpeedParameterId, speed);
-            })
-            .AddTo(this);
 
         ObserveIsPlaying()
             .Subscribe(isPlaying => this.isPlaying = isPlaying)
@@ -72,21 +59,7 @@ public class Character : Combatant
         if (!CanContinueBattle())
             return;
 
-        attackInQueue++;
-        Debug.Log($"queu: {attackInQueue}");
-
         if (!isPlaying)
             combatantAnimator.SetTrigger(attackTriggerId);
-    }
-
-    public new void InflictDamage_OnAnimEvent()
-    {
-        base.InflictDamage_OnAnimEvent();
-
-        if (--attackInQueue > 0)
-        {
-            Debug.Log($"queu: {attackInQueue}");
-            combatantAnimator.SetTrigger(attackTriggerId);
-        }
     }
 }
