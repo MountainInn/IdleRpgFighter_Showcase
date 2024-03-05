@@ -20,12 +20,10 @@ public partial class Mob : Combatant
 
     [Inject] FloatingTextSpawner takeDamagFloatingTextSpawner;
 
-    [Inject] public void Construct(Character character, MobView mobView)
+    [Inject] public void Construct(Character character)
     {
         base.Construct();
        
-        mobView.Subscribe(this);
-
         attackTimer.ObserveFull()
             .WhereEqual(true)
             .Subscribe(_ => combatantAnimator.SetTrigger(attackTriggerId))
@@ -46,6 +44,8 @@ public partial class Mob : Combatant
 
     [Inject] void SubToView(MobView mobView)
     {
+        mobView.Subscribe(this);
+
         var fade = mobView.GetComponent<Fade>();
 
         afterDeathAnimation.AddListener(fade.FadeOut);
