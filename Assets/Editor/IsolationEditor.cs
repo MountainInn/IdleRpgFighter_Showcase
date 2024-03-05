@@ -13,6 +13,7 @@ public abstract class IsolationEditor : Editor
     protected abstract void OnStartEditing();
     protected abstract IEnumerable<GameObject> InitPreviews();
     protected abstract Vector3 GetSceneViewLookAtPosition();
+    protected abstract float GetSceneViewZoom();
 
     protected abstract void ConcreteOnSceneGUI();
     protected abstract void UpdatePreviewsOnSceneGUI();
@@ -30,7 +31,9 @@ public abstract class IsolationEditor : Editor
 
         SceneVisibilityManager.instance.Isolate(previews.ToArray(), true);
 
-        SceneView.lastActiveSceneView.LookAt( GetSceneViewLookAtPosition() );
+        SceneView.lastActiveSceneView.LookAt( GetSceneViewLookAtPosition(),
+                                              Quaternion.identity,
+                                              GetSceneViewZoom());
         SceneView.duringSceneGui += OnSceneGUI;
 
         isEditing = true;

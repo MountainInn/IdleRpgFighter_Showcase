@@ -60,6 +60,11 @@ public class CombatantTemplateEditor : IsolationEditor
         return Vector3.zero;
     }
 
+    protected override float GetSceneViewZoom()
+    {
+        return 2;
+    }
+
     protected override void ConcreteOnSceneGUI()
     {
         Handles.BeginGUI();
