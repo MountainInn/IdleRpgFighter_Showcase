@@ -38,18 +38,22 @@ abstract public class Combatant : MonoBehaviour
 
     protected ObservableStateMachineTrigger ObserveStateMachine;
 
-    public void Construct(StatsSO stats)
+    public void Construct()
     {
         ObserveStateMachine = combatantAnimator.GetBehaviour<ObservableStateMachineTrigger>();
-
-        this.stats = Instantiate(stats);
-
-        health.ResizeAndRefill(stats.health);
-        attackTimer.Resize(stats.attackSpeed);
 
         attackTriggerId = Animator.StringToHash(attackTriggerName);
 
         onDie.AddListener(() => combatantAnimator.SetTrigger("death Trigger"));
+    }
+
+    public void SetStats(StatsSO stats)
+    {
+        this.stats = stats;
+
+        health.ResizeAndRefill(stats.health);
+        attackTimer.Resize(stats.attackSpeed);
+        attackTimer.ResetToZero();
     }
 
     protected void OnEnable()

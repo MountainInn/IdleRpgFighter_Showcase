@@ -9,4 +9,3 @@ public class StatsSO : ScriptableObject
     [SerializeField] public float critChance;
     [SerializeField] public float critMult;
 }
-

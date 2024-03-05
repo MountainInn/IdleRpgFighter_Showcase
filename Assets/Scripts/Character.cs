@@ -28,7 +28,9 @@ public class Character : Combatant
 
     void Awake()
     {
-        base.Construct(Stats);
+        base.Construct();
+
+        SetStats(Stats);
 
         attackSpeedParameterId = Animator.StringToHash(attackSpeedParameter);
         attackAnimationTagId = Animator.StringToHash(attackAnimationTag);

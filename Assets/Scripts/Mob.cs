@@ -13,42 +13,22 @@ public partial class Mob : Combatant
     [SerializeField] public UnityEvent onAskedToReturnToPool;
     [SerializeField] public UnityEvent onEnterPreparationState;
     [SerializeField] public UnityEvent onExitPreparationState;
-    [Space]
-    [Header("Mob")]
-    [SerializeField] StatsSO mobStats;
 
-    public StatsSO MobStats => mobStats;
 
     Color baseColor;
+    bool mobCanAttack;
 
     [Inject] FloatingTextSpawner takeDamagFloatingTextSpawner;
 
     [Inject] public void Construct(Character character, MobView mobView)
     {
-        base.Construct(mobStats);
-
-        this.mobStats = (StatsSO)this.stats;
-
+        base.Construct();
+       
         mobView.Subscribe(this);
 
         attackTimer.ObserveFull()
             .WhereEqual(true)
             .Subscribe(_ => combatantAnimator.SetTrigger(attackTriggerId))
-            .AddTo(this);
-
-
-        ObserveStateMachine
-            .OnStateExitAsObservable()
-            .Subscribe(exit =>
-            {
-                bool isAttack = exit.StateInfo.IsName("standing melee attack downward");
-
-                if (isAttack)
-                {
-                    Debug.Log($"{target}");
-                    InflictDamage(target);
-                }
-            })
             .AddTo(this);
 
         postTakeDamage.AsObservable()
@@ -57,11 +37,23 @@ public partial class Mob : Combatant
                 takeDamagFloatingTextSpawner?.FloatDamage(args);
             })
             .AddTo(this);
+
+
+        mobCanAttack = true;
+        onDie.AddListener(() => mobCanAttack = false);
+        onRespawn.AddListener(() => mobCanAttack = true);
+    }
+
+    public void SetStats(MobStatsSO mobStats)
+    {
+        base.SetStats(mobStats);
+
+        mobStats.template.ApplyTemplate(gameObject);
     }
 
     void Update()
     {
-        if (CanContinueBattle())
+        if (mobCanAttack && CanContinueBattle())
             AttackTimerTick(Time.deltaTime);
     }
 

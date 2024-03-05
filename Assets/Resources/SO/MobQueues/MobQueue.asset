@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c22ab474a7d299a4fa9e8d9579ecdb92, type: 3}
+  m_Name: MobQueue
+  m_EditorClassIdentifier: 
+  queueSegments:
+  - mobStats:
+    - {fileID: 11400000, guid: c2b15d5610123ad4fbfe5817d631104f, type: 2}
+    - {fileID: 11400000, guid: 799f275aea784ad4e8ef9869e07772a4, type: 2}
+    - {fileID: 11400000, guid: b55b80b2174a3ff49a0ba403fbd00b4d, type: 2}
+    segmentLength: 10
+    powerMultiplier: 1
+  powerMultiplier: 1

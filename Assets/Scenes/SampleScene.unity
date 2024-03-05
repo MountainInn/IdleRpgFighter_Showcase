@@ -523,11 +523,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slideDistance: 15
-  slideDuration: 1.5
+  slideDuration: 0.5
   openHatchAngle: 45
-  hatchOpeningDuration: 0.65
-  hatchClosingDuration: 0.4
-  returnDuration: 1.5
+  hatchOpeningDuration: 0.4
+  hatchClosingDuration: 0.3
+  returnDuration: 0.5
   mobRoot: {fileID: 1631593438}
   characterRoot: {fileID: 172895927}
   mobRespawn: {fileID: 334313988}
@@ -1061,6 +1061,51 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1430796202}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1537106655
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1537106657}
+  - component: {fileID: 1537106656}
+  m_Layer: 0
+  m_Name: Mob Spawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1537106656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1537106655}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fec105e61e2cfe42929fd9697d778f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mobQueue: {fileID: 11400000, guid: bff53d02b671f734c92c3d206eae8214, type: 2}
+--- !u!4 &1537106657
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1537106655}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.4651187, y: -0.5348753, z: 0.49703673, w: 0.5005274}
+  m_LocalPosition: {x: 2.85, y: 5.43, z: -8.73}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 85.8, y: -93.8, z: 0}
 --- !u!1 &1586708436
 GameObject:
   m_ObjectHideFlags: 0
@@ -1591,6 +1636,9 @@ MonoBehaviour:
     m_Bits: 0
   stats: {fileID: 11400000, guid: 28a472cb699e2ec42904c4f4ef42addb, type: 2}
   onDie:
+    m_PersistentCalls:
+      m_Calls: []
+  afterDeathAnimation:
     m_PersistentCalls:
       m_Calls: []
   onRespawn:
@@ -3086,6 +3134,9 @@ MonoBehaviour:
   onDie:
     m_PersistentCalls:
       m_Calls: []
+  afterDeathAnimation:
+    m_PersistentCalls:
+      m_Calls: []
   onRespawn:
     m_PersistentCalls:
       m_Calls: []
@@ -3118,6 +3169,7 @@ SceneRoots:
   - {fileID: 947488052}
   - {fileID: 1586708438}
   - {fileID: 1797107500}
+  - {fileID: 1537106657}
   - {fileID: 1047388836}
   - {fileID: 705507995}
   - {fileID: 963194228}
