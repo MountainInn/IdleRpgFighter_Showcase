@@ -17,4 +17,4 @@ MonoBehaviour:
   attackSpeed: 6
   critChance: 0
   critMult: 0
-  template: {fileID: 11400000, guid: 6821a4900fb5d7645a739b8d151fca91, type: 2}
+  template: {fileID: 11400000, guid: 6ea24241c5fd20c40b8df430743a02a7, type: 2}

@@ -5,16 +5,7 @@ using UnityEngine;
 [CustomEditor(typeof(TemplateEditorData))]
 public class TemplateEditorDataEditor : Editor
 {
-    List<byte[]> previews;
-
     Rect previewRect = new Rect(0, 0, 70, 70);
-
-    List<Texture2D> Textures;
-
-    void OnEnable()
-    {
-        previews ??= new();
-    }
 
     public override void OnInspectorGUI()
     {
@@ -22,66 +13,44 @@ public class TemplateEditorDataEditor : Editor
 
         var t = (target as TemplateEditorData);
 
+        if (t.modularCharacterPrefab == null)
+        {
+            EditorGUILayout.LabelField("PREFAB IS NOT SET");
+            return;
+        }
+
         if ( GUILayout.Button("Rebuild") )
         {
-            (target as TemplateEditorData)
-                .Rebuild();
+            t.parts = new();
+            t.previews = new();
 
-            Debug.Log($"Rebuilt");
-        }
-
-        if ( GUILayout.Button("Generate Previews") )
-        {
-            previews = new();
-
-            Textures = new();
-
-            foreach (var part in t.parts)
-            {
-                SkinnedMeshRenderer meshRenderer = part.GetComponent<SkinnedMeshRenderer>();
-
-                using (MeshPreview meshPreview = new MeshPreview(meshRenderer.sharedMesh))
+            t.modularCharacterPrefab
+                .GetComponentsInChildren<SkinnedMeshRenderer>(true)
+                .Map(part =>
                 {
-                    Texture2D preview = meshPreview.RenderStaticPreview((int)previewRect.width,
-                                                                        (int)previewRect.height);
+                    if (part?.sharedMesh == null)
+                        return;
 
-                    Textures.Add(preview);
+                    var parent = part.transform.parent.gameObject;
 
-                    byte[] bytes = ImageConversion.EncodeToPNG(preview);
+                    t.parts.TryAdd(parent.name, new());
+
+                    t.parts[parent.name].Add(part);
+
+                    MeshPreview meshPreview = new MeshPreview(part.sharedMesh);
+
+                    Texture2D preview =
+                        meshPreview.RenderStaticPreview((int)previewRect.width,
+                                                        (int)previewRect.height);
+
+                    t.previews.Add(part, preview);
 
                     meshPreview.Dispose();
-
-                    previews.Add(bytes);
-                }
-            }
-
-            t.previews = previews;
-
-            t.Save();
-
-            t.InitDictionaries();
-
-            t.dictPreviews = new();
-
-            t.parents.Count.ForLoop(i =>
-            {
-// Texture2D loadedTex = new Texture2D(70, 70);
-
-// ImageConversion.LoadImage(loadedTex, t.previews[i]);
-
-// t.dictPreviews?.TryAdd(t.parts[i], loadedTex);
                 });
 
-            Debug.Log($"Rendered");
+            t.Save();
+                
+            Debug.Log($"Rebuilt");
         }
-
-
-        Textures
-            .Map(texture =>
-            {
-                GUILayout.Button(texture);
-            });
-
     }
-
 }

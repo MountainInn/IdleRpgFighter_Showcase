@@ -10,9 +10,7 @@ public class CombatantTemplateEditor : IsolationEditor
 
     GameObject combatantPreview;
 
-    Dictionary<GameObject, HashSet<SkinnedMeshRenderer>> dictParts;
-    Dictionary<SkinnedMeshRenderer, Texture2D> dictPreviewTextures;
-    Dictionary<GameObject, bool> foldout;
+    Dictionary<string, bool> foldout;
 
     GUIStyle baseStyle, selectedStyle;
 
@@ -43,15 +41,12 @@ public class CombatantTemplateEditor : IsolationEditor
 
     protected override void OnStartEditing()
     {
-        if (dictParts == null)
-        {
-            InitializeParts();
-        }
+        InitializeFoldouts();
     }
 
     protected override IEnumerable<GameObject> InitPreviews()
     {
-        combatantPreview = GameObject.Instantiate(template.modularCharacterPrefab);
+        combatantPreview = GameObject.Instantiate(TemplateEditorData.instance.modularCharacterPrefab);
         combatantPreview.name = "[Combatant Template Preview]";
 
         return new []
@@ -83,34 +78,21 @@ public class CombatantTemplateEditor : IsolationEditor
 
     protected override void ConcreteOnInspectorGUI()
     {
-        EditorGUI.BeginChangeCheck();
-
-        template.modularCharacterPrefab =
-            (GameObject)
-            EditorGUILayout
-            .ObjectField(template.modularCharacterPrefab, typeof(GameObject), false);
-
-        if (EditorGUI.EndChangeCheck())
+        if (GUILayout.Button("Reinitialize"))
         {
-            SkinnedMeshRenderer[] parts = InitializeParts();
-
-            template.ClearCachedDictToggles();
-           
             template.toggles =
-                parts
+                TemplateEditorData.instance.parts
+                .SelectMany(kv =>
+                {
+                    return kv.Value.list;
+                })
                 .ToDictionary(part => part.name,
-                              _ => false);
+                              part => false);
         }
-
-        if (template?.modularCharacterPrefab == null)
-        {
-            EditorGUILayout.LabelField("PREFAB IS NOT SET");
-            return;
-        }
-
+       
         if (isEditing)
         {
-            foreach (var (parent, parts) in dictParts)
+            foreach (var (parent, parts) in TemplateEditorData.instance.parts)
             {
                 bool hasToggledParts = parts.Any(part => template.toggles[part.name]);
 
@@ -118,9 +100,8 @@ public class CombatantTemplateEditor : IsolationEditor
 
                 foldout[parent] =
                     EditorGUILayout.BeginFoldoutHeaderGroup(foldout[parent],
-                                                            parent.name,
+                                                            parent,
                                                             style);
-
                 if (foldout[parent])
                 {
                     parts
@@ -137,11 +118,17 @@ public class CombatantTemplateEditor : IsolationEditor
 
                                 style = (toggle) ? selectedStyle : baseStyle;
 
-                                bool clicked = GUILayout.Button(dictPreviewTextures[part],
+                                Texture2D texture = TemplateEditorData.instance.previews[part];
+
+                                bool clicked = GUILayout.Button(texture,
                                                                 style);
 
                                 if (clicked)
-                                    template.toggles[name] = !toggle;
+                                {
+                                    template[name] = !toggle;
+
+                                    EditorUtility.SetDirty(template);
+                                }
                             }
 
                             EditorGUILayout.EndHorizontal();
@@ -153,39 +140,15 @@ public class CombatantTemplateEditor : IsolationEditor
         }
     }
 
-    private SkinnedMeshRenderer[] InitializeParts()
+
+    private void InitializeFoldouts()
     {
-        dictParts = new();
-        dictPreviewTextures = new();
         foldout = new();
 
-        var parts =
-            template.modularCharacterPrefab
-            .GetComponentsInChildren<SkinnedMeshRenderer>(true);
-
-        foreach (var part in parts)
+        foreach (var (parent, parts) in TemplateEditorData.instance.parts)
         {
-            if (part?.sharedMesh == null)
-                continue;
-
-
-            GameObject parent = part.transform.parent.gameObject;
-
-            dictParts.TryAdd(parent, new());
-            dictParts[parent].Add(part);
-
             foldout.TryAdd(parent, true);
-
-            MeshPreview meshPreview = new(part.sharedMesh);
-
-            Texture2D texture = meshPreview.RenderStaticPreview(70, 70);
-
-            meshPreview.Dispose();
-
-            dictPreviewTextures.Add(part, texture);
         };
-
-        return parts;
     }
 
     protected override void UpdatePreviewsOnInspectorGUI()
@@ -196,6 +159,5 @@ public class CombatantTemplateEditor : IsolationEditor
 
     protected override void FinalizeTargetObject()
     {
-        template.Save();
     }
 }

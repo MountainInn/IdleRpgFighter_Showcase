@@ -5,66 +5,49 @@ using System.Linq;
 [CreateAssetMenu(fileName = "CombatantTemplate", menuName = "SO/CombatantTemplate")]
 public class CombatantTemplate : ScriptableObject
 {
-    [SerializeField] public GameObject modularCharacterPrefab;
-
-    [System.Serializable]
-    public struct Entry
+    [SerializeField] public Dictionary<string, bool> toggles
     {
-        [SerializeField] public string name;
-        [SerializeField] public bool toggle;
-
-        public void Deconstruct(out string name, out bool toggle)
+        get
         {
-            name = this.name;
-            toggle = this.toggle;
+            _toggles ??=
+                Enumerable
+                .Zip(names, bools, (name, b) => (name, b))
+                .ToDict();
+
+            return _toggles;
         }
-
-        public override string ToString()
+        set
         {
-            return $"({name} : {toggle})\n";
+            names = value.Keys.ToList();
+            bools = value.Values.ToList();
         }
     }
 
-    [SerializeField] public List<Entry> _toggles;
+    Dictionary<string, bool> _toggles;
 
-    public Dictionary<string, bool> toggles
+    [SerializeField] public List<string> names;
+    [SerializeField] public List<bool> bools;
+
+    public bool this[string name]
     {
-        set {
-            _toggles =
-                value
-                .Select(kv => new Entry(){ name = kv.Key, toggle = kv.Value })
-                .ToList();
+        get
+        {
+            return toggles[name];
         }
-
-        get {
-            cachedDictToggles ??=
-                _toggles
-                .ToDictionary(entry => entry.name,
-                              entry => entry.toggle);
-
-            return cachedDictToggles;
+        set
+        {
+            toggles[name] = value;
+            int index = names.IndexOf(name);
+            bools[index] = value;
         }
     }
 
-    Dictionary<string, bool> cachedDictToggles;
 
     Dictionary<string, GameObject> prefabChildren;
 
-    GameObject cachedModularCombatant;
-
     public void ApplyTemplate(GameObject modularCombatant)
     {
-        if (cachedModularCombatant != modularCombatant)
-        {
-            cachedModularCombatant = modularCombatant;
-           
-            prefabChildren =
-                modularCombatant
-                .GetComponentsInChildren<Transform>(true)
-                .Where(child => cachedDictToggles.Keys.Contains(child.name))
-                .ToDictionary(child => child.name,
-                              child => child.gameObject);
-        }
+        InitPrefabChildren(modularCombatant);
 
         foreach (var (name, toggle) in toggles)
         {
@@ -74,14 +57,13 @@ public class CombatantTemplate : ScriptableObject
         }
     }
 
-    public void Save()
+    private void InitPrefabChildren(GameObject modularCombatant)
     {
-        toggles = cachedDictToggles;
-    }
-
-    public void ClearCachedDictToggles()
-    {
-        cachedDictToggles?.Clear();
-        cachedDictToggles = null;
+        prefabChildren =
+            modularCombatant
+            .GetComponentsInChildren<Transform>(true)
+            .Where(child => toggles.Keys.Contains(child.name))
+            .ToDictionary(child => child.name,
+                          child => child.gameObject);
     }
 }
