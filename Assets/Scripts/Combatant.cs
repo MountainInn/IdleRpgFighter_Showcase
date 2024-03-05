@@ -52,8 +52,8 @@ abstract public class Combatant : MonoBehaviour
         this.stats = stats;
 
         health.ResizeAndRefill(stats.health);
-        attackTimer.Resize(stats.attackSpeed);
         attackTimer.ResetToZero();
+        attackTimer.Resize(stats.attackSpeed);
     }
 
     protected void OnEnable()
