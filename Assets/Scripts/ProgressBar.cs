@@ -42,7 +42,6 @@ public class ProgressBar : MonoBehaviour
             slider.value = fillAmount;
         }
 
-
         if (afterimage)
         {
             afterimage.fillSprite = afterimageSprite;
@@ -87,6 +86,9 @@ public class ProgressBar : MonoBehaviour
             .TakeWhile(_ => volumeOwner.activeSelf)
             .Subscribe(tup =>
             {
+                if (float.IsNaN(tup.ratio))
+                    return;
+               
                 if (label)
                     label.text = volume.ToString();
 
