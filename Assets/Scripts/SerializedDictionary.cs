@@ -28,7 +28,6 @@ public class SerializedDictionary<TKey, TValue> : IDictionary<TKey, TValue>, ISe
     {
         if (dict.Keys.Any() && keys.None())
         {
-            Debug.Log($"Any");
             keys = dict.Keys.ToList();
             values = dict.Values.ToList();
         }
@@ -38,7 +37,6 @@ public class SerializedDictionary<TKey, TValue> : IDictionary<TKey, TValue>, ISe
     {
         if (dict.None() && keys.Any())
         {
-            Debug.Log($"None");
             dict =
                 Enumerable
                 .Zip(keys, values,
