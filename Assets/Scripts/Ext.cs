@@ -247,6 +247,17 @@ static public class IntExt
 
 static public class IEnumerableExt
 {
+    public static IEnumerable<T> Scan<T>(this IEnumerable<T> source,
+                                         Func<T, T, T> scanner)
+    {
+        return
+            source
+            .Skip(1)
+            .Aggregate(new [] { source.First() }.AsEnumerable(),
+                       (acum, border) =>
+                       acum.Append( scanner.Invoke(acum.Last(), border) ));
+    }
+
     public static IEnumerable<IEnumerable<T>> Chunks<T>(this IEnumerable<T> source, int size)
     {
         return

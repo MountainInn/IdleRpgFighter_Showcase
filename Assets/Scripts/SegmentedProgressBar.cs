@@ -26,21 +26,13 @@ public class SegmentedProgressBar : ProgressBar
        
         float width = maskImage.rectTransform.rect.width;
 
-        float max = superVolume.maximum.Value;
-
-        var ratios =
-            superVolume.subvolumes
-            .Select(v => v.maximum.Value / max);
-
-        var scanRatios =
-            ratios
-            .Skip(1)
-            .Aggregate(new [] { ratios.First() }.AsEnumerable(),
-                       (acum, border) => acum.Append( acum.Last() + border ));
+        float superMax = superVolume.maximum.Value;
 
         var xPositions =
-            scanRatios.Select(r => r * width);
-
+            superVolume.subvolumes
+            .Select(v => v.maximum.Value)
+            .Scan((a, b) => a + b)
+            .Select(x => x / superMax * width);
 
         icons =
             icons
