@@ -10,8 +10,50 @@ public class TemplateEditorData : ScriptableSingleton<TemplateEditorData>
     [SerializeField] public SerializedDictionary<string, ListObject<SkinnedMeshRenderer>> parts;
     [SerializeField] public SerializedDictionary<SkinnedMeshRenderer, SerializedTexture2D> previews;
 
-    public void Save()
+
+    [MenuItem("Template Editor/Rebuild")]
+    static public void RebuildButton()
     {
-        Save(true);
+        TemplateEditorData.instance.Rebuild();
+    }
+
+    void Awake()
+    {
+        Rebuild();
+    }
+
+    void Rebuild()
+    {
+        modularCharacterPrefab =
+            PrefabUtility .LoadPrefabContents("Assets/PolygonFantasyHeroCharacters/Prefabs/Characters_Presets/Chr_FantasyHero_Preset_1.prefab");
+
+
+        parts = new();
+        previews = new();
+
+        modularCharacterPrefab
+            .GetComponentsInChildren<SkinnedMeshRenderer>(true)
+            .Map(part =>
+            {
+                if (part?.sharedMesh == null)
+                    return;
+
+                var parent = part.transform.parent.gameObject;
+
+                parts.TryAdd(parent.name, new());
+
+                parts[parent.name].Add(part);
+
+                MeshPreview meshPreview = new MeshPreview(part.sharedMesh);
+
+                Texture2D preview =
+                    meshPreview.RenderStaticPreview(60, 60);
+
+                previews.Add(part, preview);
+
+                meshPreview.Dispose();
+            });
+
+        Debug.Log($"Rebuilt");
     }
 }
