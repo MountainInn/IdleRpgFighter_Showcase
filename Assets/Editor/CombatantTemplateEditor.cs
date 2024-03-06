@@ -60,6 +60,11 @@ public class CombatantTemplateEditor : IsolationEditor
         return Vector3.zero;
     }
 
+    protected override Quaternion GetSceneViewRotation()
+    {
+        return Quaternion.Euler(0, 180, 0);
+    }
+
     protected override float GetSceneViewZoom()
     {
         return 2;
