@@ -16,6 +16,9 @@ public class CombatantTemplateEditor : IsolationEditor
 
     void OnEnable()
     {
+        TemplateEditorData.instance.modularCharacterPrefab =
+            PrefabUtility.LoadPrefabContents("Assets/PolygonFantasyHeroCharacters/Prefabs/Characters_Presets/Chr_FantasyHero_Preset_1.prefab");
+
         isEditing = false;
         template ??= (CombatantTemplate)target;
 
