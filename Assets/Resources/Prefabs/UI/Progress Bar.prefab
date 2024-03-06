@@ -60,6 +60,7 @@ MonoBehaviour:
   pixelsPerUnit: 1
   borderColor: {r: 0.4433962, g: 0.4433962, b: 0.4433962, a: 1}
   fillColor: {r: 1, g: 0.73936063, b: 0, a: 1}
+  slider: {fileID: 882676728115094226}
   borderImage: {fileID: 5714431726332624317}
   maskImage: {fileID: 8538333539395344916}
   fillImage: {fileID: 5518472499005165146}
@@ -218,6 +219,7 @@ MonoBehaviour:
   pixelsPerUnit: 1
   borderColor: {r: 0.4433962, g: 0.4433962, b: 0.4433962, a: 1}
   fillColor: {r: 1, g: 0.048537053, b: 0, a: 1}
+  slider: {fileID: 406869403357707751}
   borderImage: {fileID: 8646945147961036088}
   maskImage: {fileID: 7141871046090662604}
   fillImage: {fileID: 5180603948933498430}

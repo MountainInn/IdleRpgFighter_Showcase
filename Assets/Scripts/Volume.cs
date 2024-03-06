@@ -16,6 +16,7 @@ public class Volume
         current.Value == 0 && maximum.Value == 0;
 
 
+    public Volume() {}
     public Volume(float current)
         :this(current, current)
     {

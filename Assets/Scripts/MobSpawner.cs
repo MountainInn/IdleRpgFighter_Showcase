@@ -11,26 +11,74 @@ using System;
 public class MobSpawner : MonoBehaviour
 {
     [SerializeField] MobQueue mobQueue;
+    [SerializeField] public UnityEvent onSegmentFinished;
+
+    SuperVolume arenaProgress;
+    IEnumerable<IEnumerable<MobStatsSO>> queue;
+
+    CompositeDisposable subscriptions = new();
 
     [Inject] Mob mob;
     [Inject] Arena arena;
+    [Inject] SegmentedProgressBar arenaProgressBar;
     [Inject]
     public void Construct()
     {
+        InitializeNextQueue();
+
+    }
+
+    void InitializeNextQueue()
+    {
+        queue = mobQueue.GenerateQueue();
+        mobQueue.GetSubLengthsAndTotalLength(out IEnumerable<int> subLengths,
+                                             out int totalLength);
+
+
+        arenaProgress = new SuperVolume(subLengths);
+
+        subscriptions?.Dispose();
+        subscriptions = new();
+
+        arenaProgressBar
+            .Subscribe(arenaProgress, subscriptions);
+
+        arenaProgress
+            .ObserveSubvolumeFull()
+            .Subscribe(tuple => OnSegmentFinished())
+            .AddTo(this);
+
+
         StartCoroutine( Mobs() );
     }
 
-    public IEnumerator Mobs()
+    void OnSegmentFinished()
     {
-        foreach(var so in mobQueue.Next())
+        onSegmentFinished?.Invoke();
+    }
+    
+    IEnumerator Mobs()
+    {
+        foreach (var segment in queue)
         {
-            mob.SetStats(so);
+            foreach(var so in segment)
+            {
+                mob.SetStats(so);
 
-            yield return
-                arena.onMobMovedToRespawnPosition
-                .AsObservable()
-                .Take(1)
-                .ToYieldInstruction();
+                yield return
+                    mob.onDie
+                    .AsObservable()
+                    .Take(1)
+                    .ToYieldInstruction();
+
+                arenaProgress.Add(1);
+
+                yield return
+                    arena.onMobMovedToRespawnPosition
+                    .AsObservable()
+                    .Take(1)
+                    .ToYieldInstruction();
+            }
         }
     }
 }
