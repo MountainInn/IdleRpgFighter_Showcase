@@ -17,7 +17,9 @@ public class MainInstaller : MonoInstaller
     // [SerializeField] StatsSO characterStats;
     // [SerializeField] ProgressBar mobHealthView;
     // [Space]
-    // [SerializeField] BoxCollider characterHitBox;
+    [SerializeField] CollectionAnimation prefabDropable;
+    [Space]
+    [SerializeField] ParticleSystem onPickupPS;
 
     // StatsSO[] mobStatSOs;
     // Talent[] talents;
@@ -37,9 +39,23 @@ public class MainInstaller : MonoInstaller
     override public void InstallBindings()
     {
         Container
+            .Bind<ParticleSystem>()
+            .FromMethod(() => onPickupPS)
+            .WhenInjectedInto<CollectionAnimation>();
+
+        Container
+            .BindMemoryPool<CollectionAnimation, CollectionAnimation.Pool>()
+            .FromComponentInNewPrefab(prefabDropable)
+            .UnderTransformGroup("[Dropables]");
+
+        Container
+            .Bind<CollectionAnimation>()
+            .FromNewComponentOnNewPrefab(prefabDropable)
+            .AsTransient();
+
+        Container
             .Bind<List<Talent>>()
-            .FromMethod(() => InstantiateSOs<Talent>("SO/Talents/"))
-            ;
+            .FromMethod(() => InstantiateSOs<Talent>("SO/Talents/"));
 
         Container
             .Bind(

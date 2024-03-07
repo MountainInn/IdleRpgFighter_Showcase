@@ -8,6 +8,7 @@ public class MobQueue : ScriptableObject
 {
     public List<QueueSegment> queueSegments;
     public float powerMultiplier = 1f;
+    public DropList dropList;
 
     public int GetTotalLength()
     {
@@ -20,10 +21,24 @@ public class MobQueue : ScriptableObject
     {
         return
             queueSegments
-            .Select(seg =>
-                    seg
+            .Select(segment =>
+                    segment
                     .GetShuffled()
-                    .Map(so => so.Multiply(powerMultiplier * seg.powerMultiplier))
+                    .Select(so =>
+                    {
+                        so = Instantiate(so);
+                        so.Multiply(powerMultiplier * segment.powerMultiplier);
+
+                        so.dropList = Instantiate(so.dropList);
+
+                        if (dropList?.entries.Any() ?? false)
+                            so.dropList.entries.AddRange(dropList.entries);
+
+                        if (segment.dropList?.entries.Any() ?? false)
+                            so.dropList.entries.AddRange(segment.dropList.entries);
+
+                        return so;
+                    })
             );
     }
 
@@ -57,6 +72,7 @@ public class MobQueue : ScriptableObject
         public List<MobStatsSO> mobStats;
         public int segmentLength;
         public float powerMultiplier = 1f;
+        public DropList dropList;
 
         public IEnumerable<MobStatsSO> GetShuffled()
         {

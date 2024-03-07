@@ -62,4 +62,12 @@ public class Character : Combatant
         if (!isPlaying)
             combatantAnimator.SetTrigger(attackTriggerId);
     }
+
+    public void Loot(DropList.Entry entry)
+    {
+        if (entry.currency != null)
+        {
+            entry.currency.GetPaid();
+        }
+    }
 }

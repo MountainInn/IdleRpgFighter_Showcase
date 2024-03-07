@@ -49,7 +49,7 @@ abstract public class Combatant : MonoBehaviour
 
     public void SetStats(StatsSO stats)
     {
-        this.stats = stats;
+        this.stats = Instantiate(stats);
 
         health.ResizeAndRefill(stats.health);
         attackTimer.ResetToZero();
@@ -85,6 +85,9 @@ abstract public class Combatant : MonoBehaviour
 
     public void InflictDamage(Combatant defender, float damage)
     {
+        if (!defender.IsAlive)
+            return;
+       
         DamageArgs args = new DamageArgs()
         {
             attacker = this,

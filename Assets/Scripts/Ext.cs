@@ -411,7 +411,7 @@ static public class IEnumerableExt
 
     static public IEnumerable<T> Map<T>(this IEnumerable<T> source, Action<T> action)
     {
-        if (source.Count() == 0)
+        if (source.None())
         {
             return source;
         }

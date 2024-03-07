@@ -6,7 +6,6 @@ using UniRx;
 using UnityEngine.Events;
 using UnityEngine.Pool;
 using Zenject;
-using System;
 
 public class MobSpawner : MonoBehaviour
 {
@@ -31,6 +30,7 @@ public class MobSpawner : MonoBehaviour
     void InitializeNextQueue()
     {
         queue = mobQueue.GenerateQueue();
+
         mobQueue.GetSubLengthsAndTotalLength(out IEnumerable<int> subLengths,
                                              out int totalLength);
 

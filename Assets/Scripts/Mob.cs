@@ -4,6 +4,7 @@ using Zenject;
 using UniRx;
 using UniRx.Triggers;
 using System;
+using System.Linq;
 using System.Collections;
 using DG.Tweening;
 
@@ -14,6 +15,7 @@ public partial class Mob : Combatant
     [SerializeField] public UnityEvent onEnterPreparationState;
     [SerializeField] public UnityEvent onExitPreparationState;
 
+    MobStatsSO mobStats;
 
     Color baseColor;
     bool mobCanAttack;
@@ -52,9 +54,33 @@ public partial class Mob : Combatant
         onRespawn.AddListener(fade.FadeIn);
     }
 
+    [Inject] void SubToDropables(Character character, CollectionAnimation.Pool dropablesPool)
+    {
+        onDie.AddListener(() =>
+        {
+            mobStats.dropList.entries
+                .Where(entry => (UnityEngine.Random.value < entry.chance))
+                ?.Map(entry =>
+                {
+                    CollectionAnimation dropable = dropablesPool.Spawn();
+
+                    dropable.transform.position = transform.position;
+
+                    dropable.oneShotOnPickup += () =>
+                    {
+                        character.Loot(entry);
+                    };
+
+                    dropable.StartCollectionAnimation(character.transform);
+                });
+        });
+    }
+
     public void SetStats(MobStatsSO mobStats)
     {
         base.SetStats(mobStats);
+
+        this.mobStats = (MobStatsSO)this.Stats;
 
         mobStats.template.ApplyTemplate(gameObject);
     }
