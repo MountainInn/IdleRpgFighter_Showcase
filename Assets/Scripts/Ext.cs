@@ -16,6 +16,17 @@ static public class GameObjectExtension
 
         return thisLayerMask;
     }
+    public static void DelayAction(this MonoBehaviour go, float seconds, Action action)
+    {
+        go.StartCoroutine(InvokeDelayedAction(seconds, action));
+    }
+
+    private static IEnumerator InvokeDelayedAction(float seconds, Action action)
+    {
+        if (action == null) yield break;
+        yield return new WaitForSeconds(seconds);
+        action.Invoke();
+    }
 }
 
 static public class IntegerExtension
