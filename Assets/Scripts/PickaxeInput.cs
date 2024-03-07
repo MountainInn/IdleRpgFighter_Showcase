@@ -9,6 +9,9 @@ public class PickaxeInput : MonoBehaviour
     [SerializeField] float damageOnFullCharge = 100;
     [SerializeField] float chargePerSecond = 25;
     [SerializeField] float maxCharge = 100;
+    [Space]
+    [SerializeField] string pickaxeChargeFloatProperty;
+    [SerializeField] string pickaxeHitTriggerProperty;
 
     public FloatReactiveProperty strikeDamage;
 
@@ -37,11 +40,19 @@ public class PickaxeInput : MonoBehaviour
                     {
                         strikeDamage.Value = charge.Ratio * damageOnFullCharge;
 
+                        character
+                            .combatantAnimator
+                            .SetTrigger(pickaxeHitTriggerProperty);
+
                         charge.ResetToZero();
                     })
                     .Subscribe(_ =>
                     {
                         charge.Add(chargePerSecond * Time.deltaTime);
+
+                        character
+                            .combatantAnimator
+                            .SetFloat(pickaxeChargeFloatProperty, charge.Ratio);
                     })
                     .AddTo(this);
             })
