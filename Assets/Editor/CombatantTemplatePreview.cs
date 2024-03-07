@@ -13,21 +13,12 @@ public class CombatantTemplatePreview : ObjectPreview
 
     public void OnDisable()
     {
-        OnDestroy();
+        Cleanup();
     }
 
     public void OnDestroy()
     {
-        if (previewRender != null)
-        {
-            previewRender.Cleanup();
-            previewRender = null;
-        }
-
-        if (previewCharacter != null)
-        {
-            GameObject.DestroyImmediate( previewCharacter );
-        }
+        Cleanup();
     }
 
     public override bool HasPreviewGUI()
@@ -71,5 +62,22 @@ public class CombatantTemplatePreview : ObjectPreview
         previewRender.Render();
 
         previewRender.EndAndDrawPreview(r);
+    }
+
+    public override void Cleanup()
+    {
+
+        if (previewRender != null)
+        {
+            previewRender.Cleanup();
+            previewRender = null;
+        }
+
+        if (previewCharacter != null)
+        {
+            GameObject.DestroyImmediate( previewCharacter );
+        }
+
+        base.Cleanup();
     }
 }
