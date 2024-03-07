@@ -46,8 +46,7 @@ public class TemplateEditorData : ScriptableSingleton<TemplateEditorData>
 
                 MeshPreview meshPreview = new MeshPreview(part.sharedMesh);
 
-                Texture2D preview =
-                    meshPreview.RenderStaticPreview(60, 60);
+                Texture2D preview = meshPreview.RenderStaticPreview(70, 70);
 
                 previews.Add(part, preview);
 
