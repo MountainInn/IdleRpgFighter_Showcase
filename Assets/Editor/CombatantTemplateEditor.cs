@@ -4,11 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 
 [CustomEditor(typeof(CombatantTemplate))]
-public class CombatantTemplateEditor : IsolationEditor
+public class CombatantTemplateEditor : Editor
 {
     CombatantTemplate template;
-
-    GameObject combatantPreview;
 
     Dictionary<string, bool> foldout;
 
@@ -16,7 +14,6 @@ public class CombatantTemplateEditor : IsolationEditor
 
     void OnEnable()
     {
-        isEditing = false;
         template ??= (CombatantTemplate)target;
 
         baseStyle =
@@ -37,57 +34,13 @@ public class CombatantTemplateEditor : IsolationEditor
                                           background = Texture2D.whiteTexture},
         };
 
-    }
-
-    protected override void OnStartEditing()
-    {
         InitializeFoldouts();
     }
 
-    protected override IEnumerable<GameObject> InitPreviews()
+    public override void OnInspectorGUI()
     {
-        combatantPreview = GameObject.Instantiate(TemplateEditorData.instance.modularCharacterPrefab);
-        combatantPreview.name = "[Combatant Template Preview]";
+        base.OnInspectorGUI();
 
-        return new []
-        {
-            combatantPreview
-        };
-    }
-
-    protected override Vector3 GetSceneViewLookAtPosition()
-    {
-        return Vector3.zero;
-    }
-
-    protected override Quaternion GetSceneViewRotation()
-    {
-        return Quaternion.Euler(0, 180, 0);
-    }
-
-    protected override float GetSceneViewZoom()
-    {
-        return 2;
-    }
-
-    protected override void ConcreteOnSceneGUI()
-    {
-        Handles.BeginGUI();
-
-        if (GUI.Button(new Rect(10, 200, 100, 100), "Finish Editing"))
-        {
-            StopEditing();
-        }
-
-        Handles.EndGUI();
-    }
-
-    protected override void UpdatePreviewsOnSceneGUI()
-    {
-    }
-
-    protected override void ConcreteOnInspectorGUI()
-    {
         if (GUILayout.Button("Reinitialize"))
         {
             template.toggles =
@@ -100,54 +53,53 @@ public class CombatantTemplateEditor : IsolationEditor
                               part => false);
         }
        
-        if (isEditing)
+        foreach (var (parent, parts) in TemplateEditorData.instance.parts)
         {
-            foreach (var (parent, parts) in TemplateEditorData.instance.parts)
+            bool hasToggledParts = parts.Any(part => template.toggles[part.name]);
+
+            GUIStyle style = (hasToggledParts) ? selectedStyle : baseStyle;
+
+            foldout[parent] =
+                EditorGUILayout.BeginFoldoutHeaderGroup(foldout[parent],
+                                                        parent,
+                                                        style);
+            if (foldout[parent])
             {
-                bool hasToggledParts = parts.Any(part => template.toggles[part.name]);
+                parts
+                    .Chunks(6)
+                    .Map(row =>
+                    {
+                        EditorGUILayout.BeginHorizontal();
 
-                GUIStyle style = (hasToggledParts) ? selectedStyle : baseStyle;
-
-                foldout[parent] =
-                    EditorGUILayout.BeginFoldoutHeaderGroup(foldout[parent],
-                                                            parent,
-                                                            style);
-                if (foldout[parent])
-                {
-                    parts
-                        .Chunks(3)
-                        .Map(row =>
+                        foreach (var part in row)
                         {
-                            EditorGUILayout.BeginHorizontal();
+                            string name = part.name;
 
-                            foreach (var part in row)
+                            bool toggle = template.toggles[name];
+
+                            style = (toggle) ? selectedStyle : baseStyle;
+
+                            Texture2D texture = TemplateEditorData.instance.previews[part];
+
+                            bool clicked = GUILayout.Button(texture,
+                                                            style,
+                                                            GUILayout.MinWidth(10));
+
+                            if (clicked)
                             {
-                                string name = part.name;
+                                template[name] = !toggle;
 
-                                bool toggle = template.toggles[name];
-
-                                style = (toggle) ? selectedStyle : baseStyle;
-
-                                Texture2D texture = TemplateEditorData.instance.previews[part];
-
-                                bool clicked = GUILayout.Button(texture,
-                                                                style);
-
-                                if (clicked)
-                                {
-                                    template[name] = !toggle;
-
-                                    EditorUtility.SetDirty(template);
-                                }
+                                EditorUtility.SetDirty(template);
                             }
+                        }
 
-                            EditorGUILayout.EndHorizontal();
-                        });
-                }
-
-                EditorGUILayout.EndFoldoutHeaderGroup();
+                        EditorGUILayout.EndHorizontal();
+                    });
             }
+
+            EditorGUILayout.EndFoldoutHeaderGroup();
         }
+
     }
 
 
@@ -159,15 +111,5 @@ public class CombatantTemplateEditor : IsolationEditor
         {
             foldout.TryAdd(parent, true);
         };
-    }
-
-    protected override void UpdatePreviewsOnInspectorGUI()
-    {
-        if (isEditing)
-            template.ApplyTemplate(combatantPreview);
-    }
-
-    protected override void FinalizeTargetObject()
-    {
     }
 }
