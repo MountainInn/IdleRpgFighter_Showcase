@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.UIElements;
 using UniRx;
-using UniRx.Triggers;
 using Zenject;
 
 public class Character : Combatant
@@ -63,11 +61,4 @@ public class Character : Combatant
             combatantAnimator.SetTrigger(attackTriggerId);
     }
 
-    public void Loot(DropList.Entry entry)
-    {
-        if (entry.currency != null)
-        {
-            entry.currency.GetPaid();
-        }
-    }
 }

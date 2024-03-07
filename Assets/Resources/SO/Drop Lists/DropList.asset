@@ -18,4 +18,4 @@ MonoBehaviour:
       currency: {fileID: 11400000, guid: b9ab8636c1d943e44a6a011b931ebec7, type: 2}
       cost:
         value: 123
-    sdf: {fileID: 0}
+    prefabDropableGameObject: {fileID: 0}

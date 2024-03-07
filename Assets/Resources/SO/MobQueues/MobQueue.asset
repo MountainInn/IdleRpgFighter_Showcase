@@ -19,16 +19,20 @@ MonoBehaviour:
     - {fileID: 11400000, guid: b55b80b2174a3ff49a0ba403fbd00b4d, type: 2}
     segmentLength: 2
     powerMultiplier: 1
+    dropList: {fileID: 11400000, guid: bd07a9960762d634b85a0a4e70016cb4, type: 2}
   - mobStats:
     - {fileID: 11400000, guid: c2b15d5610123ad4fbfe5817d631104f, type: 2}
     - {fileID: 11400000, guid: 799f275aea784ad4e8ef9869e07772a4, type: 2}
     - {fileID: 11400000, guid: b55b80b2174a3ff49a0ba403fbd00b4d, type: 2}
     segmentLength: 10
     powerMultiplier: 1
+    dropList: {fileID: 11400000, guid: bd07a9960762d634b85a0a4e70016cb4, type: 2}
   - mobStats:
     - {fileID: 11400000, guid: c2b15d5610123ad4fbfe5817d631104f, type: 2}
     - {fileID: 11400000, guid: 799f275aea784ad4e8ef9869e07772a4, type: 2}
     - {fileID: 11400000, guid: b55b80b2174a3ff49a0ba403fbd00b4d, type: 2}
     segmentLength: 10
     powerMultiplier: 1
+    dropList: {fileID: 0}
   powerMultiplier: 1
+  dropList: {fileID: 11400000, guid: bd07a9960762d634b85a0a4e70016cb4, type: 2}

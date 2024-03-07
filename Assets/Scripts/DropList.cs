@@ -1,6 +1,6 @@
 using UnityEngine;
-using System;
 using System.Collections.Generic;
+using System;
 
 [CreateAssetMenu(fileName = "DropList", menuName = "SO/DropList")]
 public class DropList : ScriptableObject
@@ -11,7 +11,6 @@ public class DropList : ScriptableObject
     public class Entry
     {
         [Range(0, 1)] public float chance;
-        public Price currency;
-        public ScriptableObject sdf;
+        public Drop drop;
     }
 }
