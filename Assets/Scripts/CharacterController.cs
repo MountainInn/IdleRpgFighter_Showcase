@@ -9,6 +9,8 @@ public class CharacterController : MonoBehaviour
     [Inject] Button attackButton;
     [Inject] Character character;
 
+    public Button AttackButton => attackButton;
+
     void Awake()
     {
         attackButton.OnClickAsObservable()
