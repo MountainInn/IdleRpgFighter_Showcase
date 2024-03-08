@@ -21,6 +21,7 @@ public class PickaxeInput : MonoBehaviour
     public void Construct(Character character,
                           CharacterController charController,
                           Rock rock,
+                          MobView rockView,
                           ProgressBar chargeProgressBar,
                           FloatingTextSpawner floatingTextSpawner)
     {
@@ -77,5 +78,7 @@ public class PickaxeInput : MonoBehaviour
                 floatingTextSpawner.FloatDamage(args);
             })
             .AddTo(this);
+
+        rockView.Subscribe(rock);
     }
 }

@@ -5,6 +5,12 @@ public class MobView : MonoBehaviour
     [SerializeField] ProgressBar healthBar;
     [SerializeField] ProgressBar attackTimerBar;
 
+    public void Subscribe(Rock rock)
+    {
+        healthBar.Subscribe(rock.gameObject, rock.health);
+        // attackTimerBar.Subscribe(rock.gameObject, rock.attackTimer);
+    }
+
 
     public void Subscribe(Mob mob)
     {
