@@ -8,8 +8,6 @@ using Zenject;
 
 public class Character : AnimatorCombatant
 {
-    [Inject] List<Talent> talents;
-
     bool isPlaying;
 
     new void Start()

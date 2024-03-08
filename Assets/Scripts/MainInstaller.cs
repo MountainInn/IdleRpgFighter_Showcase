@@ -36,27 +36,15 @@ public class MainInstaller : MonoInstaller
             .ToList();
     }
 
+    new void Start()
+    {
+        base.Start();
+
+        InstantiateSOs<Talent>("SO/Talents/");
+    }
+
     override public void InstallBindings()
     {
-        Container
-            .Bind<ParticleSystem>()
-            .FromMethod(() => onPickupPS)
-            .WhenInjectedInto<CollectionAnimation>();
-
-        Container
-            .BindMemoryPool<CollectionAnimation, CollectionAnimation.Pool>()
-            .FromComponentInNewPrefab(prefabDropable)
-            .UnderTransformGroup("[Dropables]");
-
-        Container
-            .Bind<CollectionAnimation>()
-            .FromNewComponentOnNewPrefab(prefabDropable)
-            .AsTransient();
-
-        Container
-            .Bind<List<Talent>>()
-            .FromMethod(() => InstantiateSOs<Talent>("SO/Talents/"));
-
         Container
             .Bind(
                 typeof(Mob),
@@ -71,12 +59,14 @@ public class MainInstaller : MonoInstaller
             .AsSingle();
 
         Container
-            .Bind<Combatant>().To<Mob>()
+            .Bind(typeof(Combatant), typeof(AnimatorCombatant))
+            .To<Mob>()
             .FromResolve()
             .WhenInjectedInto<Character>();
 
         Container
-            .Bind<Combatant>().To<Character>()
+            .Bind(typeof(Combatant), typeof(AnimatorCombatant))
+            .To<Character>()
             .FromResolve()
             .WhenInjectedInto<Mob>();
 
@@ -85,5 +75,20 @@ public class MainInstaller : MonoInstaller
             .To(t => t.AllTypes().DerivingFrom<DamageModifier>())
             .AsTransient()
             .NonLazy();
+
+        Container
+            .Bind<ParticleSystem>()
+            .FromMethod(() => onPickupPS)
+            .WhenInjectedInto<CollectionAnimation>();
+
+        Container
+            .BindMemoryPool<CollectionAnimation, CollectionAnimation.Pool>()
+            .FromComponentInNewPrefab(prefabDropable)
+            .UnderTransformGroup("[Dropables]");
+
+        Container
+            .Bind<CollectionAnimation>()
+            .FromNewComponentOnNewPrefab(prefabDropable)
+            .AsTransient();
     }
 }

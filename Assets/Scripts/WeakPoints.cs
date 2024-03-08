@@ -29,13 +29,14 @@ public class WeakPoints : Talent
     {
         UnityEngine.UI.Button attackButton = characterController.AttackButton;
 
-        character.postAttack.AddListener((args) =>
-        {
-            if (UnityEngine.Random.value < chanceToAppearAfterAttack)
+        character.onAttackAnimEvent
+            .AddListener(() =>
             {
-                SpawnWeakPoint(attackButton, weakPointViewPool);
-            }
-        });
+                if (UnityEngine.Random.value < chanceToAppearAfterAttack)
+                {
+                    SpawnWeakPoint(attackButton, weakPointViewPool);
+                }
+            });
 
         weakPointViewPool.onWeakPointClicked = () =>
         {
