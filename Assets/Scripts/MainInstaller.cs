@@ -1,8 +1,6 @@
 using System.Linq;
 using UnityEngine;
 using Zenject;
-using UnityEngine.Events;
-using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 
 public class MainInstaller : MonoInstaller
@@ -20,7 +18,7 @@ public class MainInstaller : MonoInstaller
     [SerializeField] CollectionAnimation prefabDropable;
     [Space]
     [SerializeField] ParticleSystem onPickupPS;
-
+    [SerializeField] Ally prefabAlly;
     // StatsSO[] mobStatSOs;
     // Talent[] talents;
 
@@ -51,7 +49,7 @@ public class MainInstaller : MonoInstaller
                 typeof(Character),
                 typeof(Vault),
                 typeof(LootManager),
-                // typeof(Battle),
+                typeof(Gang),
                 // typeof(Corridor),
                 typeof(Arena)
             )
@@ -62,7 +60,7 @@ public class MainInstaller : MonoInstaller
             .Bind(typeof(Combatant), typeof(AnimatorCombatant))
             .To<Mob>()
             .FromResolve()
-            .WhenInjectedInto<Character>();
+            .WhenInjectedInto(typeof(Character), typeof(Ally));
 
         Container
             .Bind(typeof(Combatant), typeof(AnimatorCombatant))
@@ -75,6 +73,11 @@ public class MainInstaller : MonoInstaller
             .To(t => t.AllTypes().DerivingFrom<DamageModifier>())
             .AsTransient()
             .NonLazy();
+
+        Container
+            .BindMemoryPool<Ally, Ally.Pool>()
+            .FromComponentInNewPrefab(prefabAlly)
+            .AsTransient();
 
         Container
             .Bind<ParticleSystem>()

@@ -1,28 +1,24 @@
-using UnityEngine;
 using Zenject;
 using UniRx;
+using UnityEngine;
 
-public class Mob : AnimatorCombatant
+public class Ally : AnimatorCombatant
 {
     protected MobStatsSO mobStats;
     public MobStatsSO MobStats => mobStats;
 
     protected bool mobCanAttack;
 
-    [Inject] FloatingTextSpawner takeDamagFloatingTextSpawner;
-
     protected void Awake()
     {
-        SubscribeToAttackTimerFull();
-
-        postTakeDamage.AsObservable()
-            .Subscribe(args =>
-            {
-                takeDamagFloatingTextSpawner?.FloatDamage(args);
-            })
-            .AddTo(this);
-
         SubscribeCanAttack();
+        SubscribeToAttackTimerFull();
+    }
+
+    public new void SetStats(StatsSO stats)
+    {
+        attackTimer.ResetToZero();
+        attackTimer.Resize(stats.attackSpeed);
     }
 
     protected void SubscribeToAttackTimerFull()
@@ -40,16 +36,6 @@ public class Mob : AnimatorCombatant
         onRespawn.AddListener(() => mobCanAttack = true);
     }
 
-    [Inject] void SubToView(MobView mobView)
-    {
-        mobView.Subscribe(this);
-
-        var fade = mobView.GetComponent<Fade>();
-
-        afterDeathAnimation.AddListener(fade.FadeOut);
-        onRespawn.AddListener(fade.FadeIn);
-    }
-
     public void SetStats(MobStatsSO mobStats)
     {
         base.SetStats(mobStats);
@@ -62,5 +48,10 @@ public class Mob : AnimatorCombatant
     {
         if (mobCanAttack && CanContinueBattle())
             AttackTimerTick(Time.deltaTime);
+    }
+
+    public class Pool : MonoMemoryPool<Ally>
+    {
+       
     }
 }

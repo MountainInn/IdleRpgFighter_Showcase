@@ -51,9 +51,22 @@ public class CombatantTemplate : ScriptableObject
 
         foreach (var (name, toggle) in toggles)
         {
-            prefabChildren[name]
-                .gameObject
-                .SetActive(toggle);
+            var part = prefabChildren[name].gameObject;
+
+
+            if (toggle)
+            {
+                for (GameObject parent = part;
+                     parent != modularCombatant;
+                     parent = parent.transform.parent.gameObject)
+                {
+                    parent.SetActive(true);
+                }
+            }
+            else
+            {
+                part.SetActive(false);
+            }
         }
     }
 

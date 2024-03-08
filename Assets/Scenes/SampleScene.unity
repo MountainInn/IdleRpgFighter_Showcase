@@ -293,6 +293,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefabDropable: {fileID: 3889362763578253771, guid: 8ec4ab9b3cbafdd4a87960fcefc04457, type: 3}
   onPickupPS: {fileID: 1417597428}
+  prefabAlly: {fileID: 2749354289678819367, guid: e854bfe8e99250948a015cfdcd80f118, type: 3}
 --- !u!114 &947488051
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -471,6 +472,51 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1047388834}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.4651187, y: -0.5348753, z: 0.49703673, w: 0.5005274}
+  m_LocalPosition: {x: 2.85, y: 5.43, z: -8.73}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 85.8, y: -93.8, z: 0}
+--- !u!1 &1402423443
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1402423445}
+  - component: {fileID: 1402423444}
+  m_Layer: 0
+  m_Name: Gang
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1402423444
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1402423443}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 655122bc068572247a712a8e84dc1e46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxAllies: 3
+--- !u!4 &1402423445
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1402423443}
   serializedVersion: 2
   m_LocalRotation: {x: 0.4651187, y: -0.5348753, z: 0.49703673, w: 0.5005274}
   m_LocalPosition: {x: 2.85, y: 5.43, z: -8.73}
@@ -5635,6 +5681,7 @@ SceneRoots:
   - {fileID: 1797107500}
   - {fileID: 1537106657}
   - {fileID: 1047388836}
+  - {fileID: 1402423445}
   - {fileID: 1572951662}
   - {fileID: 715126647}
   - {fileID: 1417597429}
