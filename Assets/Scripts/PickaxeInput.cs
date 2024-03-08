@@ -34,6 +34,7 @@ public class PickaxeInput : MonoBehaviour
             .Subscribe(pointerData =>
             {
                 this.UpdateAsObservable()
+                    .SkipUntil( character.ObserveIsPlaying().WhereEqual(false) )
                     .TakeUntil( attackButton.OnPointerUpAsObservable() )
                     .TakeUntil( charge.ObserveFull().WhereEqual(true) )
                     .DoOnCompleted(() =>

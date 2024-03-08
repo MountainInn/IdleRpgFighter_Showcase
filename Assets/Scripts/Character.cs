@@ -43,7 +43,7 @@ public class Character : Combatant
             .AddTo(this);
     }
 
-    private System.IObservable<bool> ObserveIsPlaying()
+    public System.IObservable<bool> ObserveIsPlaying()
     {
         return
             Observable
