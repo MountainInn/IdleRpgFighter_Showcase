@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using System.Linq;
 using DG.Tweening;
 
@@ -9,7 +10,11 @@ public class Fade : MonoBehaviour
 {
     [SerializeField] CanvasGroup canvasGroup;
     [SerializeField] bool visible;
+    [SerializeField] bool interactable;
+    [SerializeField] bool blocksRaycast;
     [SerializeField] float duration;
+    [Space]
+    [SerializeField] public UnityEvent onFadeIn, onFadeOut;
 
     void Awake()
     {
@@ -27,7 +32,7 @@ public class Fade : MonoBehaviour
             FadeIn();
     }
 
-    void FadeIn()
+    public void FadeIn()
     {
         canvasGroup.DOKill();
 
@@ -36,13 +41,15 @@ public class Fade : MonoBehaviour
             .SetEase(Ease.OutQuad)
             .OnKill(() =>
             {
-                visible =
-                    canvasGroup.blocksRaycasts =
-                    canvasGroup.interactable = true;
+                visible = true;
+
+                ToggleInteractable();
+
+                onFadeIn?.Invoke();
             });
     }
 
-    void FadeOut()
+    public void FadeOut()
     {
         canvasGroup.DOKill();
 
@@ -51,9 +58,17 @@ public class Fade : MonoBehaviour
             .SetEase(Ease.OutQuad)
             .OnStart(() =>
             {
-                visible =
-                    canvasGroup.blocksRaycasts =
-                    canvasGroup.interactable = false;
+                visible = false;
+
+                ToggleInteractable();
+               
+                onFadeOut?.Invoke();
             });
+    }
+
+    void ToggleInteractable()
+    {
+        canvasGroup.blocksRaycasts = (visible && blocksRaycast);
+        canvasGroup.interactable = (visible && interactable);
     }
 }

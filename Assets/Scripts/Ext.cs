@@ -16,6 +16,17 @@ static public class GameObjectExtension
 
         return thisLayerMask;
     }
+    public static void DelayAction(this MonoBehaviour go, float seconds, Action action)
+    {
+        go.StartCoroutine(InvokeDelayedAction(seconds, action));
+    }
+
+    private static IEnumerator InvokeDelayedAction(float seconds, Action action)
+    {
+        if (action == null) yield break;
+        yield return new WaitForSeconds(seconds);
+        action.Invoke();
+    }
 }
 
 static public class IntegerExtension
@@ -247,6 +258,17 @@ static public class IntExt
 
 static public class IEnumerableExt
 {
+    public static IEnumerable<T> Scan<T>(this IEnumerable<T> source,
+                                         Func<T, T, T> scanner)
+    {
+        return
+            source
+            .Skip(1)
+            .Aggregate(new [] { source.First() }.AsEnumerable(),
+                       (acum, border) =>
+                       acum.Append( scanner.Invoke(acum.Last(), border) ));
+    }
+
     public static IEnumerable<IEnumerable<T>> Chunks<T>(this IEnumerable<T> source, int size)
     {
         return
@@ -389,7 +411,7 @@ static public class IEnumerableExt
 
     static public IEnumerable<T> Map<T>(this IEnumerable<T> source, Action<T> action)
     {
-        if (source.Count() == 0)
+        if (source.None())
         {
             return source;
         }

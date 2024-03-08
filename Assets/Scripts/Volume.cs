@@ -16,6 +16,7 @@ public class Volume
         current.Value == 0 && maximum.Value == 0;
 
 
+    public Volume() {}
     public Volume(float current)
         :this(current, current)
     {
@@ -61,12 +62,22 @@ public class Volume
         current.Value = 0;
     }
 
-    public float Ratio => (current.Value / maximum.Value);
-
-    public void ResetTo(float newCurrentAmount)
+    public float Ratio
     {
-        current.Value = newCurrentAmount;
+        get {
+            float ratio = (current.Value / maximum.Value);
+
+            if (float.IsNaN(ratio))
+                ratio = 0;
+
+            return ratio;
+        }
     }
+
+        public void ResetTo(float newCurrentAmount)
+        {
+            current.Value = newCurrentAmount;
+        }
 
     public void Add(float amount, out float overflow)
     {

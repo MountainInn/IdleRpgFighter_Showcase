@@ -1,32 +1,22 @@
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
-using UniRx.Triggers;
 using Zenject;
 
 abstract public class Combatant : MonoBehaviour
 {
     [SerializeField] public Volume health;
     [SerializeField] public Volume attackTimer;
-    [SerializeField] protected LayerMask targetLayers;
     [Space]
     [SerializeField] protected StatsSO stats;
     [Space]
     [SerializeField] public UnityEvent onDie;
-    [SerializeField] public UnityEvent afterDeathAnimation;
     [SerializeField] public UnityEvent onRespawn;
     [SerializeField] public UnityEvent<Combatant> onKill;
-    [HeaderAttribute("Animations")]
-    [SerializeField] public Animator combatantAnimator;
-    [SerializeField] protected string attackTriggerName;
-
-    [HideInInspector] public int defense;
 
     [Inject] protected Combatant target;
 
     public StatsSO Stats => stats;
-    public LayerMask TargetLayers => targetLayers;
-
 
     public UnityEvent<DamageArgs>
         preAttack,
@@ -34,22 +24,13 @@ abstract public class Combatant : MonoBehaviour
         postTakeDamage,
         postAttack;
 
-    protected int attackTriggerId;
-
-    protected ObservableStateMachineTrigger ObserveStateMachine;
-
-    public void Construct(StatsSO stats)
+    public void SetStats(StatsSO stats)
     {
-        ObserveStateMachine = combatantAnimator.GetBehaviour<ObservableStateMachineTrigger>();
-
         this.stats = Instantiate(stats);
 
         health.ResizeAndRefill(stats.health);
+        attackTimer.ResetToZero();
         attackTimer.Resize(stats.attackSpeed);
-
-        attackTriggerId = Animator.StringToHash(attackTriggerName);
-
-        onDie.AddListener(() => combatantAnimator.SetTrigger("death Trigger"));
     }
 
     protected void OnEnable()
@@ -69,11 +50,6 @@ abstract public class Combatant : MonoBehaviour
         return isFull;
     }
 
-    public void InflictDamage_OnAnimEvent()
-    {
-        InflictDamage(target, stats.attackDamage);
-    }
-
     public void InflictDamage(Combatant defender)
     {
         InflictDamage(defender, stats.attackDamage);
@@ -81,6 +57,9 @@ abstract public class Combatant : MonoBehaviour
 
     public void InflictDamage(Combatant defender, float damage)
     {
+        if (!defender.IsAlive)
+            return;
+       
         DamageArgs args = new DamageArgs()
         {
             attacker = this,
@@ -109,11 +88,6 @@ abstract public class Combatant : MonoBehaviour
         health.Subtract(args.damage);
 
         postTakeDamage?.Invoke(args);
-    }
-
-    public void Die()
-    {
-        afterDeathAnimation?.Invoke();
     }
 
     public void Respawn()

@@ -7,48 +7,22 @@ using System;
 using System.Collections;
 using DG.Tweening;
 
-public partial class Mob : Combatant
+public partial class Mob : AnimatorCombatant
 {
-    [SerializeField] MeshRenderer meshRenderer;
     [SerializeField] public UnityEvent onAskedToReturnToPool;
-    [SerializeField] public UnityEvent onEnterPreparationState;
-    [SerializeField] public UnityEvent onExitPreparationState;
-    [Space]
-    [Header("Mob")]
-    [SerializeField] StatsSO mobStats;
 
-    public StatsSO MobStats => mobStats;
+    MobStatsSO mobStats;
+    public MobStatsSO MobStats => mobStats;
 
-    Color baseColor;
+    bool mobCanAttack;
 
     [Inject] FloatingTextSpawner takeDamagFloatingTextSpawner;
 
-    [Inject] public void Construct(Character character, MobView mobView)
+    void Awake()
     {
-        base.Construct(mobStats);
-
-        this.mobStats = (StatsSO)this.stats;
-
-        mobView.Subscribe(this);
-
         attackTimer.ObserveFull()
             .WhereEqual(true)
             .Subscribe(_ => combatantAnimator.SetTrigger(attackTriggerId))
-            .AddTo(this);
-
-
-        ObserveStateMachine
-            .OnStateExitAsObservable()
-            .Subscribe(exit =>
-            {
-                bool isAttack = exit.StateInfo.IsName("standing melee attack downward");
-
-                if (isAttack)
-                {
-                    Debug.Log($"{target}");
-                    InflictDamage(target);
-                }
-            })
             .AddTo(this);
 
         postTakeDamage.AsObservable()
@@ -57,11 +31,33 @@ public partial class Mob : Combatant
                 takeDamagFloatingTextSpawner?.FloatDamage(args);
             })
             .AddTo(this);
+
+        mobCanAttack = true;
+        onDie.AddListener(() => mobCanAttack = false);
+        onRespawn.AddListener(() => mobCanAttack = true);
+    }
+
+    [Inject] void SubToView(MobView mobView)
+    {
+        mobView.Subscribe(this);
+
+        var fade = mobView.GetComponent<Fade>();
+
+        afterDeathAnimation.AddListener(fade.FadeOut);
+        onRespawn.AddListener(fade.FadeIn);
+    }
+
+    public void SetStats(MobStatsSO mobStats)
+    {
+        base.SetStats(mobStats);
+
+        this.mobStats = mobStats;
+        mobStats.template.ApplyTemplate(gameObject);
     }
 
     void Update()
     {
-        if (CanContinueBattle())
+        if (mobCanAttack && CanContinueBattle())
             AttackTimerTick(Time.deltaTime);
     }
 

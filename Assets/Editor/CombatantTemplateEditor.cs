@@ -4,21 +4,16 @@ using System.Collections.Generic;
 using System.Linq;
 
 [CustomEditor(typeof(CombatantTemplate))]
-public class CombatantTemplateEditor : IsolationEditor
+public class CombatantTemplateEditor : Editor
 {
     CombatantTemplate template;
 
-    GameObject combatantPreview;
-
-    Dictionary<GameObject, HashSet<SkinnedMeshRenderer>> dictParts;
-    Dictionary<SkinnedMeshRenderer, Texture2D> dictPreviewTextures;
-    Dictionary<GameObject, bool> foldout;
+    Dictionary<string, bool> foldout;
 
     GUIStyle baseStyle, selectedStyle;
 
     void OnEnable()
     {
-        isEditing = false;
         template ??= (CombatantTemplate)target;
 
         baseStyle =
@@ -39,163 +34,82 @@ public class CombatantTemplateEditor : IsolationEditor
                                           background = Texture2D.whiteTexture},
         };
 
+        InitializeFoldouts();
     }
 
-    protected override void OnStartEditing()
+    public override void OnInspectorGUI()
     {
-        if (dictParts == null)
+        base.OnInspectorGUI();
+
+        if (GUILayout.Button("Reinitialize"))
         {
-            InitializeParts();
-        }
-    }
-
-    protected override IEnumerable<GameObject> InitPreviews()
-    {
-        combatantPreview = GameObject.Instantiate(template.modularCharacterPrefab);
-        combatantPreview.name = "[Combatant Template Preview]";
-
-        return new []
-        {
-            combatantPreview
-        };
-    }
-
-    protected override Vector3 GetSceneViewLookAtPosition()
-    {
-        return Vector3.zero;
-    }
-
-    protected override void ConcreteOnSceneGUI()
-    {
-        Handles.BeginGUI();
-
-        if (GUI.Button(new Rect(10, 200, 100, 100), "Finish Editing"))
-        {
-            StopEditing();
-        }
-
-        Handles.EndGUI();
-    }
-
-    protected override void UpdatePreviewsOnSceneGUI()
-    {
-    }
-
-    protected override void ConcreteOnInspectorGUI()
-    {
-        EditorGUI.BeginChangeCheck();
-
-        template.modularCharacterPrefab =
-            (GameObject)
-            EditorGUILayout
-            .ObjectField(template.modularCharacterPrefab, typeof(GameObject), false);
-
-        if (EditorGUI.EndChangeCheck())
-        {
-            SkinnedMeshRenderer[] parts = InitializeParts();
-
-            template.ClearCachedDictToggles();
-           
             template.toggles =
-                parts
-                .ToDictionary(part => part.name,
-                              _ => false);
-        }
-
-        if (template?.modularCharacterPrefab == null)
-        {
-            EditorGUILayout.LabelField("PREFAB IS NOT SET");
-            return;
-        }
-
-        if (isEditing)
-        {
-            foreach (var (parent, parts) in dictParts)
-            {
-                bool hasToggledParts = parts.Any(part => template.toggles[part.name]);
-
-                GUIStyle style = (hasToggledParts) ? selectedStyle : baseStyle;
-
-                foldout[parent] =
-                    EditorGUILayout.BeginFoldoutHeaderGroup(foldout[parent],
-                                                            parent.name,
-                                                            style);
-
-                if (foldout[parent])
+                TemplateEditorData.instance.parts
+                .SelectMany(kv =>
                 {
-                    parts
-                        .Chunks(3)
-                        .Map(row =>
-                        {
-                            EditorGUILayout.BeginHorizontal();
-
-                            foreach (var part in row)
-                            {
-                                string name = part.name;
-
-                                bool toggle = template.toggles[name];
-
-                                style = (toggle) ? selectedStyle : baseStyle;
-
-                                bool clicked = GUILayout.Button(dictPreviewTextures[part],
-                                                                style);
-
-                                if (clicked)
-                                    template.toggles[name] = !toggle;
-                            }
-
-                            EditorGUILayout.EndHorizontal();
-                        });
-                }
-
-                EditorGUILayout.EndFoldoutHeaderGroup();
-            }
+                    return kv.Value.list;
+                })
+                .ToDictionary(part => part.name,
+                              part => false);
         }
+       
+        foreach (var (parent, parts) in TemplateEditorData.instance.parts)
+        {
+            bool hasToggledParts = parts.Any(part => template.toggles[part.name]);
+
+            GUIStyle style = (hasToggledParts) ? selectedStyle : baseStyle;
+
+            foldout[parent] =
+                EditorGUILayout.BeginFoldoutHeaderGroup(foldout[parent],
+                                                        parent,
+                                                        style);
+            if (foldout[parent])
+            {
+                parts
+                    .Chunks(6)
+                    .Map(row =>
+                    {
+                        EditorGUILayout.BeginHorizontal();
+
+                        foreach (var part in row)
+                        {
+                            string name = part.name;
+
+                            bool toggle = template.toggles[name];
+
+                            style = (toggle) ? selectedStyle : baseStyle;
+
+                            Texture2D texture = TemplateEditorData.instance.previews[part];
+
+                            bool clicked = GUILayout.Button(texture,
+                                                            style,
+                                                            GUILayout.MinWidth(10));
+
+                            if (clicked)
+                            {
+                                template[name] = !toggle;
+
+                                EditorUtility.SetDirty(template);
+                            }
+                        }
+
+                        EditorGUILayout.EndHorizontal();
+                    });
+            }
+
+            EditorGUILayout.EndFoldoutHeaderGroup();
+        }
+
     }
 
-    private SkinnedMeshRenderer[] InitializeParts()
+
+    private void InitializeFoldouts()
     {
-        dictParts = new();
-        dictPreviewTextures = new();
         foldout = new();
 
-        var parts =
-            template.modularCharacterPrefab
-            .GetComponentsInChildren<SkinnedMeshRenderer>(true);
-
-        foreach (var part in parts)
+        foreach (var (parent, parts) in TemplateEditorData.instance.parts)
         {
-            if (part?.sharedMesh == null)
-                continue;
-
-
-            GameObject parent = part.transform.parent.gameObject;
-
-            dictParts.TryAdd(parent, new());
-            dictParts[parent].Add(part);
-
             foldout.TryAdd(parent, true);
-
-            MeshPreview meshPreview = new(part.sharedMesh);
-
-            Texture2D texture = meshPreview.RenderStaticPreview(70, 70);
-
-            meshPreview.Dispose();
-
-            dictPreviewTextures.Add(part, texture);
         };
-
-        return parts;
-    }
-
-    protected override void UpdatePreviewsOnInspectorGUI()
-    {
-        if (isEditing)
-            template.ApplyTemplate(combatantPreview);
-    }
-
-    protected override void FinalizeTargetObject()
-    {
-        template.Save();
     }
 }

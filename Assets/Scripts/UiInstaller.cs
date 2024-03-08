@@ -23,6 +23,10 @@ public class UiInstaller : MonoInstaller
     [SerializeField] VaultView vaultView;
     [Space]
     [SerializeField] Transform shopPanel;
+    [Space]
+    [SerializeField] SegmentedProgressBar arenaProgressBar;
+    [Space]
+    [SerializeField] WeakPointView prefabWeakPoint;
 
     new void Start()
     {
@@ -32,6 +36,21 @@ public class UiInstaller : MonoInstaller
 
     override public void InstallBindings()
     {
+        Container
+            .BindMemoryPool<WeakPointView, WeakPointView.Pool>()
+            .FromComponentInNewPrefab(prefabWeakPoint)
+            .UnderTransform(canvasTransform);
+
+        Container
+            .Bind<CharacterController>()
+            .FromComponentInHierarchy()
+            .AsSingle();
+       
+        Container
+            .Bind<SegmentedProgressBar>()
+            .FromMethod(() => arenaProgressBar)
+            .WhenInjectedInto<MobSpawner>();
+
         BindView(talentViewPrefab, talentsParent);
 
         Container

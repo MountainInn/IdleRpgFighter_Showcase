@@ -3,72 +3,56 @@ using UnityEngine;
 using System.Collections.Generic;
 
 [CreateAssetMenuAttribute(fileName = "TemplateEditorData", menuName = "S Singleton/TemplateEditorData")]
-public class TemplateEditorData : ScriptableSingleton<TemplateEditorData>, ISerializationCallbackReceiver
+public class TemplateEditorData : ScriptableSingleton<TemplateEditorData>
 {
     [SerializeField] public GameObject modularCharacterPrefab;
 
-    [HideInInspector] [SerializeField] public List<GameObject> parents;
-    [HideInInspector] [SerializeField] public List<GameObject> parts;
-    [SerializeField] public List<byte[]> previews;
+    [SerializeField] public SerializedDictionary<string, ListObject<SkinnedMeshRenderer>> parts;
+    [SerializeField] public SerializedDictionary<SkinnedMeshRenderer, SerializedTexture2D> previews;
 
-    public Dictionary<GameObject, HashSet<GameObject>> dictParts;
-    public Dictionary<GameObject, Texture2D> dictPreviews;
 
-    public void Rebuild()
+    [MenuItem("Template Editor/Rebuild")]
+    static public void RebuildButton()
     {
-        if (modularCharacterPrefab == null)
-        {
-            Debug.LogWarning($"modularCharacterPrefab is null!");
-            return;
-        }
+        TemplateEditorData.instance.Rebuild();
+    }
 
-        parents = new();
+    void Awake()
+    {
+        Rebuild();
+    }
+
+    void Rebuild()
+    {
+        modularCharacterPrefab =
+            PrefabUtility .LoadPrefabContents("Assets/PolygonFantasyHeroCharacters/Prefabs/Characters_Presets/Chr_FantasyHero_Preset_1.prefab");
+
+
         parts = new();
         previews = new();
-           
+
         modularCharacterPrefab
-            .GetComponentsInChildren<SkinnedMeshRenderer>()
+            .GetComponentsInChildren<SkinnedMeshRenderer>(true)
             .Map(part =>
             {
+                if (part?.sharedMesh == null)
+                    return;
+
                 var parent = part.transform.parent.gameObject;
 
+                parts.TryAdd(parent.name, new());
 
-                parents.Add(parent);
-                parts.Add(part.gameObject);
+                parts[parent.name].Add(part);
+
+                MeshPreview meshPreview = new MeshPreview(part.sharedMesh);
+
+                Texture2D preview = meshPreview.RenderStaticPreview(70, 70);
+
+                previews.Add(part, preview);
+
+                meshPreview.Dispose();
             });
 
-        Save();
-
-        InitDictionaries();
-
-        Debug.Log($"REbuildt");
-    }
-
-
-    public void Save()
-    {
-        Save(true);
-        // EditorUtility.RequestScriptReload();
-    }
-
-    void ISerializationCallbackReceiver.OnBeforeSerialize()
-    {
-    }
-
-    void ISerializationCallbackReceiver.OnAfterDeserialize()
-    {
-        InitDictionaries();
-    }
-
-    public void InitDictionaries()
-    {
-        dictParts = new();
-
-        parents.Count.ForLoop(i =>
-        {
-            dictParts.TryAdd(parents[i], new());
-
-            dictParts[parents[i]].Add(parts[i]);
-        });
+        Debug.Log($"Rebuilt");
     }
 }

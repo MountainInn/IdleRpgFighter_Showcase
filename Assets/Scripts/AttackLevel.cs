@@ -4,7 +4,7 @@ using UnityEngine;
 using UniRx;
 using Zenject;
 
-[CreateAssetMenu(fileName = "AttackLevel", menuName = "SO/AttackLevel")]
+[CreateAssetMenu(fileName = "AttackLevel", menuName = "SO/Talents/AttackLevel")]
 public class AttackLevel : Talent
 {
     [SerializeField] List<Field> fields;

@@ -8,5 +8,9 @@ public class StatsSO : ScriptableObject
     [SerializeField] public float attackSpeed;
     [SerializeField] public float critChance;
     [SerializeField] public float critMult;
-}
 
+    public void Apply(Combatant combatant)
+    {
+        combatant.health.ResizeAndRefill(health);
+    }
+}
