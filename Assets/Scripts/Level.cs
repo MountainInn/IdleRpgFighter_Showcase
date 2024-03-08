@@ -14,7 +14,7 @@ public class Level
             statsCalculation
         };
 
-        SetLevel(1);
+        SetLevel(0);
     }
 
     public void AddCalculation(params Action<int>[] statCalculations)
