@@ -522,7 +522,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71c2386892e767943b460384d0eee582, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slideDistance: 15
+  slideDistance: 5
   slideDuration: 0.5
   openHatchAngle: 45
   hatchOpeningDuration: 0.4

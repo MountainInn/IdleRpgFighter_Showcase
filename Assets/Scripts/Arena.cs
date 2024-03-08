@@ -64,7 +64,7 @@ public class Arena : MonoBehaviour
             .Append(hatch
                     .DORotate(new Vector3(endAngle, 0, 0), hatchOpeningDuration)
             )
-            .Insert(hatchOpeningDuration * .8f,
+            .Insert(hatchOpeningDuration * .4f,
                     combatant
                     .DOLocalMoveZ(combatant.position.z + endZ, slideDuration)
                     .SetEase(Ease.InQuad)
