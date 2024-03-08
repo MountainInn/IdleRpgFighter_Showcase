@@ -12,9 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 796446d167c29fb4ab32f67057832b8f, type: 3}
   m_Name: Drop
   m_EditorClassIdentifier: 
-  chance: 0.496
   currency:
     currency: {fileID: 11400000, guid: b9ab8636c1d943e44a6a011b931ebec7, type: 2}
     cost:
-      value: 0
+      value: 12
   prefabDropableGameObject: {fileID: 0}

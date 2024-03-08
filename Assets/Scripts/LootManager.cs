@@ -32,10 +32,6 @@ public class LootManager : MonoBehaviour
 
     void Loot(Drop drop)
     {
-        if (drop.currency != null)
-        {
-            drop.currency.GetPaid();
-        }
+        drop.currency?.GetPaid();
     }
-
 }

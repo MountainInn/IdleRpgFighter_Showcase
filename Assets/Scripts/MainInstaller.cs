@@ -62,7 +62,7 @@ public class MainInstaller : MonoInstaller
                 typeof(Mob),
                 typeof(Character),
                 typeof(Vault),
-                // typeof(MobSpawner),
+                typeof(LootManager),
                 // typeof(Battle),
                 // typeof(Corridor),
                 typeof(Arena)

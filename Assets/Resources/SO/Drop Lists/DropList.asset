@@ -13,9 +13,5 @@ MonoBehaviour:
   m_Name: DropList
   m_EditorClassIdentifier: 
   entries:
-  - chance: 0.707
-    currency:
-      currency: {fileID: 11400000, guid: b9ab8636c1d943e44a6a011b931ebec7, type: 2}
-      cost:
-        value: 123
-    prefabDropableGameObject: {fileID: 0}
+  - chance: 0.591
+    drop: {fileID: 11400000, guid: ec542e323bc971c48bcde586419abc41, type: 2}
