@@ -6,40 +6,20 @@ using UnityEngine.Events;
 using UniRx;
 using Zenject;
 
-public class Character : Combatant
+public class Character : AnimatorCombatant
 {
-    [Header("Speedup")]
-    [SerializeField] int clicksToSpeedupLevel = 2;
-    [SerializeField] float speedupPerLevel = 0.2f;
-    [Space]
-    [SerializeField] string attackAnimationTag = "attack";
-    [SerializeField] string attackSpeedParameter = "speed";
-
     [Inject] List<Talent> talents;
 
-    int attackInQueue;
     bool isPlaying;
-    int attackSpeedParameterId;
-    int attackAnimationTagId;
 
-    void Awake()
+    new void Start()
     {
-        base.Construct();
+        base.Start();
 
         SetStats(Stats);
 
-        attackSpeedParameterId = Animator.StringToHash(attackSpeedParameter);
-        attackAnimationTagId = Animator.StringToHash(attackAnimationTag);
-
         ObserveIsPlaying()
             .Subscribe(isPlaying => this.isPlaying = isPlaying)
-            .AddTo(this);
-
-        onDie.AsObservable()
-            .Subscribe(args =>
-            {
-                Debug.Log($"You Ded");
-            })
             .AddTo(this);
     }
 
@@ -52,13 +32,11 @@ public class Character : Combatant
                            (enter, exit) => enter.Equals(exit));
     }
 
-    public void EnterAttackState()
+    public void Attack()
     {
-        if (!CanContinueBattle())
+        if (!CanContinueBattle() || isPlaying)
             return;
 
-        if (!isPlaying)
-            combatantAnimator.SetTrigger(attackTriggerId);
+        combatantAnimator.SetTrigger(attackTriggerId);
     }
-
 }

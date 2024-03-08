@@ -7,25 +7,19 @@ using System;
 using System.Collections;
 using DG.Tweening;
 
-public partial class Mob : Combatant
+public partial class Mob : AnimatorCombatant
 {
-    [SerializeField] MeshRenderer meshRenderer;
     [SerializeField] public UnityEvent onAskedToReturnToPool;
-    [SerializeField] public UnityEvent onEnterPreparationState;
-    [SerializeField] public UnityEvent onExitPreparationState;
 
     MobStatsSO mobStats;
     public MobStatsSO MobStats => mobStats;
 
-    Color baseColor;
     bool mobCanAttack;
 
     [Inject] FloatingTextSpawner takeDamagFloatingTextSpawner;
 
-    [Inject] public void Construct(Character character)
+    void Awake()
     {
-        base.Construct();
-       
         attackTimer.ObserveFull()
             .WhereEqual(true)
             .Subscribe(_ => combatantAnimator.SetTrigger(attackTriggerId))
@@ -37,7 +31,6 @@ public partial class Mob : Combatant
                 takeDamagFloatingTextSpawner?.FloatDamage(args);
             })
             .AddTo(this);
-
 
         mobCanAttack = true;
         onDie.AddListener(() => mobCanAttack = false);
@@ -58,8 +51,7 @@ public partial class Mob : Combatant
     {
         base.SetStats(mobStats);
 
-        this.mobStats = (MobStatsSO)this.Stats;
-
+        this.mobStats = mobStats;
         mobStats.template.ApplyTemplate(gameObject);
     }
 

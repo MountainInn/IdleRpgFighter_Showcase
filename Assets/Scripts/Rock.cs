@@ -1,4 +1,4 @@
-public class Rock : Combatant
+public class Rock : AnimatorCombatant
 {
 
 }

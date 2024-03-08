@@ -35,6 +35,11 @@ public class UiInstaller : MonoInstaller
     override public void InstallBindings()
     {
         Container
+            .Bind<CharacterController>()
+            .FromComponentInHierarchy()
+            .AsSingle();
+
+        Container
             .Bind<SegmentedProgressBar>()
             .FromMethod(() => arenaProgressBar)
             .WhenInjectedInto<MobSpawner>();
