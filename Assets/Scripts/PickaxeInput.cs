@@ -13,9 +13,10 @@ public class PickaxeInput : MonoBehaviour
     [SerializeField] string pickaxeChargeFloatProperty;
     [SerializeField] string pickaxeHitTriggerProperty;
 
-    public FloatReactiveProperty strikeDamage;
+    [HideInInspector] public FloatReactiveProperty strikeDamage;
 
     Volume charge;
+    ReadOnlyReactiveProperty<bool> isInIdleState;
 
     [Inject]
     public void Construct(Character character,
@@ -30,12 +31,18 @@ public class PickaxeInput : MonoBehaviour
 
         Button attackButton = charController.AttackButton;
 
+        isInIdleState =
+            character.ObserveStateMachine
+            .OnStateEnterAsObservable()
+            .Select(enter => enter.StateInfo.IsName("Idle"))
+            .ToReadOnlyReactiveProperty(false);
+
         attackButton
             .OnPointerDownAsObservable()
             .Subscribe(pointerData =>
             {
                 this.UpdateAsObservable()
-                    .SkipUntil( character.ObserveIsPlaying().WhereEqual(false) )
+                    .SkipUntil( isInIdleState.WhereEqual(true) )
                     .TakeUntil( attackButton.OnPointerUpAsObservable() )
                     .TakeUntil( charge.ObserveFull().WhereEqual(true) )
                     .DoOnCompleted(() =>
@@ -45,6 +52,10 @@ public class PickaxeInput : MonoBehaviour
                         character
                             .combatantAnimator
                             .SetTrigger(pickaxeHitTriggerProperty);
+
+                        character
+                            .combatantAnimator
+                            .SetFloat(pickaxeChargeFloatProperty, 0);
 
                         charge.ResetToZero();
                     })
@@ -62,13 +73,6 @@ public class PickaxeInput : MonoBehaviour
 
         chargeProgressBar
             .Subscribe(gameObject, charge)
-            .AddTo(this);
-
-        strikeDamage
-            .Subscribe(damage =>
-            {
-                character.InflictDamage(rock, damage);
-            })
             .AddTo(this);
 
         rock
