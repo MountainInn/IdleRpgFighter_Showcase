@@ -83,6 +83,7 @@ public class Arena : MonoBehaviour
     void ResetCharacter()
     {
         characterRoot.position = characterRespawn.position;
+        characterRoot.localRotation = Quaternion.identity;
 
         onCharacterMovedToRespawnPosition?.Invoke();
 
