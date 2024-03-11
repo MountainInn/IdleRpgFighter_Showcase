@@ -6,9 +6,11 @@ using Zenject;
 
 public class PickaxeInput : MonoBehaviour
 {
+    [SerializeField] float baseDamage = 100;
     [SerializeField] float damageOnFullCharge = 100;
-    [SerializeField] float chargePerSecond = 25;
+    [Space]
     [SerializeField] float maxCharge = 100;
+    [SerializeField] float chargePerSecond = 50;
     [Space]
     [SerializeField] string pickaxeChargeFloatProperty;
     [SerializeField] string pickaxeHitTriggerProperty;
@@ -47,27 +49,30 @@ public class PickaxeInput : MonoBehaviour
                     .TakeUntil( charge.ObserveFull().WhereEqual(true) )
                     .DoOnCompleted(() =>
                     {
-                        strikeDamage.Value = charge.Ratio * damageOnFullCharge;
+                        strikeDamage.Value =
+                            baseDamage + damageOnFullCharge * charge.Ratio;
 
                         character
                             .combatantAnimator
                             .SetTrigger(pickaxeHitTriggerProperty);
-
-                        character
-                            .combatantAnimator
-                            .SetFloat(pickaxeChargeFloatProperty, 0);
 
                         charge.ResetToZero();
                     })
                     .Subscribe(_ =>
                     {
                         charge.Add(chargePerSecond * Time.deltaTime);
-
-                        character
-                            .combatantAnimator
-                            .SetFloat(pickaxeChargeFloatProperty, charge.Ratio);
                     })
                     .AddTo(this);
+            })
+            .AddTo(this);
+
+        charge
+            .ObserveAll()
+            .Subscribe(tuple =>
+            {
+                character
+                    .combatantAnimator
+                    .SetFloat(pickaxeChargeFloatProperty, tuple.ratio);
             })
             .AddTo(this);
 
