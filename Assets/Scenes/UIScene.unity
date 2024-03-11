@@ -460,6 +460,7 @@ GameObject:
   m_Component:
   - component: {fileID: 709101901}
   - component: {fileID: 709101903}
+  - component: {fileID: 709101904}
   - component: {fileID: 709101902}
   m_Layer: 5
   m_Name: DPS Label
@@ -584,6 +585,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 709101900}
   m_CullTransparentMesh: 1
+--- !u!114 &709101904
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 709101900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27ded5f8479821344a0f0278957ff473, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  label: {fileID: 709101902}
 --- !u!1 &737390041
 GameObject:
   m_ObjectHideFlags: 0
@@ -1138,19 +1152,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86e46ca7e2f47de4389660d613fabd2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabFloatingText: {fileID: 6975139298732545734, guid: a69c0c49998ce614fb4b8d874b10b2e4, type: 3}
-  prefabCritFloatingText: {fileID: -7062248921582132845, guid: a6fc87ebf51f7ab4aa909d422823afeb, type: 3}
   mobDamagedFloatingText: {fileID: 593654028}
   canvasTransform: {fileID: 2104315015}
   dpsLabel: {fileID: 709101902}
   mobView: {fileID: 1988634411}
   attackButton: {fileID: 1827467489}
-  talentViewPrefab: {fileID: 1806308915050764445, guid: 698620675062b224181cdccbd6117588, type: 3}
   talentsParent: {fileID: 3437564141346624879}
   vaultView: {fileID: 737390043}
   shopPanel: {fileID: 237966270}
   arenaProgressBar: {fileID: 1989844156}
+  prefabFloatingText: {fileID: 6975139298732545734, guid: a69c0c49998ce614fb4b8d874b10b2e4, type: 3}
+  prefabCritFloatingText: {fileID: -7062248921582132845, guid: a6fc87ebf51f7ab4aa909d422823afeb, type: 3}
+  talentViewPrefab: {fileID: 1806308915050764445, guid: 698620675062b224181cdccbd6117588, type: 3}
   prefabWeakPoint: {fileID: 8726968288934103438, guid: 3746ddb90fe6374468d13c78055be22c, type: 3}
+  dpsMeterView: {fileID: 709101904}
 --- !u!114 &1517091957
 MonoBehaviour:
   m_ObjectHideFlags: 0

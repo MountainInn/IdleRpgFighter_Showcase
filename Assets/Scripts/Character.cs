@@ -10,7 +10,9 @@ public class Character : AnimatorCombatant
 {
     bool isPlaying;
 
-    [InjectOptional] PickaxeInput pickaxeInput;
+    public PickaxeInput pickaxeInput;
+
+    [Inject] DiContainer Container;
 
     new void Start()
     {
@@ -18,9 +20,16 @@ public class Character : AnimatorCombatant
 
         SetStats(Stats);
 
+        InitObserveStateMachine();
+
         ObserveIsPlaying()
             .Subscribe(isPlaying => this.isPlaying = isPlaying)
             .AddTo(this);
+    }
+
+    public void SetTarget(Combatant target)
+    {
+        this.target = target;
     }
 
     public System.IObservable<bool> ObserveIsPlaying()

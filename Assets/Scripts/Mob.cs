@@ -50,6 +50,30 @@ public class Mob : AnimatorCombatant
         onRespawn.AddListener(fade.FadeIn);
     }
 
+    [Inject] void SubscribeToCharacter(Character character)
+    {
+        character.SetTarget(this);
+    }
+
+    [Inject] void SubscribeToDPSMeter(DPSMeter dpsMeter, DPSMeterView dpsView)
+    {
+        dpsMeter
+            .ObserveDPS(this)
+            .Subscribe(dpsView.SetText)
+            .AddTo(this);
+    }
+
+    [Inject] void SubscribeToLootManager(LootManager lootManager)
+    {
+        lootManager.Subscribe(this);
+    }
+
+    [Inject] void SubscribeToGang(Gang gang)
+    {
+        gang.Initialize(this, (Character)target);
+    }
+
+
     public void SetStats(MobStatsSO mobStats)
     {
         base.SetStats(mobStats);

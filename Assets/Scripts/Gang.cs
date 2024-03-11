@@ -12,10 +12,9 @@ public class Gang : MonoBehaviour
     float angle;
 
     Vector3 mobPosition;
-    Vector3 fromMobToChar;
+    Vector3 fromMobToChar = Vector3.left;
 
-    [Inject]
-    public void Construct(Character character, Mob mob)
+    public void Initialize(Mob mob, Character character)
     {
         mobPosition = mob.transform.position;
         fromMobToChar = (character.transform.position - mobPosition);

@@ -6,28 +6,32 @@ using System.Linq;
 public class LootManager : MonoBehaviour
 {
     [Inject] Character character;
-    [Inject]
-    public void Construct(Mob mob, CollectionAnimation.Pool dropablesPool)
+    [Inject] CollectionAnimation.Pool dropablesPool;
+
+    public void Subscribe(Mob mob)
     {
-        mob.onDie.AddListener(() =>
-        {
-            mob.MobStats.dropList
-                .entries
-                .Where(entry => (UnityEngine.Random.value < entry.chance))
-                ?.Map(entry =>
-                {
-                    CollectionAnimation dropable = dropablesPool.Spawn();
-
-                    dropable.transform.position = mob.transform.position;
-
-                    dropable.oneShotOnPickup += () =>
+        mob.onDie
+            .AsObservable()
+            .Subscribe(_ =>
+            {
+                mob.MobStats.dropList
+                    .entries
+                    .Where(entry => (UnityEngine.Random.value < entry.chance))
+                    ?.Map(entry =>
                     {
-                        Loot(entry.drop);
-                    };
+                        CollectionAnimation dropable = dropablesPool.Spawn();
 
-                    dropable.StartCollectionAnimation(character.transform);
-                });
-        });
+                        dropable.transform.position = mob.transform.position;
+
+                        dropable.oneShotOnPickup += () =>
+                        {
+                            Loot(entry.drop);
+                        };
+
+                        dropable.StartCollectionAnimation(character.transform);
+                    });
+            })
+            .AddTo(mob);
     }
 
     void Loot(Drop drop)

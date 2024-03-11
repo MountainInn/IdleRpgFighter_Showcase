@@ -14,7 +14,7 @@ abstract public class Combatant : MonoBehaviour
     [SerializeField] public UnityEvent onRespawn;
     [SerializeField] public UnityEvent<Combatant> onKill;
 
-    [Inject] protected Combatant target;
+    [InjectOptional] protected Combatant target;
 
     public StatsSO Stats => stats;
 

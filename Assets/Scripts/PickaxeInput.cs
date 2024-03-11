@@ -1,10 +1,11 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UniRx;
 using UniRx.Triggers;
 using Zenject;
 
-public class PickaxeInput : MonoBehaviour
+public class PickaxeInput : MonoBehaviour, IDisposable
 {
     [SerializeField] float baseDamage = 100;
     [SerializeField] float damageOnFullCharge = 100;
@@ -20,9 +21,9 @@ public class PickaxeInput : MonoBehaviour
     Volume charge;
     ReadOnlyReactiveProperty<bool> isInIdleState;
 
+    [Inject] Character character;
     [Inject]
-    public void Construct(Character character,
-                          CharacterController charController,
+    public void Construct(CharacterController charController,
                           Rock rock,
                           MobView rockView,
                           ProgressBar chargeProgressBar,
@@ -30,6 +31,7 @@ public class PickaxeInput : MonoBehaviour
     {
         charge = new (0, maxCharge);
         strikeDamage = new();
+        character.pickaxeInput = this;
 
         Button attackButton = charController.AttackButton;
 
@@ -89,5 +91,10 @@ public class PickaxeInput : MonoBehaviour
             .AddTo(this);
 
         rockView.Subscribe(rock);
+    }
+
+    public void Dispose()
+    {
+        character.pickaxeInput = null;
     }
 }

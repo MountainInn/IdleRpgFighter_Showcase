@@ -16,6 +16,11 @@ public abstract class AnimatorCombatant : Combatant
     [Inject]
     public void Construct()
     {
+        InitObserveStateMachine();
+    }
+
+    protected void InitObserveStateMachine()
+    {
         ObserveStateMachine = combatantAnimator.GetBehaviour<ObservableStateMachineTrigger>();
     }
 
