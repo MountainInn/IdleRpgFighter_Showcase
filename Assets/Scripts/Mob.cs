@@ -4,8 +4,7 @@ using UniRx;
 
 public class Mob : AnimatorCombatant
 {
-    protected MobStatsSO mobStats;
-    public MobStatsSO MobStats => mobStats;
+    [HideInInspector] public DropList dropList;
 
     protected bool mobCanAttack;
 
@@ -71,15 +70,6 @@ public class Mob : AnimatorCombatant
     [Inject] void SubscribeToGang(Gang gang)
     {
         gang.Initialize(this, (Character)target);
-    }
-
-
-    public void SetStats(MobStatsSO mobStats)
-    {
-        base.SetStats(mobStats);
-
-        this.mobStats = mobStats;
-        mobStats.template.ApplyTemplate(gameObject);
     }
 
     public void Update()

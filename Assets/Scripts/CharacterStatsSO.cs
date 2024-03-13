@@ -4,7 +4,7 @@ using UnityEngine;
 public class CharacterStatsSO : ScriptableObject
 {
     [SerializeField] public float health;
-    [SerializeField] public float attackSpeed;
+    [SerializeField] public float attackTimer;
     [SerializeField] public float critChance;
     [SerializeField] public float critMult;
 
@@ -14,7 +14,7 @@ public class CharacterStatsSO : ScriptableObject
         {
             attackDamage = 0,
             health = health,
-            attackTimer = attackSpeed,
+            attackTimer = attackTimer,
             critChance = critChance,
             critMult = critMult
         };

@@ -63,7 +63,7 @@ public class MobSpawner : MonoBehaviour
         {
             foreach(var so in segment)
             {
-                mob.SetStats(so);
+                so.Apply(mob);
 
                 yield return
                     mob.onDie

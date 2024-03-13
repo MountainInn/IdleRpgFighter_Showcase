@@ -1385,7 +1385,6 @@ MonoBehaviour:
       value: 0
     current:
       value: 0
-  stats: {fileID: 11400000, guid: d0e442beebc999444b21e0eae96363c0, type: 2}
   onDie:
     m_PersistentCalls:
       m_Calls: []
@@ -1395,6 +1394,7 @@ MonoBehaviour:
   onKill:
     m_PersistentCalls:
       m_Calls: []
+  Stats: {fileID: 0}
   preAttack:
     m_PersistentCalls:
       m_Calls: []
@@ -1416,3 +1416,5 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   ObserveStateMachine: {fileID: 0}
+  characterStatsSO: {fileID: 11400000, guid: a83359df9a11fda47aa36db8666b76d8, type: 2}
+  pickaxeInput: {fileID: 0}

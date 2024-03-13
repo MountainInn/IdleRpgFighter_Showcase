@@ -14,8 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 50
   attackDamage: 1
-  attackSpeed: 6
-  critChance: 0
-  critMult: 0
+  attackTimer: 4
   template: {fileID: 11400000, guid: 6ea24241c5fd20c40b8df430743a02a7, type: 2}
   dropList: {fileID: 11400000, guid: bd07a9960762d634b85a0a4e70016cb4, type: 2}

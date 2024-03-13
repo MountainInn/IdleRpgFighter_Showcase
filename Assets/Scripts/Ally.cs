@@ -15,12 +15,6 @@ public class Ally : AnimatorCombatant
         SubscribeToAttackTimerFull();
     }
 
-    public new void SetStats(StatsSO stats)
-    {
-        attackTimer.ResetToZero();
-        attackTimer.Resize(stats.attackTimer);
-    }
-
     protected void SubscribeToAttackTimerFull()
     {
         attackTimer.ObserveFull()
@@ -34,14 +28,6 @@ public class Ally : AnimatorCombatant
         mobCanAttack = true;
         onDie.AddListener(() => mobCanAttack = false);
         onRespawn.AddListener(() => mobCanAttack = true);
-    }
-
-    public void SetStats(MobStatsSO mobStats)
-    {
-        base.SetStats(mobStats);
-
-        this.mobStats = mobStats;
-        mobStats.template.ApplyTemplate(gameObject);
     }
 
     public void Update()

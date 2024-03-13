@@ -14,7 +14,7 @@ public class LootManager : MonoBehaviour
             .AsObservable()
             .Subscribe(_ =>
             {
-                mob.MobStats.dropList
+                mob.dropList
                     .entries
                     .Where(entry => (UnityEngine.Random.value < entry.chance))
                     ?.Map(entry =>

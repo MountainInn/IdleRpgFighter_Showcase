@@ -8,8 +8,9 @@ using Zenject;
 
 public class Character : AnimatorCombatant
 {
-    public CharacterStatsSO characterStatsSO;
-    public PickaxeInput pickaxeInput;
+    [SerializeField] CharacterStatsSO characterStatsSO;
+
+    [HideInInspector] public PickaxeInput pickaxeInput;
 
     [Inject] DiContainer Container;
 
@@ -19,7 +20,7 @@ public class Character : AnimatorCombatant
     {
         base.Start();
 
-        SetStats(characterStatsSO.ToStats());
+        characterStatsSO . ToStats() . Apply(this);
 
         InitObserveStateMachine();
 

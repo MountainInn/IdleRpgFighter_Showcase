@@ -20,7 +20,7 @@ public class RecruitAlly : Talent
     {
         var newAlly = allyPool.Spawn();
 
-        newAlly.SetStats( allyStats );
+        allyStats.Apply(newAlly);
 
         gang.Add(newAlly);
     }

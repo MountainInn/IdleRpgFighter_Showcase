@@ -12,7 +12,7 @@ abstract public class Combatant : MonoBehaviour
     [SerializeField] public UnityEvent onRespawn;
     [SerializeField] public UnityEvent<Combatant> onKill;
 
-    [HideInInspector] [SerializeField] public StatsSO Stats { get; protected set; }
+    [HideInInspector] [SerializeField] public StatsSO Stats;
 
     [InjectOptional] protected Combatant target;
 
@@ -22,15 +22,6 @@ abstract public class Combatant : MonoBehaviour
         preTakeDamage,
         postTakeDamage,
         postAttack;
-
-    public void SetStats(StatsSO stats)
-    {
-        this.Stats = Instantiate(stats);
-
-        health.ResizeAndRefill(stats.health);
-        attackTimer.ResetToZero();
-        attackTimer.Resize(stats.attackTimer);
-    }
 
     protected void OnEnable()
     {

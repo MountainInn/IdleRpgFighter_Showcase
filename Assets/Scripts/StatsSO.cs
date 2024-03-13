@@ -10,8 +10,9 @@ public class StatsSO : ScriptableObject
 
     public void Apply(Combatant combatant)
     {
+        var stats = combatant.Stats = Instantiate(this);
+
         combatant.health.ResizeAndRefill(health);
-       
         combatant.attackTimer.ResetToZero();
         combatant.attackTimer.Resize(attackTimer);
     }
