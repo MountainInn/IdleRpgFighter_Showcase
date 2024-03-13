@@ -23,6 +23,12 @@ public class ProjectInstaller : MonoInstaller
             .AsSingle();
 
         Container
+            .Bind<SaveSystem>()
+            .FromNewComponentOnNewGameObject()
+            .AsSingle()
+            .NonLazy();
+
+        Container
             .Bind<Character>()
             .FromComponentInNewPrefab(prefabCharacter)
             .AsSingle();

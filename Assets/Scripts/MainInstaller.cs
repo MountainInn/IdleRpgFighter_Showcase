@@ -53,6 +53,5 @@ public class MainInstaller : MonoInstaller
             .To(t => t.AllTypes().DerivingFrom<DamageModifier>())
             .AsTransient()
             .NonLazy();
-
     }
 }
