@@ -82,6 +82,32 @@ static public class TransformExtension
 
 static public class StringExtension
 {
+    static public string Encode(this string str, string key)
+    {
+        return Code(str, key, (a, b) => (char)(a + b));
+    }
+
+    static public string Decode(this string str, string key)
+    {
+        return Code(str, key, (a, b) => (char)(a - b));
+    }
+
+    static private string Code(this string str, string key, Func<char, char, char> func)
+    {
+        string keyHash = Hash128.Compute(key).ToString();
+        Debug.Log($"keyHash: {keyHash}");
+
+        return
+            str
+            .Select((strChar, i) =>
+            {
+                char keyChar = keyHash[i % keyHash.Length];
+                return func.Invoke(strChar, keyChar);
+            })
+            .JoinAsString();
+    }
+
+
     static public string JoinAsString(this IEnumerable<string> strs, string delimeter)
     {
         return string.Join(delimeter, strs);
