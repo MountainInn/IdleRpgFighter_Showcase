@@ -33,7 +33,7 @@ public abstract class AnimatorCombatant : Combatant
 
     public void InflictDamage_OnAnimEvent()
     {
-        InflictDamage(target, stats.attackDamage);
+        InflictDamage(target, Stats.attackDamage);
 
         onAttackAnimEvent?.Invoke();
     }

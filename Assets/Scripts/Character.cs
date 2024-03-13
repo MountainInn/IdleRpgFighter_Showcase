@@ -8,17 +8,18 @@ using Zenject;
 
 public class Character : AnimatorCombatant
 {
-    bool isPlaying;
-
+    public CharacterStatsSO characterStatsSO;
     public PickaxeInput pickaxeInput;
 
     [Inject] DiContainer Container;
+
+    bool isPlaying;
 
     new void Start()
     {
         base.Start();
 
-        SetStats(Stats);
+        SetStats(characterStatsSO.ToStats());
 
         InitObserveStateMachine();
 

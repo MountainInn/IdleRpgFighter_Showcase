@@ -18,7 +18,7 @@ public class Ally : AnimatorCombatant
     public new void SetStats(StatsSO stats)
     {
         attackTimer.ResetToZero();
-        attackTimer.Resize(stats.attackSpeed);
+        attackTimer.Resize(stats.attackTimer);
     }
 
     protected void SubscribeToAttackTimerFull()
