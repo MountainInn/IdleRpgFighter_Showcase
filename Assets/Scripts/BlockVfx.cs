@@ -47,9 +47,15 @@ public class BlockVfx : MonoBehaviour
 
     public void ShowCounterAttack()
     {
-        blockRenderer
-            .material
-            .DOColor(counterAttackColor, "_TintColor", counterAttackFlashDuration)
-            .SetEase(Ease.Flash, 2);
+        DOTween
+            .Sequence()
+            .Append(blockRenderer
+                    .material
+                    .DOColor(counterAttackColor, "_TintColor", counterAttackFlashDuration)
+                    .SetEase(Ease.Flash, 1))
+            .Append(blockRenderer
+                    .material
+                    .DOColor(blockColor, "_TintColor", counterAttackFlashDuration)
+                    .SetEase(Ease.Flash, 1));
     }
 }
