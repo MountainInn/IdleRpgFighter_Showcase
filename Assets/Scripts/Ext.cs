@@ -3,8 +3,17 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using System.Collections;
 using UniRx;
+
+static public class UnityEventExtension
+{
+    static public ObservableYieldInstruction<Unit> TakeYield(this UnityEvent unityEvent, int count)
+    {
+        return unityEvent.AsObservable().Take(count).ToYieldInstruction();
+    }
+}
 
 static public class GameObjectExtension
 {

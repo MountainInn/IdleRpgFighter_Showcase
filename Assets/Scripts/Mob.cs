@@ -45,8 +45,8 @@ public class Mob : AnimatorCombatant
 
         var fade = mobView.GetComponent<Fade>();
 
-        afterDeathAnimation.AddListener(fade.FadeOut);
-        onRespawn.AddListener(fade.FadeIn);
+        afterDeathAnimation.AddListener(() => fade.FadeOut());
+        onRespawn.AddListener(() => fade.FadeIn());
     }
 
     [Inject] void SubscribeToCharacter(Character character)

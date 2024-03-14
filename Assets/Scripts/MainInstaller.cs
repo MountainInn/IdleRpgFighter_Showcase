@@ -7,6 +7,8 @@ public class MainInstaller : MonoInstaller
 {
     [SerializeField] BlockVfx blockVfx;
     [SerializeField] AttackBonusVfx attackBonusVfx;
+    [Space]
+    [SerializeField] Transform levelHolder;
 
     [Inject] Ally prefabAlly;
 
@@ -35,7 +37,8 @@ public class MainInstaller : MonoInstaller
         Container
             .Bind(
                 typeof(Mob),
-                typeof(Arena)
+                typeof(Arena),
+                typeof(LevelSwitcher)
             )
             .FromComponentInHierarchy()
             .AsSingle();
@@ -60,5 +63,10 @@ public class MainInstaller : MonoInstaller
 
         Container .Bind<BlockVfx>() .FromInstance(blockVfx);
         Container .Bind<AttackBonusVfx>() .FromInstance(attackBonusVfx);
+
+        Container
+            .Bind<Transform>()
+            .FromInstance(levelHolder)
+            .WhenInjectedInto<LevelSwitcher>();
     }
 }

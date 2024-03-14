@@ -10,13 +10,6 @@ public class MobQueue : ScriptableObject
     public float powerMultiplier = 1f;
     public DropList dropList;
 
-    public int GetTotalLength()
-    {
-        return
-            queueSegments
-            .Sum(seg => seg.segmentLength);
-    }
-
     public IEnumerable<IEnumerable<MobStatsSO>> GenerateQueue()
     {
         return
@@ -47,6 +40,13 @@ public class MobQueue : ScriptableObject
     {
         subLengths = queueSegments.Select(seg => seg.segmentLength);
         totalLength = GetTotalLength();
+    }
+
+    public int GetTotalLength()
+    {
+        return
+            queueSegments
+            .Sum(seg => seg.segmentLength);
     }
 
     public IEnumerable<MobStatsSO> Next()

@@ -15,10 +15,14 @@ public class SaveSystem : MonoBehaviour
 
     private const string _time = "time";
     private const string _gold = "gold";
+    private const string _spawnerData = "spawnerData";
+    private const string _journeySaveState = "journeySaveState";
+
+    Content newestLoadedContent;
 
     [Inject] Vault vault;
 
-    async Task Initialize()
+    async Task MaybeInitialize()
     {
         if (UnityServices.State == ServicesInitializationState.Uninitialized)
         {
@@ -34,12 +38,14 @@ public class SaveSystem : MonoBehaviour
 
     public async void Save()
     {
-        await Initialize();
+        await MaybeInitialize();
+
+        object sdf = (1, 2, "sdf");
 
         Dictionary<string, object> content = new ()
         {
             {_time, DateTime.UtcNow},
-            {_gold, vault.gold.value.Value}
+            {_gold, vault.gold.value.Value},
         };
 
         var saved =
@@ -48,10 +54,25 @@ public class SaveSystem : MonoBehaviour
         Debug.Log("Saved: " + string.Join(",", saved));
     }
 
-    public async void Load(string json)
+    public async Task<Content> Load()
     {
-        await Initialize();
+        return null;
 
+        /// TODO: make switch cases on all tasks
+
+        await MaybeInitialize();
+
+        if (newestLoadedContent == null)
+        {
+            newestLoadedContent = await Load("*PLACEHOLDER*");
+        }
+        /// TODO: if you saved after last loading than newestLoadedContent needs to be reloaded
+
+        return newestLoadedContent;
+    }
+
+    async Task<Content> Load(string json)
+    {
         HashSet<string> keys = new HashSet<string>() {
             _time,
             _gold
@@ -61,5 +82,18 @@ public class SaveSystem : MonoBehaviour
             await CloudSaveService.Instance.Data.Player.LoadAsync(keys);
 
         vault.gold.value.Value = loaded[_gold].Value.GetAs<int>();
+
+
+        Debug.Log("Loaded: " + string.Join(",", loaded));
+
+        return new Content
+        {
+            journeySaveState = loaded[_journeySaveState].Value.GetAs<Journey.SaveState>()
+        };
+    }
+
+    public class Content
+    {
+        public Journey.SaveState journeySaveState;
     }
 }

@@ -363,6 +363,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 85.8, y: -93.8, z: 0}
+--- !u!4 &942386164 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8403402293155246076, guid: 14ca7196a953664469a98999343fbb3b, type: 3}
+  m_PrefabInstance: {fileID: 6765775530532176803}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &947488049
 GameObject:
   m_ObjectHideFlags: 0
@@ -395,6 +400,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blockVfx: {fileID: 25369150}
   attackBonusVfx: {fileID: 1296036958}
+  levelHolder: {fileID: 942386164}
 --- !u!114 &947488051
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -713,30 +719,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1969613198}
-  - component: {fileID: 1969613197}
+  - component: {fileID: 1969613199}
   m_Layer: 0
-  m_Name: Mob Spawner
+  m_Name: Journey
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1969613197
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1969613196}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6fec105e61e2cfe42929fd9697d778f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mobQueue: {fileID: 11400000, guid: bff53d02b671f734c92c3d206eae8214, type: 2}
-  onSegmentFinished:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!4 &1969613198
 Transform:
   m_ObjectHideFlags: 0
@@ -752,6 +742,74 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 85.8, y: -93.8, z: 0}
+--- !u!114 &1969613199
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1969613196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae0709e481958f0438ad2611241223b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  journeySO: {fileID: 11400000, guid: 234c47c00a86297458d136ac35db5d27, type: 2}
+  onSegmentCompleted:
+    m_PersistentCalls:
+      m_Calls: []
+  onQueueCompleted:
+    m_PersistentCalls:
+      m_Calls: []
+  onJourneyCompleted:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!1 &1986955782
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1986955784}
+  - component: {fileID: 1986955783}
+  m_Layer: 0
+  m_Name: Level Switcher
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1986955783
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1986955782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76ba29889c61304499dd653eeda28789, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultLevel: {fileID: 8463969633121829928, guid: 7db84c14686f5c2449af0ba0008a94dd, type: 3}
+  transitionDuration: 0.2
+--- !u!4 &1986955784
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1986955782}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.4651187, y: -0.5348753, z: 0.49703673, w: 0.5005274}
+  m_LocalPosition: {x: 2.85, y: 5.43, z: -8.73}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &6765775530532176803
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -816,6 +874,7 @@ SceneRoots:
   m_Roots:
   - {fileID: 947488052}
   - {fileID: 715126647}
+  - {fileID: 1986955784}
   - {fileID: 1969613198}
   - {fileID: 705507995}
   - {fileID: 963194228}
