@@ -9,17 +9,13 @@ public abstract class Ability : Talent, ITickable
     protected AbilityButton abilityButton;
 
     [Inject]
-    public void Construct(Character character, Battle battle,
-                          AbilityButton abilityButton)
+    public void Construct(Character character, AbilityButton abilityButton)
     {
         this.abilityButton = abilityButton;
 
         abilityButton.Connect(this);
 
-        Observable
-            .CombineLatest(cooldown.ObserveFull(),
-                           battle.battleTarget,
-                           (isFull, mob) => (isFull && mob != null))
+        cooldown.ObserveFull()
             .SubscribeToInteractable(abilityButton)
             .AddTo(character);
     }

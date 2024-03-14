@@ -1,61 +1,55 @@
 using UnityEngine;
 using DG.Tweening;
-using Zenject;
 
 public class BlockVfx : MonoBehaviour
 {
+    [SerializeField] Color blockColor = Color.blue;
+    [SerializeField] Color parryColor = Color.red;
+    [SerializeField] Color counterAttackColor = Color.yellow;
+    [Space]
     [SerializeField] float blockFadeDuration = .1f;
+    [SerializeField] float counterAttackFlashDuration = .25f;
     [Space]
     [SerializeField] MeshRenderer blockRenderer;
 
-    [SerializeField] Color blockColor = Color.blue;
-    [SerializeField] Color parryColor = Color.red;
-
-    [Inject]
-    public void Construct(Character character)
-    {
-        transform.position = character.transform.position;
-    }
-
-    void Awake()
+    void Start()
     {
         HideBlock();
-        HideParry();
     }
 
     public void ShowBlock()
     {
         blockRenderer
             .material
-            .DOFade(1f, blockFadeDuration);
+            .DOFade(1f, "_TintColor", blockFadeDuration);
     }
 
     public void HideBlock()
     {
         blockRenderer
             .material
-            .DOFade(0f, blockFadeDuration);
+            .DOFade(0f, "_TintColor", blockFadeDuration);
     }
 
     public void ShowParry()
     {
         blockRenderer
             .material
-            .DOColor(parryColor, blockFadeDuration);
+            .DOColor(parryColor, "_TintColor", blockFadeDuration);
     }
 
     public void HideParry()
     {
         blockRenderer
             .material
-            .DOColor(blockColor, blockFadeDuration);
+            .DOColor(blockColor, "_TintColor", blockFadeDuration);
     }
 
     public void ShowCounterAttack()
     {
         blockRenderer
             .material
-            .DOColor(Color.yellow, blockFadeDuration)
+            .DOColor(counterAttackColor, "_TintColor", counterAttackFlashDuration)
             .SetEase(Ease.Flash, 2);
     }
 }

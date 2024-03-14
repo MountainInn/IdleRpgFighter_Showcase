@@ -5,6 +5,7 @@ using UniRx.Triggers;
 using Zenject;
 using System.Linq;
 
+[CreateAssetMenu(fileName = "Block", menuName = "SO/Abilities/Block")]
 public class Block : Ability
 {
     [SerializeField] float parryTimeWindow;

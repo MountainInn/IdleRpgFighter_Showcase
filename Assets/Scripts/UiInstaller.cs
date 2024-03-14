@@ -29,6 +29,9 @@ public class UiInstaller : MonoInstaller
     [SerializeField] WeakPointView prefabWeakPoint;
     [Space]
     [SerializeField] DPSMeterView dpsMeterView;
+    [Space]
+    [SerializeField] Transform abilitiesParent;
+    [SerializeField] AbilityButton abilityButtonPrefab;
 
     new void Start()
     {
@@ -56,6 +59,7 @@ public class UiInstaller : MonoInstaller
             .WhenInjectedInto<MobSpawner>();
 
         BindView(talentViewPrefab, talentsParent);
+        BindView(abilityButtonPrefab, abilitiesParent);
 
         Container
             .Bind<VaultView>()

@@ -5,6 +5,9 @@ using System.Collections.Generic;
 
 public class MainInstaller : MonoInstaller
 {
+    [SerializeField] BlockVfx blockVfx;
+    [SerializeField] AttackBonusVfx attackBonusVfx;
+
     [Inject] Ally prefabAlly;
 
     new void Start()
@@ -12,6 +15,7 @@ public class MainInstaller : MonoInstaller
         base.Start();
 
         InstantiateSOs<Talent>("SO/Talents/");
+        InstantiateSOs<Ability>("SO/Abilities/");
     }
    
     List<T> InstantiateSOs<T>(string path)
@@ -53,5 +57,8 @@ public class MainInstaller : MonoInstaller
             .To(t => t.AllTypes().DerivingFrom<DamageModifier>())
             .AsTransient()
             .NonLazy();
+
+        Container .Bind<BlockVfx>() .FromInstance(blockVfx);
+        Container .Bind<AttackBonusVfx>() .FromInstance(attackBonusVfx);
     }
 }

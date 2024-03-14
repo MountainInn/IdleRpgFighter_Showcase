@@ -7,23 +7,22 @@ public class AttackBonusVfx : MonoBehaviour
     [SerializeField] float fadeDuration;
     [SerializeField] MeshRenderer meshRenderer;
 
-    [Inject]
-    public void Construct(Character character)
+    void Start()
     {
-        transform.position = character.transform.position;
+        HideBonus();
     }
 
     public void ShowBonus()
     {
         meshRenderer
             .material
-            .DOFade(1f, fadeDuration);
+            .DOFade(1f, "_TintColor", fadeDuration);
     }
 
     public void HideBonus()
     {
         meshRenderer
             .material
-            .DOFade(0f, fadeDuration);
+            .DOFade(0f, "_TintColor", fadeDuration);
     }
 }
