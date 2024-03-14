@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class MobView : MonoBehaviour
 {
-    [SerializeField] ProgressBar healthBar;
-    [SerializeField] ProgressBar attackTimerBar;
+    [SerializeField] protected ProgressBar healthBar;
+    [SerializeField] protected ProgressBar attackTimerBar;
 
     public void Subscribe(Rock rock)
     {
