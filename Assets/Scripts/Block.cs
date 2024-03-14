@@ -17,6 +17,8 @@ public class Block : Ability
 
     float activeBonus = 1f;
 
+    [Inject] BlockVfx blockVfx;
+    [Inject] AttackBonusVfx attackBonusVfx;
     [Inject]
     public void Construct(Character character)
     {
@@ -43,15 +45,15 @@ public class Block : Ability
             .TakeUntil(abilityButton.OnPointerUpAsObservable())
             .DoOnSubscribe(() =>
             {
-/// TODO: Show block VFX
-                })
+                blockVfx.ShowBlock();
+            })
             .Do(hit =>
             {
                 hit.damage *= damageReductionMultiplier;
             })
             .DoOnCompleted(() =>
             {
-/// TODO: Hide block VFX
+                blockVfx.HideBlock();
                 cooldown.ResetToZero();
             })
             .Subscribe()
@@ -65,20 +67,20 @@ public class Block : Ability
             .Take(TimeSpan.FromSeconds(parryTimeWindow))
             .DoOnSubscribe(() =>
             {
-/// TODO: Show parry VFX
-                })
+                blockVfx.ShowParry();
+            })
             .Do(hit =>
             {
                 if (hit != null && canCounterAttack)
                 {
-                    /// TODO: Show counterAttack VFX
+                    blockVfx.ShowCounterAttack();
                     SubscribeCounterAttackBonus(character);
                 }
             })
             .DoOnCompleted(() =>
             {
-/// TODO: Hide parry VFX
-                })
+                blockVfx.HideParry();
+            })
             .Subscribe()
             .AddTo(character);
     }
@@ -96,13 +98,12 @@ public class Block : Ability
     void ActivateBonus()
     {
         activeBonus = counterAttackDamageBonus;
-        /// TODO: Enable bonus VFX
+        attackBonusVfx.ShowBonus();
     }
     void DeactivateBonus()
     {
         activeBonus = 1f;
-
-        /// TODO: Disable bonus VFX
+        attackBonusVfx.HideBonus();
     }
 
     public override IObservable<string> ObserveDescription()
@@ -114,5 +115,4 @@ public class Block : Ability
     protected override void OnLevelUp(int level, Price price)
     {
     }
-
 }
