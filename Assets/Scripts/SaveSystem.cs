@@ -20,9 +20,16 @@ public class SaveSystem : MonoBehaviour
 
     async Task Initialize()
     {
-        await UnityServices.InitializeAsync();
-        await AuthenticationService.Instance.SignInAnonymouslyAsync();
-        Debug.LogWarning($"Does this work?");
+        if (UnityServices.State == ServicesInitializationState.Uninitialized)
+        {
+            await UnityServices.InitializeAsync();
+        }
+
+        if (AuthenticationService.Instance.IsExpired ||
+            !AuthenticationService.Instance.IsAuthorized)
+        {
+            await AuthenticationService.Instance.SignInAnonymouslyAsync();
+        }
     }
 
     public async void Save()
