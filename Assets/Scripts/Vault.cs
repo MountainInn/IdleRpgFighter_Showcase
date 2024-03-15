@@ -1,6 +1,5 @@
-using System.Collections.Generic;
 using UnityEngine;
-using System;
+using Zenject;
 
 public class Vault : MonoBehaviour
 {
@@ -8,6 +7,16 @@ public class Vault : MonoBehaviour
     static Vault _inst;
 
     [SerializeField] public Currency gold;
+
+    [Inject] SaveSystem saveSystem;
+    [Inject]
+    void RegisterWithSaveSystem()
+    {
+        saveSystem
+            .Register("gold",
+                      () => gold.value.Value,
+                      (val) => gold.value.Value = val.GetAs<int>());
+    }
 
     void Awake()
     {

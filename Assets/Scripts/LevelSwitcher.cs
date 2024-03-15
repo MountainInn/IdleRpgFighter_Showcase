@@ -1,6 +1,6 @@
 using UnityEngine;
 using Zenject;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 
 public class LevelSwitcher : MonoBehaviour
 {
@@ -17,8 +17,9 @@ public class LevelSwitcher : MonoBehaviour
         cover.duration = transitionDuration;
     }
 
-    public async Task<bool> MaybeSwitchLevel(GameObject prefabLevel)
+    public async UniTask<bool> MaybeSwitchLevel(GameObject prefabLevel)
     {
+        Debug.Log($"Switch Level");
         bool needToSwitch = (currentLevel?.name != prefabLevel.name);
 
         if (needToSwitch)

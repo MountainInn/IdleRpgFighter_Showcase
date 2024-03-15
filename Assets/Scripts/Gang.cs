@@ -31,8 +31,6 @@ public class Gang : MonoBehaviour
             mobPosition +
             Quaternion.Euler(0, angle, 0) * fromMobToChar;
 
-        Debug.Log($"{angle}");
-
         ally.transform.position = allyPosition;
         ally.transform.rotation = Quaternion.LookRotation(mobPosition - allyPosition);
 

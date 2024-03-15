@@ -41,17 +41,18 @@ public class Journey : MonoBehaviour
     [Inject] SegmentedProgressBar arenaProgressBar;
     [Inject] LevelSwitcher LevelSwitcher;
     [Inject] SaveSystem saveSystem;
-
-    async void Start()
+    [Inject]
+    void RegisterWithSaveSystem(SaveSystem saveSystem)
     {
-        ResetQueuePosition();
-
-        var loadedData = await saveSystem.Load();
-
-        if (loadedData != null)
-            this.LoadSaveData(loadedData.journeySaveState);
-
-        StartQueue();
+        saveSystem
+            .Register("journeyState",
+                      () => saveState,
+                      (val) => saveState = val.GetAs<SaveState>(),
+                      () =>
+                      {
+                          Debug.Log($"Start Queue After Load");
+                          StartQueue();
+                      });
     }
 
     void ResetQueuePosition()
@@ -82,7 +83,7 @@ public class Journey : MonoBehaviour
         onSegmentCompleted?.Invoke();
     }
 
-    void StartQueue()
+    public void StartQueue()
     {
         StartCoroutine( Mobs() );
     }
@@ -95,10 +96,7 @@ public class Journey : MonoBehaviour
 
             yield return
                 LevelSwitcher
-                .MaybeSwitchLevel(journeyField.levelPrefab)
-                .ToObservable()
-                .Take(1)
-                .ToYieldInstruction();
+                .MaybeSwitchLevel(journeyField.levelPrefab);
 
             MobQueue mobQueue = journeyField.mobQueue;
             mobQueue.GetSubLengthsAndTotalLength(out IEnumerable<int> subLengths,

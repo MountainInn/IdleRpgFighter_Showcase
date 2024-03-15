@@ -38,7 +38,8 @@ public class MainInstaller : MonoInstaller
             .Bind(
                 typeof(Mob),
                 typeof(Arena),
-                typeof(LevelSwitcher)
+                typeof(LevelSwitcher),
+                typeof(SaveSystemUser)
             )
             .FromComponentInHierarchy()
             .AsSingle();

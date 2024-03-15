@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using System.Linq;
 using DG.Tweening;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 
 [RequireComponent(typeof(CanvasGroup))]
 public class Fade : MonoBehaviour
@@ -33,7 +33,7 @@ public class Fade : MonoBehaviour
             FadeIn();
     }
 
-    public async Task FadeIn()
+    public async UniTask FadeIn()
     {
         canvasGroup.DOKill();
 
@@ -52,7 +52,7 @@ public class Fade : MonoBehaviour
             .AsyncWaitForKill();
     }
 
-    public async Task FadeOut()
+    public async UniTask FadeOut()
     {
         canvasGroup.DOKill();
 

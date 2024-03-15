@@ -2,30 +2,68 @@ using Unity.Services.Core;
 using Unity.Services.Authentication;
 using Unity.Services.CloudSave;
 using UnityEngine;
-using Zenject;
 using System.Collections.Generic;
-using System.Linq;
-using UniRx;
 using System;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
+using Unity.Services.CloudSave.Models;
 
 public class SaveSystem : MonoBehaviour
 {
     static readonly string KEY = "Tut-turu";
 
-    private const string _time = "time";
-    private const string _gold = "gold";
-    private const string _spawnerData = "spawnerData";
-    private const string _journeySaveState = "journeySaveState";
+    Action makeSaveDict;
+    Action processLoadDict;
+    Action afterLoad;
 
-    Content newestLoadedContent;
+    HashSet<string> keys = new();
+    Dictionary<string, object> saveDict = new();
+    Dictionary<string, Unity.Services.CloudSave.Models.Item> loadDict = new();
 
-    [Inject] Vault vault;
-
-    async Task MaybeInitialize()
+    public void Register(string key, Func<object> getter,
+                         Action<Unity.Services.CloudSave.Internal.Http.IDeserializable> setter,
+                         Action afterLoad)
     {
+        Register(key, getter, setter);
+
+        this.afterLoad += afterLoad;
+    }
+
+    public void Register(string key, Func<object> getter,
+                         Action<Unity.Services.CloudSave.Internal.Http.IDeserializable> setter)
+    {
+        Debug.Log($"Register {key}");
+
+        keys.Add(key);
+
+        makeSaveDict += () =>
+        {
+            saveDict.Add(key, getter.Invoke());
+        };
+
+        processLoadDict += () =>
+        {
+            if (loadDict.TryGetValue(key, out Item item))
+                setter.Invoke(item.Value);
+        };
+    }
+
+    async UniTask MaybeInitialize()
+    {
+        if (UnityServices.State == ServicesInitializationState.Initialized)
+            return;
+       
+        if (UnityServices.State == ServicesInitializationState.Initializing)
+        {
+            Debug.Log($"Initializing...");
+            await UniTask.WaitUntil(() =>
+                                    UnityServices.State == ServicesInitializationState.Initialized);
+            return;
+        }
+
         if (UnityServices.State == ServicesInitializationState.Uninitialized)
         {
+            Debug.Log($"Start Initialization");
+
             await UnityServices.InitializeAsync();
         }
 
@@ -36,64 +74,28 @@ public class SaveSystem : MonoBehaviour
         }
     }
 
-    public async void Save()
+    public async UniTask Save()
     {
-        await MaybeInitialize();
+        // await MaybeInitialize();
 
-        object sdf = (1, 2, "sdf");
+        saveDict = new();
+        makeSaveDict.Invoke();
 
-        Dictionary<string, object> content = new ()
-        {
-            {_time, DateTime.UtcNow},
-            {_gold, vault.gold.value.Value},
-        };
+        // var saved = await CloudSaveService.Instance.Data.Player.SaveAsync(saveDict);
 
-        var saved =
-            await CloudSaveService.Instance.Data.Player.SaveAsync(content);
-
-        Debug.Log("Saved: " + string.Join(",", saved));
+        // Debug.Log("Saved: " + string.Join(",", saved));
     }
 
-    public async Task<Content> Load()
+    public async UniTask Load()
     {
-        return null;
+        // await MaybeInitialize();
 
-        /// TODO: make switch cases on all tasks
+        // loadDict = await CloudSaveService.Instance.Data.Player.LoadAsync(keys);
 
-        await MaybeInitialize();
+        Debug.Log("Loaded: " + string.Join(",", loadDict));
 
-        if (newestLoadedContent == null)
-        {
-            newestLoadedContent = await Load("*PLACEHOLDER*");
-        }
-        /// TODO: if you saved after last loading than newestLoadedContent needs to be reloaded
+        processLoadDict.Invoke();
 
-        return newestLoadedContent;
-    }
-
-    async Task<Content> Load(string json)
-    {
-        HashSet<string> keys = new HashSet<string>() {
-            _time,
-            _gold
-        };
-
-        var loaded =
-            await CloudSaveService.Instance.Data.Player.LoadAsync(keys);
-
-        vault.gold.value.Value = loaded[_gold].Value.GetAs<int>();
-
-
-        Debug.Log("Loaded: " + string.Join(",", loaded));
-
-        return new Content
-        {
-            journeySaveState = loaded[_journeySaveState].Value.GetAs<Journey.SaveState>()
-        };
-    }
-
-    public class Content
-    {
-        public Journey.SaveState journeySaveState;
+        afterLoad?.Invoke();
     }
 }
