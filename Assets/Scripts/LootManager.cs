@@ -15,7 +15,7 @@ public class LootManager : MonoBehaviour
             .Subscribe(_ =>
             {
                 combatant.dropList
-                    .entries
+                    ?.entries
                     .Where(entry => (UnityEngine.Random.value < entry.chance))
                     ?.Map(entry =>
                     {

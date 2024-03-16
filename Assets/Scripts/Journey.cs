@@ -35,6 +35,7 @@ public class Journey : MonoBehaviour
     }
 
     CompositeDisposable subscriptions;
+    Coroutine queueCoroutine;
 
     [Inject] Mob mob;
     [Inject] Arena arena;
@@ -50,10 +51,15 @@ public class Journey : MonoBehaviour
                                       (val) => saveState = val,
                                       () =>
                                       {
-                                          Debug.Log($"Start Queue After Load");
                                           StartQueue();
                                       },
                                       this);
+    }
+
+    void Start()
+    {
+        if (queueCoroutine == null)
+            StartQueue();
     }
 
     void ResetQueuePosition()
@@ -86,7 +92,8 @@ public class Journey : MonoBehaviour
 
     public void StartQueue()
     {
-        StartCoroutine( Mobs() );
+        Debug.Log($"Start Queue");
+        queueCoroutine = StartCoroutine( Mobs() );
     }
 
     IEnumerator Mobs()

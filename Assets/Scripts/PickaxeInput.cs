@@ -25,11 +25,14 @@ public class PickaxeInput : MonoBehaviour, IDisposable
     [Inject]
     public void Construct(CharacterController charController,
                           Rock rock,
-                          ProgressBar chargeProgressBar)
+                          ProgressBar chargeProgressBar,
+                          RuntimeAnimatorController pickaxeAnimatorController)
     {
         charge = new (0, maxCharge);
         strikeDamage = new();
+
         character.pickaxeInput = this;
+        character.SetAnimatorController(pickaxeAnimatorController);
 
         Button attackButton = charController.AttackButton;
 

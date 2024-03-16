@@ -3,8 +3,9 @@ using UnityEngine;
 using Zenject;
 using System.Collections.Generic;
 
-public class MainInstaller : MonoInstaller
+public class MainInstaller : BaseInstaller
 {
+    [Space]
     [SerializeField] BlockVfx blockVfx;
     [SerializeField] AttackBonusVfx attackBonusVfx;
     [Space]
@@ -13,17 +14,6 @@ public class MainInstaller : MonoInstaller
     [Inject] Ally prefabAlly;
 
 
-    List<T> InstantiateSOs<T>(string path)
-        where T : ScriptableObject
-    {
-        var objects = Resources.LoadAll<T>(path);
-
-        return
-            objects
-            .Select(t => Instantiate(t))
-            .Map(Container.Inject)
-            .ToList();
-    }
 
     override public void InstallBindings()
     {
@@ -37,6 +27,12 @@ public class MainInstaller : MonoInstaller
             )
             .FromComponentInHierarchy()
             .AsSingle();
+
+        Container
+            .Bind<RuntimeAnimatorController>()
+            .FromInstance(characterAnimatorController)
+            .WhenInjectedInto<AttackInput>();
+
 
         Container
             .Bind<List<Talent>>()

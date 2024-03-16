@@ -2,12 +2,17 @@ using UnityEngine;
 using Zenject;
 using UnityEngine.UI;
 
-public class GulagInstaller : MonoInstaller
+public class GulagInstaller : BaseInstaller
 {
     [SerializeField] ProgressBar chargeProgressBar;
 
     override public void InstallBindings()
     {
+        Container
+            .Bind<RuntimeAnimatorController>()
+            .FromInstance(characterAnimatorController)
+            .WhenInjectedInto<PickaxeInput>();
+
         Container.Bind<Combatant>().FromInstance(null).WhenInjectedInto<Rock>();
 
         Container
