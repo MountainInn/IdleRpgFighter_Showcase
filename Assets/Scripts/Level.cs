@@ -27,7 +27,7 @@ public class Level
         SetLevel(level.Value + 1);
     }
 
-    void SetLevel(int level)
+    public void SetLevel(int level)
     {
         this.level.Value = level;
 

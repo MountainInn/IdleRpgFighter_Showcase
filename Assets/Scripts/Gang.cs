@@ -14,15 +14,6 @@ public class Gang : MonoBehaviour
     Vector3 mobPosition;
     Vector3 fromMobToChar = Vector3.left;
 
-    [Inject]
-    public void RegisterWithSaveSystem(SaveSystem saveSystem)
-    {
-        saveSystem
-            .MaybeRegister("allies",
-                           () => allies,
-                           (val) => allies = val.GetAs<List<Ally>>());
-    }
-
     public void Initialize(Mob mob, Character character)
     {
         mobPosition = mob.transform.position;
