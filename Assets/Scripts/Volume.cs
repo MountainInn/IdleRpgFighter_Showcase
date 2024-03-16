@@ -12,8 +12,6 @@ public class Volume
 
 
     public float Unfilled => maximum.Value - current.Value;
-    public bool IsFullZeroes =>
-        current.Value == 0 && maximum.Value == 0;
 
 
     public Volume() {}
@@ -37,17 +35,16 @@ public class Volume
     public IObservable<bool> ObserveFull() =>
         Observable.CombineLatest(
             current, maximum,
-            (cur , max) => !IsFullZeroes && IsFull);
+            (cur , max) => IsFull);
 
     public IObservable<bool> ObserveEmpty() =>
         current
-        .Select(v => !IsFullZeroes && IsEmpty);
+        .Select(v => IsEmpty);
 
     public IObservable<bool> ObserveRefill() =>
         ObserveFull()
         .Pairwise()
         .Select(fulls =>
-                !IsFullZeroes &&
                 fulls.Previous == false && fulls.Current == true);
 
     public IObservable<float> ObserveChange() =>
