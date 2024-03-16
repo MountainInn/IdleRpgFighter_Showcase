@@ -13,31 +13,36 @@ public class SaveSystem : MonoBehaviour
 
     Action makeSaveDict;
     Action processLoadDict;
-    Action afterLoad;
+    Dictionary<Component, Action> afterLoads = new();
 
     HashSet<string> keys = new();
     Dictionary<string, object> saveDict = new();
     Dictionary<string, Unity.Services.CloudSave.Models.Item> loadDict = new();
 
-    public void Register(string key, Func<object> getter,
+    public void MaybeRegister(string key, Func<object> getter,
                          Action<Unity.Services.CloudSave.Internal.Http.IDeserializable> setter,
-                         Action afterLoad)
+                         Action afterLoad,
+                         Component component)
     {
-        Register(key, getter, setter);
+        if (keys.Contains(key))
+            return;
 
-        this.afterLoad += afterLoad;
+        MaybeRegister(key, getter, setter);
+
+        afterLoads.TryAdd(component, afterLoad);
     }
 
-    public void Register(string key, Func<object> getter,
-                         Action<Unity.Services.CloudSave.Internal.Http.IDeserializable> setter)
+    public void MaybeRegister(string key, Func<object> getter,
+                              Action<Unity.Services.CloudSave.Internal.Http.IDeserializable> setter)
     {
-        Debug.Log($"Register {key}");
+        if (keys.Contains(key))
+            return;
 
         keys.Add(key);
 
         makeSaveDict += () =>
         {
-            saveDict.Add(key, getter.Invoke());
+            saveDict.TryAdd(key, getter.Invoke());
         };
 
         processLoadDict += () =>
@@ -96,6 +101,13 @@ public class SaveSystem : MonoBehaviour
 
         processLoadDict.Invoke();
 
-        afterLoad?.Invoke();
+        afterLoads
+            ?.Map(kv =>
+            {
+                if (kv.Key != null)
+                {
+                    kv.Value.Invoke();
+                }
+            });
     }
 }

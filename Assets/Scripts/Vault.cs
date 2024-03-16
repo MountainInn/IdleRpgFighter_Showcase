@@ -13,7 +13,7 @@ public class Vault : MonoBehaviour
     void RegisterWithSaveSystem()
     {
         saveSystem
-            .Register("gold",
+            .MaybeRegister("gold",
                       () => gold.value.Value,
                       (val) => gold.value.Value = val.GetAs<int>());
     }
