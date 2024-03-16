@@ -8,20 +8,20 @@ public class LootManager : MonoBehaviour
     [Inject] Character character;
     [Inject] CollectionAnimation.Pool dropablesPool;
 
-    public void Subscribe(Mob mob)
+    public void Subscribe(Combatant combatant)
     {
-        mob.onDie
+        combatant.onDie
             .AsObservable()
             .Subscribe(_ =>
             {
-                mob.dropList
+                combatant.dropList
                     .entries
                     .Where(entry => (UnityEngine.Random.value < entry.chance))
                     ?.Map(entry =>
                     {
                         CollectionAnimation dropable = dropablesPool.Spawn();
 
-                        dropable.transform.position = mob.transform.position;
+                        dropable.transform.position = combatant.transform.position;
 
                         dropable.oneShotOnPickup += () =>
                         {
@@ -31,7 +31,7 @@ public class LootManager : MonoBehaviour
                         dropable.StartCollectionAnimation(character.transform);
                     });
             })
-            .AddTo(mob);
+            .AddTo(combatant);
     }
 
     void Loot(Drop drop)

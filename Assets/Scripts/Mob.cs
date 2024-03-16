@@ -1,11 +1,11 @@
 using UnityEngine;
 using Zenject;
 using UniRx;
+using System;
+using UnityEngine.Events;
 
 public class Mob : AnimatorCombatant
 {
-    [HideInInspector] public DropList dropList;
-
     protected bool mobCanAttack;
 
     [Inject] FloatingTextSpawner takeDamagFloatingTextSpawner;

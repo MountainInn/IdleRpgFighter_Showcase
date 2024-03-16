@@ -11,6 +11,10 @@ public class MobView : MonoBehaviour
         // attackTimerBar.Subscribe(rock.gameObject, rock.attackTimer);
     }
 
+    public void SubscribeGulagTimer(Gulag gulag, Volume timer)
+    {
+        attackTimerBar.Subscribe(gulag.gameObject, timer);
+    }
 
     public void Subscribe(Mob mob)
     {
