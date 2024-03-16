@@ -17,7 +17,9 @@ public class ProjectInstaller : MonoInstaller
                 typeof(Vault),
                 typeof(LootManager),
                 typeof(Gang),
-                typeof(DPSMeter)
+                typeof(DPSMeter),
+                typeof(SceneLoader),
+                typeof(FullScreenCover)
             )
             .FromComponentsInHierarchy()
             .AsSingle();
@@ -46,7 +48,7 @@ public class ProjectInstaller : MonoInstaller
 
         Container
             .Bind<ParticleSystem>()
-            .FromMethod(() => onPickupPS)
+            .FromComponentInNewPrefab(onPickupPS)
             .WhenInjectedInto<CollectionAnimation>();
 
         Container

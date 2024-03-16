@@ -32,8 +32,6 @@ public class UiInstaller : MonoInstaller
     [Space]
     [SerializeField] Transform abilitiesParent;
     [SerializeField] AbilityButton abilityButtonPrefab;
-    [Space]
-    [SerializeField] Fade fullScreenCover;
 
     new void Start()
     {
@@ -44,10 +42,6 @@ public class UiInstaller : MonoInstaller
     override public void InstallBindings()
     {
         Container .Bind<DPSMeterView>() .FromInstance(dpsMeterView);
-
-        Container
-            .Bind<Fade>()
-            .FromInstance(fullScreenCover);
 
         Container
             .BindMemoryPool<WeakPointView, WeakPointView.Pool>()
@@ -104,7 +98,7 @@ public class UiInstaller : MonoInstaller
             .Bind<FloatingTextSpawner>()
             .FromMethod(_ => mobDamagedFloatingText)
             .AsSingle()
-            .WhenInjectedInto<Mob>();
+            .WhenInjectedInto(typeof(Mob), typeof(Rock));
     }
 
     void BindView<T>(T prefabView, Transform parent)

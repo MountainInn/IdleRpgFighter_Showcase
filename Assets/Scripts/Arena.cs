@@ -3,10 +3,11 @@ using UnityEngine.Events;
 using DG.Tweening;
 using Zenject;
 using System;
-using UniRx;
 
 public class Arena : MonoBehaviour
 {
+    [SerializeField] bool dontSwitchScenes;
+    [Space]
     [SerializeField] float slideDistance;
     [SerializeField] float slideDuration;
     [Space]
@@ -25,21 +26,14 @@ public class Arena : MonoBehaviour
     [SerializeField] public UnityEvent onCharacterReset;
     [SerializeField] public UnityEvent onMobMovedToRespawnPosition;
     [SerializeField] public UnityEvent onMobReset;
-   
+
     [Inject] Character character;
     [Inject] Mob mob;
+    [Inject] SceneLoader sceneLoader;
   
     void Start()
     {
-        characterRoot = character.transform;
-
-        characterRoot.SetParent(characterHatch);
-        characterRoot.GetLocalPositionAndRotation(out Vector3 localPosition,
-                                                  out Quaternion localRotation);
-        localPosition = Vector3.zero;
-        localPosition.y = mobRoot.position.y;
-
-        characterRoot.SetPositionAndRotation(localPosition, localRotation);
+        characterRoot = character.transform.parent;
 
         character.afterDeathAnimation
             .AddListener( SlideCharacter );
@@ -57,7 +51,13 @@ public class Arena : MonoBehaviour
     public void SlideCharacter()
     {
         DoSlide(characterRoot, characterHatch, slideDistance, openHatchAngle)
-            .OnKill( ResetCharacter );
+            .OnKill(() =>
+            {
+                if (dontSwitchScenes)
+                    ResetCharacter();
+                else
+                    sceneLoader.SwitchToGulag();
+            });
     }
 
     public void SlideMob()

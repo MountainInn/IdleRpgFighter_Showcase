@@ -10,7 +10,7 @@ public class LevelSwitcher : MonoBehaviour
     GameObject currentLevel;
 
     [Inject] Transform levelHolder;
-    [Inject] Fade cover;
+    [Inject] FullScreenCover cover;
     [Inject]
     void Construct()
     {
