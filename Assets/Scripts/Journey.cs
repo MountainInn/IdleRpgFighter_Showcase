@@ -45,15 +45,15 @@ public class Journey : MonoBehaviour
     void RegisterWithSaveSystem(SaveSystem saveSystem)
     {
         saveSystem
-            .MaybeRegister("journeyState",
-                      () => saveState,
-                      (val) => saveState = val.GetAs<SaveState>(),
-                      () =>
-                      {
-                          Debug.Log($"Start Queue After Load");
-                          StartQueue();
-                      },
-                      this);
+            .MaybeRegister<SaveState>("journeyState",
+                                      () => saveState,
+                                      (val) => saveState = val,
+                                      () =>
+                                      {
+                                          Debug.Log($"Start Queue After Load");
+                                          StartQueue();
+                                      },
+                                      this);
     }
 
     void ResetQueuePosition()

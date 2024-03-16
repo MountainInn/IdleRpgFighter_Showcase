@@ -13,9 +13,9 @@ public class Vault : MonoBehaviour
     void RegisterWithSaveSystem()
     {
         saveSystem
-            .MaybeRegister("gold",
-                      () => gold.value.Value,
-                      (val) => gold.value.Value = val.GetAs<int>());
+            .MaybeRegister<int>("gold",
+                                () => gold.value.Value,
+                                (val) => gold.value.Value = val);
     }
 
     void Awake()

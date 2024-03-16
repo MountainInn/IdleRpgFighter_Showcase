@@ -19,10 +19,10 @@ public class SaveSystem : MonoBehaviour
     Dictionary<string, object> saveDict = new();
     Dictionary<string, Unity.Services.CloudSave.Models.Item> loadDict = new();
 
-    public void MaybeRegister(string key, Func<object> getter,
-                         Action<Unity.Services.CloudSave.Internal.Http.IDeserializable> setter,
-                         Action afterLoad,
-                         Component component)
+    public void MaybeRegister<T>(string key, Func<T> getter,
+                                 Action<T> setter,
+                                 Action afterLoad,
+                                 Component component)
     {
         if (keys.Contains(key))
             return;
@@ -32,8 +32,8 @@ public class SaveSystem : MonoBehaviour
         afterLoads.TryAdd(component, afterLoad);
     }
 
-    public void MaybeRegister(string key, Func<object> getter,
-                              Action<Unity.Services.CloudSave.Internal.Http.IDeserializable> setter)
+    public void MaybeRegister<T>(string key, Func<T> getter,
+                                 Action<T> setter)
     {
         if (keys.Contains(key))
             return;
@@ -48,7 +48,7 @@ public class SaveSystem : MonoBehaviour
         processLoadDict += () =>
         {
             if (loadDict.TryGetValue(key, out Item item))
-                setter.Invoke(item.Value);
+                setter.Invoke(item.Value.GetAs<T>());
         };
     }
 
