@@ -1,29 +1,18 @@
 using UnityEngine;
-using UnityEngine.Events;
 using Zenject;
 using UniRx;
-using UniRx.Triggers;
-using System;
-using System.Collections;
-using DG.Tweening;
 
-public partial class Mob : AnimatorCombatant
+public class Mob : AnimatorCombatant
 {
-    [SerializeField] public UnityEvent onAskedToReturnToPool;
+    [HideInInspector] public DropList dropList;
 
-    MobStatsSO mobStats;
-    public MobStatsSO MobStats => mobStats;
-
-    bool mobCanAttack;
+    protected bool mobCanAttack;
 
     [Inject] FloatingTextSpawner takeDamagFloatingTextSpawner;
 
-    void Awake()
+    protected void Awake()
     {
-        attackTimer.ObserveFull()
-            .WhereEqual(true)
-            .Subscribe(_ => combatantAnimator.SetTrigger(attackTriggerId))
-            .AddTo(this);
+        SubscribeToAttackTimerFull();
 
         postTakeDamage.AsObservable()
             .Subscribe(args =>
@@ -32,6 +21,19 @@ public partial class Mob : AnimatorCombatant
             })
             .AddTo(this);
 
+        SubscribeCanAttack();
+    }
+
+    protected void SubscribeToAttackTimerFull()
+    {
+        attackTimer.ObserveFull()
+            .WhereEqual(true)
+            .Subscribe(_ => combatantAnimator.SetTrigger(attackTriggerId))
+            .AddTo(this);
+    }
+
+    protected void SubscribeCanAttack()
+    {
         mobCanAttack = true;
         onDie.AddListener(() => mobCanAttack = false);
         onRespawn.AddListener(() => mobCanAttack = true);
@@ -47,22 +49,32 @@ public partial class Mob : AnimatorCombatant
         onRespawn.AddListener(fade.FadeIn);
     }
 
-    public void SetStats(MobStatsSO mobStats)
+    [Inject] void SubscribeToCharacter(Character character)
     {
-        base.SetStats(mobStats);
-
-        this.mobStats = mobStats;
-        mobStats.template.ApplyTemplate(gameObject);
+        character.SetTarget(this);
     }
 
-    void Update()
+    [Inject] void SubscribeToDPSMeter(DPSMeter dpsMeter, DPSMeterView dpsView)
+    {
+        dpsMeter
+            .ObserveDPS(this)
+            .Subscribe(dpsView.SetText)
+            .AddTo(this);
+    }
+
+    [Inject] void SubscribeToLootManager(LootManager lootManager)
+    {
+        lootManager.Subscribe(this);
+    }
+
+    [Inject] void SubscribeToGang(Gang gang)
+    {
+        gang.Initialize(this, (Character)target);
+    }
+
+    public void Update()
     {
         if (mobCanAttack && CanContinueBattle())
             AttackTimerTick(Time.deltaTime);
-    }
-
-    public void ReturnToPool()
-    {
-        onAskedToReturnToPool.Invoke();
     }
 }

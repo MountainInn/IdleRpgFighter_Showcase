@@ -8,30 +8,20 @@ abstract public class Combatant : MonoBehaviour
     [SerializeField] public Volume health;
     [SerializeField] public Volume attackTimer;
     [Space]
-    [SerializeField] protected StatsSO stats;
-    [Space]
     [SerializeField] public UnityEvent onDie;
     [SerializeField] public UnityEvent onRespawn;
     [SerializeField] public UnityEvent<Combatant> onKill;
 
-    [Inject] protected Combatant target;
+    [HideInInspector] [SerializeField] public StatsSO Stats;
 
-    public StatsSO Stats => stats;
+    [InjectOptional] protected Combatant target;
 
+    [HideInInspector]
     public UnityEvent<DamageArgs>
         preAttack,
         preTakeDamage,
         postTakeDamage,
         postAttack;
-
-    public void SetStats(StatsSO stats)
-    {
-        this.stats = Instantiate(stats);
-
-        health.ResizeAndRefill(stats.health);
-        attackTimer.ResetToZero();
-        attackTimer.Resize(stats.attackSpeed);
-    }
 
     protected void OnEnable()
     {
@@ -52,7 +42,7 @@ abstract public class Combatant : MonoBehaviour
 
     public void InflictDamage(Combatant defender)
     {
-        InflictDamage(defender, stats.attackDamage);
+        InflictDamage(defender, Stats.attackDamage);
     }
 
     public void InflictDamage(Combatant defender, float damage)

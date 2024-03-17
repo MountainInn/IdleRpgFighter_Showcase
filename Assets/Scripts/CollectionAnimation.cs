@@ -41,6 +41,7 @@ public class CollectionAnimation : MonoBehaviour
         endColor.a = 0;
     }
 
+
     public void StartCollectionAnimation(Transform target)
     {
         this.target = target;

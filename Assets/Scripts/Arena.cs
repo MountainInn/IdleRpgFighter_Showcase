@@ -31,6 +31,16 @@ public class Arena : MonoBehaviour
   
     void Start()
     {
+        characterRoot = character.transform;
+
+        characterRoot.SetParent(characterHatch);
+        characterRoot.GetLocalPositionAndRotation(out Vector3 localPosition,
+                                                  out Quaternion localRotation);
+        localPosition = Vector3.zero;
+        localPosition.y = mobRoot.position.y;
+
+        characterRoot.SetPositionAndRotation(localPosition, localRotation);
+
         character.afterDeathAnimation
             .AddListener( SlideCharacter );
 

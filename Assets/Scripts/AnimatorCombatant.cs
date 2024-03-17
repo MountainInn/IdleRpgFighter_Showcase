@@ -10,11 +10,17 @@ public abstract class AnimatorCombatant : Combatant
     [SerializeField] public UnityEvent afterDeathAnimation;
     [SerializeField] public UnityEvent onAttackAnimEvent;
 
+    [HideInInspector] public ObservableStateMachineTrigger ObserveStateMachine;
+
     protected int attackTriggerId;
-    public ObservableStateMachineTrigger ObserveStateMachine;
 
     [Inject]
     public void Construct()
+    {
+        InitObserveStateMachine();
+    }
+
+    protected void InitObserveStateMachine()
     {
         ObserveStateMachine = combatantAnimator.GetBehaviour<ObservableStateMachineTrigger>();
     }
@@ -28,7 +34,7 @@ public abstract class AnimatorCombatant : Combatant
 
     public void InflictDamage_OnAnimEvent()
     {
-        InflictDamage(target, stats.attackDamage);
+        InflictDamage(target, Stats.attackDamage);
 
         onAttackAnimEvent?.Invoke();
     }

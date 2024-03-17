@@ -1,25 +1,29 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UniRx;
 using UniRx.Triggers;
 using Zenject;
 
-public class PickaxeInput : MonoBehaviour
+public class PickaxeInput : MonoBehaviour, IDisposable
 {
+    [SerializeField] float baseDamage = 100;
     [SerializeField] float damageOnFullCharge = 100;
-    [SerializeField] float chargePerSecond = 25;
+    [Space]
     [SerializeField] float maxCharge = 100;
+    [SerializeField] float chargePerSecond = 50;
     [Space]
     [SerializeField] string pickaxeChargeFloatProperty;
     [SerializeField] string pickaxeHitTriggerProperty;
 
-    public FloatReactiveProperty strikeDamage;
+    [HideInInspector] public FloatReactiveProperty strikeDamage;
 
     Volume charge;
+    ReadOnlyReactiveProperty<bool> isInIdleState;
 
+    [Inject] Character character;
     [Inject]
-    public void Construct(Character character,
-                          CharacterController charController,
+    public void Construct(CharacterController charController,
                           Rock rock,
                           MobView rockView,
                           ProgressBar chargeProgressBar,
@@ -27,20 +31,28 @@ public class PickaxeInput : MonoBehaviour
     {
         charge = new (0, maxCharge);
         strikeDamage = new();
+        character.pickaxeInput = this;
 
         Button attackButton = charController.AttackButton;
+
+        isInIdleState =
+            character.ObserveStateMachine
+            .OnStateEnterAsObservable()
+            .Select(enter => enter.StateInfo.IsName("Idle"))
+            .ToReadOnlyReactiveProperty(false);
 
         attackButton
             .OnPointerDownAsObservable()
             .Subscribe(pointerData =>
             {
                 this.UpdateAsObservable()
-                    .SkipUntil( character.ObserveIsPlaying().WhereEqual(false) )
+                    .SkipUntil( isInIdleState.WhereEqual(true) )
                     .TakeUntil( attackButton.OnPointerUpAsObservable() )
                     .TakeUntil( charge.ObserveFull().WhereEqual(true) )
                     .DoOnCompleted(() =>
                     {
-                        strikeDamage.Value = charge.Ratio * damageOnFullCharge;
+                        strikeDamage.Value =
+                            baseDamage + damageOnFullCharge * charge.Ratio;
 
                         character
                             .combatantAnimator
@@ -51,24 +63,23 @@ public class PickaxeInput : MonoBehaviour
                     .Subscribe(_ =>
                     {
                         charge.Add(chargePerSecond * Time.deltaTime);
-
-                        character
-                            .combatantAnimator
-                            .SetFloat(pickaxeChargeFloatProperty, charge.Ratio);
                     })
                     .AddTo(this);
             })
             .AddTo(this);
 
-        chargeProgressBar
-            .Subscribe(gameObject, charge)
+        charge
+            .ObserveAll()
+            .Subscribe(tuple =>
+            {
+                character
+                    .combatantAnimator
+                    .SetFloat(pickaxeChargeFloatProperty, tuple.ratio);
+            })
             .AddTo(this);
 
-        strikeDamage
-            .Subscribe(damage =>
-            {
-                character.InflictDamage(rock, damage);
-            })
+        chargeProgressBar
+            .Subscribe(gameObject, charge)
             .AddTo(this);
 
         rock
@@ -80,5 +91,10 @@ public class PickaxeInput : MonoBehaviour
             .AddTo(this);
 
         rockView.Subscribe(rock);
+    }
+
+    public void Dispose()
+    {
+        character.pickaxeInput = null;
     }
 }

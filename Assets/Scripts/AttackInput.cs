@@ -4,7 +4,6 @@ using Zenject;
 
 public class AttackInput : MonoBehaviour
 {
-
     [Inject]
     public void Construct(CharacterController characterController,
                           Character character)
@@ -17,6 +16,4 @@ public class AttackInput : MonoBehaviour
             })
             .AddTo(this);
     }
-
-
 }

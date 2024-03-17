@@ -9,11 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47ce28d9a11fd124397affa39c282cbd, type: 3}
-  m_Name: Mob
+  m_Script: {fileID: 11500000, guid: cecfcff32401e8c45963d5bfa5b089e2, type: 3}
+  m_Name: CharacterStats
   m_EditorClassIdentifier: 
   health: 100
-  attackDamage: 1
-  attackSpeed: 12
-  critChance: 0
-  critMult: 0
+  attackTimer: 1
+  critChance: 0.25
+  critMult: 2
