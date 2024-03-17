@@ -499,6 +499,7 @@ MonoBehaviour:
   prefabCharacter: {fileID: 6859527260312034529, guid: 5700b25de6589b0499c093abc9fb792f, type: 3}
   onPickupPS: {fileID: 4977700661301901759, guid: d9e6e2eaea9404d47a037474309bec79, type: 3}
   vaultInstance: {fileID: 5772903999246625768}
+  gameSettings: {fileID: 11400000, guid: 2e2e41ab9de26cb42b7a0edc1a681d59, type: 2}
 --- !u!1 &8870410820895108880
 GameObject:
   m_ObjectHideFlags: 0

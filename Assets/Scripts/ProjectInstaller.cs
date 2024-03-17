@@ -9,6 +9,8 @@ public class ProjectInstaller : MonoInstaller
     [SerializeField] GameObject prefabCharacter;
     [SerializeField] ParticleSystem onPickupPS;
     [SerializeField] Vault vaultInstance;
+    [Header("Game Settings")]
+    [SerializeField] GameSettings gameSettings;
 
     override public void InstallBindings()
     {
@@ -23,6 +25,8 @@ public class ProjectInstaller : MonoInstaller
             )
             .FromComponentsInHierarchy()
             .AsSingle();
+
+        Container.Bind<GameSettings>() .FromInstance(gameSettings) .AsSingle();
 
         Container
             .Bind<SaveSystem>()
