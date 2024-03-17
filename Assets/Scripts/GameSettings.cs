@@ -5,4 +5,6 @@ public class GameSettings : ScriptableObject
 {
     [Header("Loot Manager")]
     public float intervalBetweenDrops;
+    [Header("Save System")]
+    public double autoSaveInterval;
 }

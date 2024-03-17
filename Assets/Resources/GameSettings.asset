@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: GameSettings
   m_EditorClassIdentifier: 
   intervalBetweenDrops: 0.15
+  autoSaveInterval: 15

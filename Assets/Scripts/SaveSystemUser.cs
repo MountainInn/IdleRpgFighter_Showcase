@@ -8,12 +8,14 @@ public class SaveSystemUser : MonoBehaviour
 {
     [Inject] SaveSystem saveSystem;
 
+    [Inject] GameSettings gameSettings;
+
     void Start()
     {
         saveSystem.Load();
 
         Observable
-            .Interval(TimeSpan.FromSeconds(3))
+            .Interval(TimeSpan.FromSeconds(gameSettings.autoSaveInterval))
 
             .DoOnSubscribe(() => saveSystem.Save())
             .Do(            _ => saveSystem.Save())
