@@ -13,10 +13,12 @@ public class SaveSystemUser : MonoBehaviour
         saveSystem.Load();
 
         Observable
-            .Interval(TimeSpan.FromSeconds(10))
+            .Interval(TimeSpan.FromSeconds(3))
+
             .DoOnSubscribe(() => saveSystem.Save())
-            .Do(_ => saveSystem.Save())
-            .DoOnCancel(() => saveSystem.Save())
+            .Do(            _ => saveSystem.Save())
+            .DoOnCancel(   () => saveSystem.Save())
+
             .Debug("SaveSystemUser")
             .Subscribe()
             .AddTo(this);

@@ -22,7 +22,6 @@ public class MainInstaller : BaseInstaller
                 typeof(Mob),
                 typeof(Arena),
                 typeof(LevelSwitcher),
-                typeof(SaveSystemUser),
                 typeof(CharacterSpawnPoint)
             )
             .FromComponentInHierarchy()

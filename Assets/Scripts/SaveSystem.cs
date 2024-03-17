@@ -11,52 +11,94 @@ public class SaveSystem : MonoBehaviour
 {
     static readonly string KEY = "Tut-turu";
 
-    Action makeSaveDict;
-    Action processLoadDict;
-    Dictionary<Component, Action> afterLoads = new();
+    Dictionary<string, object> subs = new();
+
+    Dictionary<string, Action> savers = new();
+    Dictionary<string, Action> loaders = new();
+    Dictionary<object, Action> loadCallbacks = new();
 
     HashSet<string> keys = new();
     Dictionary<string, object> saveDict = new();
     Dictionary<string, Unity.Services.CloudSave.Models.Item> loadDict = new();
 
-    public void MaybeRegister<T>(string key, Func<T> getter,
-                                 Action<T> setter,
-                                 Action afterLoad,
-                                 Component component)
+    public void MaybeRegister<T>(object sub, string key, Func<T> getter, Action<T> setter,
+                                 Action afterLoad = null)
     {
-        if (keys.Contains(key))
-            return;
+        if (!keys.Contains(key))
+            keys.Add(key);
 
-        MaybeRegister(key, getter, setter);
+        bool isPresent = subs.TryGetValue(key, out object cachedSub);
+        //
+        // Same null check as in PopulateSaveDict()
+        //
+        bool isEqualsNull = (cachedSub?.Equals(null) ?? true);
+        bool isExpired = (isPresent && isEqualsNull);
 
-        afterLoads.TryAdd(component, afterLoad);
+        if (isExpired || !isPresent)
+        {
+            subs[key] = sub;
+
+            savers[key] = () =>
+            {
+                saveDict[key] = getter.Invoke();
+            };
+
+            loaders[key] = () =>
+            {
+                if (loadDict.TryGetValue(key, out Item loadedItem))
+                    setter.Invoke(loadedItem.Value.GetAs<T>());
+            };
+
+            if (afterLoad != null)
+            {
+                loadCallbacks[sub] = afterLoad;
+            }
+        }
     }
 
-    public void MaybeRegister<T>(string key, Func<T> getter,
-                                 Action<T> setter)
+    void PopulateSaveDict()
     {
-        if (keys.Contains(key))
-            return;
+        saveDict = new();
 
-        keys.Add(key);
-
-        makeSaveDict += () =>
+        foreach (var (k, v) in savers)
         {
-            saveDict.TryAdd(key, getter.Invoke());
-        };
+            //______________________________________
+            // This is not enough
+            // to check object for null for some reason:
+            //
+            // bool isNotNull = comp != null;
+            //______________________________________
 
-        processLoadDict += () =>
-        {
-            if (loadDict.TryGetValue(key, out Item item))
-                setter.Invoke(item.Value.GetAs<T>());
-        };
+            object sub = subs[k];
+            // Better
+            bool isNotEqualsNull = (!sub?.Equals(null) ?? false);
+
+            if (isNotEqualsNull)
+            {
+                v.Invoke();
+            }
+        }
+    }
+
+    void ProcessLoadDict()
+    {
+        foreach (var (k, v) in loaders)
+            if (subs[k] != null)
+                v.Invoke();
+    }
+
+    void CallbackAfterLoad()
+    {
+        foreach (var (k, v) in loadCallbacks)
+            if (k != null)
+                v.Invoke();
     }
 
     async UniTask MaybeInitialize()
     {
         if (UnityServices.State == ServicesInitializationState.Initialized)
             return;
-       
+
         if (UnityServices.State == ServicesInitializationState.Initializing)
         {
             Debug.Log($"Initializing...");
@@ -83,8 +125,10 @@ public class SaveSystem : MonoBehaviour
     {
         // await MaybeInitialize();
 
-        saveDict = new();
-        makeSaveDict.Invoke();
+        PopulateSaveDict();
+
+        Debug.Log("Saved: " + string.Join(",", saveDict));
+
 
         // var saved = await CloudSaveService.Instance.Data.Player.SaveAsync(saveDict);
 
@@ -99,15 +143,8 @@ public class SaveSystem : MonoBehaviour
 
         Debug.Log("Loaded: " + string.Join(",", loadDict));
 
-        processLoadDict.Invoke();
+        ProcessLoadDict();
 
-        afterLoads
-            ?.Map(kv =>
-            {
-                if (kv.Key != null)
-                {
-                    kv.Value.Invoke();
-                }
-            });
+        CallbackAfterLoad();
     }
 }

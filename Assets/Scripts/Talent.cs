@@ -17,7 +17,8 @@ public abstract class Talent : ScriptableObject
     public void RegisterWithSaveSystem(SaveSystem saveSystem)
     {
         saveSystem
-            .MaybeRegister<int>($"{name}:level",
+            .MaybeRegister<int>(this,
+                                $"{name}:level",
                                 () => buyableLevel.ware.level.Value,
                                 (val) => buyableLevel.ware.SetLevel(val));
     }

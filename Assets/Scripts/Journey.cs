@@ -46,14 +46,14 @@ public class Journey : MonoBehaviour
     void RegisterWithSaveSystem(SaveSystem saveSystem)
     {
         saveSystem
-            .MaybeRegister<SaveState>("journeyState",
+            .MaybeRegister<SaveState>(this,
+                                      "journeyState",
                                       () => saveState,
                                       (val) => saveState = val,
                                       () =>
                                       {
                                           StartQueue();
-                                      },
-                                      this);
+                                      });
     }
 
     void Start()
@@ -136,6 +136,8 @@ public class Journey : MonoBehaviour
             journeyField.onQueueCompleted?.Invoke();
             onQueueCompleted?.Invoke();
         }
+
+        queueCoroutine = null;
     }
 
     public void LoadSaveData(SaveState saveState)
