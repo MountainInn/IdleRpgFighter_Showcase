@@ -667,6 +667,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterAnimatorController: {fileID: 9100000, guid: a4f4468f67961e14bb9ec10582bfe1c2, type: 2}
+  canvasTransform: {fileID: 1434257740}
   chargeProgressBar: {fileID: 449377008}
 --- !u!1 &1434257736
 GameObject:

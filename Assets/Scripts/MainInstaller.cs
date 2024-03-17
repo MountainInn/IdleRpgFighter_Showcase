@@ -10,6 +10,8 @@ public class MainInstaller : BaseInstaller
     [SerializeField] AttackBonusVfx attackBonusVfx;
     [Space]
     [SerializeField] Transform levelHolder;
+    [Space]
+    [SerializeField] WeakPointView prefabWeakPoint;
 
     [Inject] Ally prefabAlly;
 
@@ -27,11 +29,16 @@ public class MainInstaller : BaseInstaller
             .FromComponentInHierarchy()
             .AsSingle();
 
+
+        Container
+            .BindMemoryPool<WeakPointView, WeakPointView.Pool>()
+            .FromComponentInNewPrefab(prefabWeakPoint)
+            .UnderTransform(canvasTransform);
+
         Container
             .Bind<RuntimeAnimatorController>()
             .FromInstance(characterAnimatorController)
             .WhenInjectedInto<AttackInput>();
-
 
         Container
             .Bind<List<Talent>>()

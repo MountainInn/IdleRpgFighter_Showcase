@@ -6,6 +6,8 @@ using System.Collections.Generic;
 public abstract class BaseInstaller : MonoInstaller
 {
     [SerializeField] protected RuntimeAnimatorController characterAnimatorController;
+    [Space]
+    [SerializeField] protected Transform canvasTransform;
 
     protected List<T> InstantiateSOs<T>(string path)
         where T : ScriptableObject

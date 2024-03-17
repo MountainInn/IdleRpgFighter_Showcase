@@ -26,7 +26,6 @@ public class UiInstaller : MonoInstaller
     [SerializeField] FloatingText prefabFloatingText;
     [SerializeField] CritFloatingText prefabCritFloatingText;
     [SerializeField] TalentView talentViewPrefab;
-    [SerializeField] WeakPointView prefabWeakPoint;
     [Space]
     [SerializeField] DPSMeterView dpsMeterView;
     [Space]
@@ -42,11 +41,6 @@ public class UiInstaller : MonoInstaller
     override public void InstallBindings()
     {
         Container .Bind<DPSMeterView>() .FromInstance(dpsMeterView);
-
-        Container
-            .BindMemoryPool<WeakPointView, WeakPointView.Pool>()
-            .FromComponentInNewPrefab(prefabWeakPoint)
-            .UnderTransform(canvasTransform);
 
         Container
             .Bind<CharacterController>()
