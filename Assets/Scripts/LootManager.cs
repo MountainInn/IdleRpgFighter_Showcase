@@ -8,13 +8,7 @@ public class LootManager : MonoBehaviour
 {
     [Inject] Character character;
     [Inject] CollectionAnimation.Pool dropablesPool;
-    [Inject]
-    public void Construct(GameSettings gameSettings)
-    {
-        intervalBetweenDrops = gameSettings.intervalBetweenDrops;
-    }
-
-    float intervalBetweenDrops;
+    [Inject] GameSettings gameSettings;
 
     public void Subscribe(Combatant combatant)
     {
@@ -37,7 +31,7 @@ public class LootManager : MonoBehaviour
                 {
                     DropEntry(combatant, entry);
 
-                    await UniTask.WaitForSeconds(intervalBetweenDrops);
+                    await UniTask.WaitForSeconds(gameSettings.intervalBetweenDrops);
                 }
             }
         }
