@@ -3,42 +3,81 @@ using UnityEngine;
 using Zenject;
 using System.Collections.Generic;
 
-public class MainInstaller : MonoInstaller
+public class MainInstaller : BaseInstaller
 {
+    [Space]
     [SerializeField] BlockVfx blockVfx;
     [SerializeField] AttackBonusVfx attackBonusVfx;
+    [Space]
+    [SerializeField] Transform levelHolder;
+    [Space]
+    [SerializeField] WeakPointView prefabWeakPoint;
 
     [Inject] Ally prefabAlly;
 
-    new void Start()
-    {
-        base.Start();
 
-        InstantiateSOs<Talent>("SO/Talents/");
-        InstantiateSOs<Ability>("SO/Abilities/");
-    }
-   
-    List<T> InstantiateSOs<T>(string path)
-        where T : ScriptableObject
-    {
-        var objects = Resources.LoadAll<T>(path);
-
-        return
-            objects
-            .Select(t => Instantiate(t))
-            .Map(Container.Inject)
-            .ToList();
-    }
 
     override public void InstallBindings()
     {
         Container
             .Bind(
                 typeof(Mob),
-                typeof(Arena)
+                typeof(Arena),
+                typeof(LevelSwitcher),
+                typeof(CharacterSpawnPoint)
             )
             .FromComponentInHierarchy()
             .AsSingle();
+
+
+        Container
+            .BindMemoryPool<WeakPointView, WeakPointView.Pool>()
+            .FromComponentInNewPrefab(prefabWeakPoint)
+            .UnderTransform(canvasTransform);
+
+        Container
+            .Bind<RuntimeAnimatorController>()
+            .FromInstance(characterAnimatorController)
+            .WhenInjectedInto<AttackInput>();
+
+        Container
+            .Bind<List<Talent>>()
+            .FromMethod(() => InstantiateSOs<Talent>("SO/Talents/"))
+            .AsSingle();
+
+        Container
+            .Bind<List<Ability>>()
+            .FromMethod(() => InstantiateSOs<Ability>("SO/Abilities/"))
+            .AsSingle();
+
+        Container
+            .Bind<TalentUser>()
+            .FromMethod(() =>
+            {
+                var users =
+                    GameObject
+                    .FindObjectsOfType<TalentUser>();
+
+                var injected = users.FirstOrDefault(u => u.alreadyInjected);
+
+                if (injected != null)
+                    return injected;
+                else
+                {
+                    var user =
+                        new GameObject(nameof(TalentUser))
+                        .AddComponent<TalentUser>();
+
+                    Container.Inject(user);
+
+                    DontDestroyOnLoad(user);
+                    user.alreadyInjected = true;
+
+                    return user;
+                }
+            })
+            .AsSingle()
+            .NonLazy();
 
         Container
             .BindMemoryPool<Ally, Ally.Pool>()
@@ -60,5 +99,10 @@ public class MainInstaller : MonoInstaller
 
         Container .Bind<BlockVfx>() .FromInstance(blockVfx);
         Container .Bind<AttackBonusVfx>() .FromInstance(attackBonusVfx);
+
+        Container
+            .Bind<Transform>()
+            .FromInstance(levelHolder)
+            .WhenInjectedInto<LevelSwitcher>();
     }
 }

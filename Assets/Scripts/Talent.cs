@@ -13,6 +13,15 @@ public abstract class Talent : ScriptableObject
 
     public abstract IObservable<string> ObserveDescription();
 
+    [Inject]
+    public void RegisterWithSaveSystem(SaveSystem saveSystem)
+    {
+        saveSystem
+            .MaybeRegister<int>(this,
+                                $"{name}:level",
+                                () => buyableLevel.ware.level.Value,
+                                (val) => buyableLevel.ware.SetLevel(val));
+    }
 
     [Inject] protected void InitializeBuyableLevel(Vault vault)
     {

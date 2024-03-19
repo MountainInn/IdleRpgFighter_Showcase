@@ -26,7 +26,6 @@ public class UiInstaller : MonoInstaller
     [SerializeField] FloatingText prefabFloatingText;
     [SerializeField] CritFloatingText prefabCritFloatingText;
     [SerializeField] TalentView talentViewPrefab;
-    [SerializeField] WeakPointView prefabWeakPoint;
     [Space]
     [SerializeField] DPSMeterView dpsMeterView;
     [Space]
@@ -44,11 +43,6 @@ public class UiInstaller : MonoInstaller
         Container .Bind<DPSMeterView>() .FromInstance(dpsMeterView);
 
         Container
-            .BindMemoryPool<WeakPointView, WeakPointView.Pool>()
-            .FromComponentInNewPrefab(prefabWeakPoint)
-            .UnderTransform(canvasTransform);
-
-        Container
             .Bind<CharacterController>()
             .FromComponentInHierarchy()
             .AsSingle();
@@ -56,7 +50,7 @@ public class UiInstaller : MonoInstaller
         Container
             .Bind<SegmentedProgressBar>()
             .FromMethod(() => arenaProgressBar)
-            .WhenInjectedInto<MobSpawner>();
+            .WhenInjectedInto<Journey>();
 
         BindView(talentViewPrefab, talentsParent);
         BindView(abilityButtonPrefab, abilitiesParent);
@@ -98,7 +92,7 @@ public class UiInstaller : MonoInstaller
             .Bind<FloatingTextSpawner>()
             .FromMethod(_ => mobDamagedFloatingText)
             .AsSingle()
-            .WhenInjectedInto<Mob>();
+            .WhenInjectedInto(typeof(Mob), typeof(Rock));
     }
 
     void BindView<T>(T prefabView, Transform parent)

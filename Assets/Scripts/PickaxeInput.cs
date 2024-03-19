@@ -25,13 +25,14 @@ public class PickaxeInput : MonoBehaviour, IDisposable
     [Inject]
     public void Construct(CharacterController charController,
                           Rock rock,
-                          MobView rockView,
                           ProgressBar chargeProgressBar,
-                          FloatingTextSpawner floatingTextSpawner)
+                          RuntimeAnimatorController pickaxeAnimatorController)
     {
         charge = new (0, maxCharge);
         strikeDamage = new();
+
         character.pickaxeInput = this;
+        character.SetAnimatorController(pickaxeAnimatorController);
 
         Button attackButton = charController.AttackButton;
 
@@ -81,16 +82,6 @@ public class PickaxeInput : MonoBehaviour, IDisposable
         chargeProgressBar
             .Subscribe(gameObject, charge)
             .AddTo(this);
-
-        rock
-            .postTakeDamage.AsObservable()
-            .Subscribe(args =>
-            {
-                floatingTextSpawner.FloatDamage(args);
-            })
-            .AddTo(this);
-
-        rockView.Subscribe(rock);
     }
 
     public void Dispose()

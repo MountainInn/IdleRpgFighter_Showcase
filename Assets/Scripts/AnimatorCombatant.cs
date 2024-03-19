@@ -20,6 +20,11 @@ public abstract class AnimatorCombatant : Combatant
         InitObserveStateMachine();
     }
 
+    public void SetAnimatorController(RuntimeAnimatorController controller)
+    {
+        combatantAnimator.runtimeAnimatorController = controller;
+        InitObserveStateMachine();
+    }
     protected void InitObserveStateMachine()
     {
         ObserveStateMachine = combatantAnimator.GetBehaviour<ObservableStateMachineTrigger>();

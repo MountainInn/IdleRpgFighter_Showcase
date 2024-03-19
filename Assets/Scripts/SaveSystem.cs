@@ -2,26 +2,115 @@ using Unity.Services.Core;
 using Unity.Services.Authentication;
 using Unity.Services.CloudSave;
 using UnityEngine;
-using Zenject;
 using System.Collections.Generic;
-using System.Linq;
-using UniRx;
 using System;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
+using Unity.Services.CloudSave.Models;
 
 public class SaveSystem : MonoBehaviour
 {
     static readonly string KEY = "Tut-turu";
 
-    private const string _time = "time";
-    private const string _gold = "gold";
+    Dictionary<string, object> subs = new();
 
-    [Inject] Vault vault;
+    Dictionary<string, Action> savers = new();
+    Dictionary<string, Action> loaders = new();
+    Dictionary<object, Action> loadCallbacks = new();
 
-    async Task Initialize()
+    HashSet<string> keys = new();
+    Dictionary<string, object> saveDict = new();
+    Dictionary<string, Unity.Services.CloudSave.Models.Item> loadDict = new();
+
+    public void MaybeRegister<T>(object sub, string key, Func<T> getter, Action<T> setter,
+                                 Action afterLoad = null)
     {
+        if (!keys.Contains(key))
+            keys.Add(key);
+
+        bool isPresent = subs.TryGetValue(key, out object cachedSub);
+        //
+        // Same null check as in PopulateSaveDict()
+        //
+        bool isEqualsNull = (cachedSub?.Equals(null) ?? true);
+        bool isExpired = (isPresent && isEqualsNull);
+
+        if (isExpired || !isPresent)
+        {
+            subs[key] = sub;
+
+            savers[key] = () =>
+            {
+                saveDict[key] = getter.Invoke();
+            };
+
+            loaders[key] = () =>
+            {
+                if (loadDict.TryGetValue(key, out Item loadedItem))
+                    setter.Invoke(loadedItem.Value.GetAs<T>());
+            };
+
+            if (afterLoad != null)
+            {
+                loadCallbacks[sub] = afterLoad;
+            }
+        }
+    }
+
+    void PopulateSaveDict()
+    {
+        saveDict = new();
+
+        foreach (var (k, v) in savers)
+        {
+            //______________________________________
+            // This is not enough
+            // to check object for null for some reason:
+            //
+            // bool isNotNull = comp != null;
+            //______________________________________
+
+            object sub = subs[k];
+            // Better
+            bool isNotEqualsNull = (!sub?.Equals(null) ?? false);
+
+            if (isNotEqualsNull)
+            {
+                v.Invoke();
+            }
+        }
+    }
+
+    void ProcessLoadDict()
+    {
+        foreach (var (k, v) in loaders)
+            if (subs[k] != null)
+                v.Invoke();
+    }
+
+    void CallbackAfterLoad()
+    {
+        foreach (var (k, v) in loadCallbacks)
+            if (k != null)
+                v.Invoke();
+    }
+
+    async UniTask MaybeInitialize()
+    {
+        if (UnityServices.State == ServicesInitializationState.Initialized)
+            return;
+
+        if (UnityServices.State == ServicesInitializationState.Initializing)
+        {
+            Debug.Log($"Initializing...");
+            await UniTask.WaitUntil(() =>
+                                    UnityServices.State == ServicesInitializationState.Initialized);
+            return;
+        }
+
         if (UnityServices.State == ServicesInitializationState.Uninitialized)
         {
+            Debug.Log($"Start Initialization");
+
             await UnityServices.InitializeAsync();
         }
 
@@ -32,34 +121,30 @@ public class SaveSystem : MonoBehaviour
         }
     }
 
-    public async void Save()
+    public async UniTask Save()
     {
-        await Initialize();
+        // await MaybeInitialize();
 
-        Dictionary<string, object> content = new ()
-        {
-            {_time, DateTime.UtcNow},
-            {_gold, vault.gold.value.Value}
-        };
+        PopulateSaveDict();
 
-        var saved =
-            await CloudSaveService.Instance.Data.Player.SaveAsync(content);
+        Debug.Log("Saved: " + string.Join(",", saveDict));
 
-        Debug.Log("Saved: " + string.Join(",", saved));
+
+        // var saved = await CloudSaveService.Instance.Data.Player.SaveAsync(saveDict);
+
+        // Debug.Log("Saved: " + string.Join(",", saved));
     }
 
-    public async void Load(string json)
+    public async UniTask Load()
     {
-        await Initialize();
+        // await MaybeInitialize();
 
-        HashSet<string> keys = new HashSet<string>() {
-            _time,
-            _gold
-        };
+        // loadDict = await CloudSaveService.Instance.Data.Player.LoadAsync(keys);
 
-        var loaded =
-            await CloudSaveService.Instance.Data.Player.LoadAsync(keys);
+        Debug.Log("Loaded: " + string.Join(",", loadDict));
 
-        vault.gold.value.Value = loaded[_gold].Value.GetAs<int>();
+        ProcessLoadDict();
+
+        CallbackAfterLoad();
     }
 }

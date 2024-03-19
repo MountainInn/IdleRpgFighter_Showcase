@@ -12,9 +12,9 @@ public class DPSMeter : MonoBehaviour
 
     Queue<float> damageSecondsQueue = new();
 
-    public IObservable<float> ObserveDPS(Mob mob)
+    public IObservable<float> ObserveDPS(Combatant combatant)
     {
-        return mob.postTakeDamage.AsObservable()
+        return combatant.postTakeDamage.AsObservable()
             .Select(args => args.damage)
             .Buffer(TimeSpan.FromSeconds(1))
             .Select(damagesInSecond =>

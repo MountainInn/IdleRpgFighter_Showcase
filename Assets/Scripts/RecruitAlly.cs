@@ -18,6 +18,9 @@ public class RecruitAlly : Talent
 
     protected override void OnLevelUp(int level, Price price)
     {
+        if (level == 0)
+            return;
+
         var newAlly = allyPool.Spawn();
 
         allyStats.Apply(newAlly);

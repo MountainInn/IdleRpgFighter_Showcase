@@ -1,11 +1,11 @@
 using UnityEngine;
 using Zenject;
 using UniRx;
+using System;
+using UnityEngine.Events;
 
 public class Mob : AnimatorCombatant
 {
-    [HideInInspector] public DropList dropList;
-
     protected bool mobCanAttack;
 
     [Inject] FloatingTextSpawner takeDamagFloatingTextSpawner;
@@ -45,8 +45,8 @@ public class Mob : AnimatorCombatant
 
         var fade = mobView.GetComponent<Fade>();
 
-        afterDeathAnimation.AddListener(fade.FadeOut);
-        onRespawn.AddListener(fade.FadeIn);
+        afterDeathAnimation.AddListener(() => fade.FadeOut());
+        onRespawn.AddListener(() => fade.FadeIn());
     }
 
     [Inject] void SubscribeToCharacter(Character character)

@@ -11,6 +11,8 @@ abstract public class Combatant : MonoBehaviour
     [SerializeField] public UnityEvent onDie;
     [SerializeField] public UnityEvent onRespawn;
     [SerializeField] public UnityEvent<Combatant> onKill;
+    [Space]
+    [HideInInspector] public DropList dropList;
 
     [HideInInspector] [SerializeField] public StatsSO Stats;
 

@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
@@ -13,14 +12,17 @@ public class Character : AnimatorCombatant
     [HideInInspector] public PickaxeInput pickaxeInput;
 
     [Inject] DiContainer Container;
+    [Inject]
+    public void Construct()
+    {
+        characterStatsSO . ToStats() . Apply(this);
+    }
 
     bool isPlaying;
 
     new void Start()
     {
         base.Start();
-
-        characterStatsSO . ToStats() . Apply(this);
 
         InitObserveStateMachine();
 

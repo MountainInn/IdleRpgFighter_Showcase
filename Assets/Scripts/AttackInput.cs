@@ -6,8 +6,11 @@ public class AttackInput : MonoBehaviour
 {
     [Inject]
     public void Construct(CharacterController characterController,
-                          Character character)
+                          Character character,
+                          RuntimeAnimatorController attackAnimatorController)
     {
+        character.SetAnimatorController(attackAnimatorController);
+
         characterController.AttackButton
             .OnClickAsObservable()
             .Subscribe(_ =>

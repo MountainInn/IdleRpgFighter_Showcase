@@ -9,6 +9,8 @@ public class ProjectInstaller : MonoInstaller
     [SerializeField] GameObject prefabCharacter;
     [SerializeField] ParticleSystem onPickupPS;
     [SerializeField] Vault vaultInstance;
+    [Header("Game Settings")]
+    [SerializeField] GameSettings gameSettings;
 
     override public void InstallBindings()
     {
@@ -17,13 +19,23 @@ public class ProjectInstaller : MonoInstaller
                 typeof(Vault),
                 typeof(LootManager),
                 typeof(Gang),
-                typeof(DPSMeter)
+                typeof(DPSMeter),
+                typeof(SceneLoader),
+                typeof(FullScreenCover)
             )
             .FromComponentsInHierarchy()
             .AsSingle();
 
+        Container.Bind<GameSettings>() .FromInstance(gameSettings) .AsSingle();
+
         Container
             .Bind<SaveSystem>()
+            .FromNewComponentOnNewGameObject()
+            .AsSingle()
+            .NonLazy();
+
+        Container
+            .Bind<SaveSystemUser>()
             .FromNewComponentOnNewGameObject()
             .AsSingle()
             .NonLazy();
@@ -46,7 +58,7 @@ public class ProjectInstaller : MonoInstaller
 
         Container
             .Bind<ParticleSystem>()
-            .FromMethod(() => onPickupPS)
+            .FromComponentInNewPrefab(onPickupPS)
             .WhenInjectedInto<CollectionAnimation>();
 
         Container

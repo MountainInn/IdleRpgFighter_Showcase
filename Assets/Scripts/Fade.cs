@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using System.Linq;
 using DG.Tweening;
+using Cysharp.Threading.Tasks;
 
 [RequireComponent(typeof(CanvasGroup))]
 public class Fade : MonoBehaviour
@@ -12,7 +13,7 @@ public class Fade : MonoBehaviour
     [SerializeField] bool visible;
     [SerializeField] bool interactable;
     [SerializeField] bool blocksRaycast;
-    [SerializeField] float duration;
+    [SerializeField] public float duration;
     [Space]
     [SerializeField] public UnityEvent onFadeIn, onFadeOut;
 
@@ -32,11 +33,12 @@ public class Fade : MonoBehaviour
             FadeIn();
     }
 
-    public void FadeIn()
+    public async UniTask FadeIn()
     {
         canvasGroup.DOKill();
 
-        canvasGroup
+        await
+            canvasGroup
             .DOFade(1, duration)
             .SetEase(Ease.OutQuad)
             .OnKill(() =>
@@ -46,14 +48,16 @@ public class Fade : MonoBehaviour
                 ToggleInteractable();
 
                 onFadeIn?.Invoke();
-            });
+            })
+            .AsyncWaitForKill();
     }
 
-    public void FadeOut()
+    public async UniTask FadeOut()
     {
         canvasGroup.DOKill();
 
-        canvasGroup
+        await
+            canvasGroup
             .DOFade(0, duration)
             .SetEase(Ease.OutQuad)
             .OnStart(() =>
@@ -63,7 +67,8 @@ public class Fade : MonoBehaviour
                 ToggleInteractable();
                
                 onFadeOut?.Invoke();
-            });
+            })
+            .AsyncWaitForKill();
     }
 
     void ToggleInteractable()
