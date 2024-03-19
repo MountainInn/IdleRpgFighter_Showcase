@@ -3,6 +3,7 @@ using UnityEngine.Events;
 using DG.Tweening;
 using Zenject;
 using System;
+using Cysharp.Threading.Tasks;
 
 public class Arena : MonoBehaviour
 {
@@ -56,7 +57,10 @@ public class Arena : MonoBehaviour
                 if (dontSwitchScenes)
                     ResetCharacter();
                 else
-                    sceneLoader.SwitchToGulag();
+                {
+                    ResetCharacterTransform();
+                    sceneLoader.SwitchToGulag().Forget();
+                }
             });
     }
 
@@ -68,26 +72,36 @@ public class Arena : MonoBehaviour
 
     Tween DoSlide(Transform combatant, Transform hatch, float endZ, float endAngle)
     {
+        Vector3 position = combatant.position;
+        position.z =+ endZ;
+        position = Quaternion.AngleAxis(endAngle, Vector3.right) * position;
         return
             DOTween
             .Sequence()
             .Append(hatch
                     .DORotate(new Vector3(endAngle, 0, 0), hatchOpeningDuration)
             )
+            .Insert(0f,combatant
+                    .DORotate(new Vector3(endAngle, 0, 0), hatchOpeningDuration)
+            )
             .Insert(hatchOpeningDuration * .4f,
                     combatant
-                    .DOLocalMoveZ(combatant.position.z + endZ, slideDuration)
+                    .DOLocalMove(position, slideDuration)
                     .SetEase(Ease.InQuad)
             )
             .Append(hatch
                     .DORotate(new Vector3(0, 0, 0), hatchClosingDuration)
             );
     }
-
-    void ResetCharacter()
+    void ResetCharacterTransform()
     {
         characterRoot.position = characterRespawn.position;
+        characterRoot.localRotation = Quaternion.identity;
+    }
+    void ResetCharacter()
+    {
 
+        ResetCharacterTransform();
         onCharacterMovedToRespawnPosition?.Invoke();
 
         character.combatantAnimator.SetTrigger("respawn");
@@ -100,7 +114,7 @@ public class Arena : MonoBehaviour
     void ResetMob()
     {
         mobRoot.position = mobRespawn.position;
-
+        mobRoot.localRotation = Quaternion.identity;
         onMobMovedToRespawnPosition?.Invoke();
 
         mob.combatantAnimator.SetTrigger("respawn");

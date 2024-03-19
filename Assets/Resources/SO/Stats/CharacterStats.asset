@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cecfcff32401e8c45963d5bfa5b089e2, type: 3}
   m_Name: CharacterStats
   m_EditorClassIdentifier: 
-  health: 1000
+  health: 1
   attackTimer: 1
   critChance: 0.25
   critMult: 2
