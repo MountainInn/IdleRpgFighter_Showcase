@@ -1,6 +1,7 @@
 #if UNITY_EDITOR
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using UnityEditor;
 using UnityEditor.EditorTools;
@@ -9,6 +10,8 @@ using UnityEngine.SceneManagement;
 
 public static class AssetsHelpers 
 {
+    private static string LogPath => Directory.GetCurrentDirectory() + "/utils/logs/";
+
     [MenuItem("Tools/Utils/ List all paths for meshes")]
     public static void LogAssetsPathAtCurrentScene()
    {
@@ -33,7 +36,8 @@ public static class AssetsHelpers
                 sb.AppendLine($"GO: {item.gameObject.name} Mesh Path: {path}");
             }
         }
-        Debug.Log( sb.ToString() );
+        Debug.Log(LogPath + "meshes.txt");
+        Utils.FileUtils.WriteAllText(LogPath + "meshes.txt", sb.ToString());
     }
 
 }
