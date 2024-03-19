@@ -3,6 +3,7 @@ using UnityEngine.Events;
 using DG.Tweening;
 using Zenject;
 using System;
+using Cysharp.Threading.Tasks;
 
 public class Arena : MonoBehaviour
 {
@@ -56,7 +57,7 @@ public class Arena : MonoBehaviour
                 if (dontSwitchScenes)
                     ResetCharacter();
                 else
-                    sceneLoader.SwitchToGulag();
+                    sceneLoader.SwitchToGulag().Forget();
             });
     }
 
