@@ -57,7 +57,10 @@ public class Arena : MonoBehaviour
                 if (dontSwitchScenes)
                     ResetCharacter();
                 else
+                {
+                    ResetCharacterTransform();
                     sceneLoader.SwitchToGulag().Forget();
+                }
             });
     }
 
@@ -90,12 +93,15 @@ public class Arena : MonoBehaviour
                     .DORotate(new Vector3(0, 0, 0), hatchClosingDuration)
             );
     }
-
-    void ResetCharacter()
+    void ResetCharacterTransform()
     {
         characterRoot.position = characterRespawn.position;
         characterRoot.localRotation = Quaternion.identity;
+    }
+    void ResetCharacter()
+    {
 
+        ResetCharacterTransform();
         onCharacterMovedToRespawnPosition?.Invoke();
 
         character.combatantAnimator.SetTrigger("respawn");

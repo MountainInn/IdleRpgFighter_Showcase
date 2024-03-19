@@ -413,7 +413,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   arenaSceneBuildIndex: 2
-  gulagSceneBuildIndex: 4
+  gulagSceneBuildIndex: 3
 --- !u!1 &8409171426398874777
 GameObject:
   m_ObjectHideFlags: 0
