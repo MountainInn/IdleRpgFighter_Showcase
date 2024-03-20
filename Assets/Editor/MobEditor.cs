@@ -18,7 +18,7 @@ public class MobEditor : Editor
 
         CombatantTemplate after = mob.startingMobStats.template;
 
-        if (before != after)
+        if (before != after && after != null)
         {
             after.ApplyTemplate(mob.gameObject);
         }
