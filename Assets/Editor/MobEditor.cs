@@ -12,11 +12,11 @@ public class MobEditor : Editor
 
     public override void OnInspectorGUI()
     {
-        CombatantTemplate before = mob.startingMobStats.template;
+        CombatantTemplate before = mob.startingMobStats?.template;
 
         base.OnInspectorGUI();
 
-        CombatantTemplate after = mob.startingMobStats.template;
+        CombatantTemplate after = mob.startingMobStats?.template;
 
         if (before != after && after != null)
         {
