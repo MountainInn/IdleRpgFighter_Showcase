@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.43682337, g: 0.48445904, b: 0.56471527, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 112000002, guid: 13b267e869c525c4abe23fcb7f6510a9, type: 2}
-  m_LightingSettings: {fileID: 0}
+  m_LightingSettings: {fileID: 4890085278179872738, guid: 314ac5f4769e1ca45ab15990f2b9d7bf, type: 2}
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -1513,7 +1513,6 @@ MonoBehaviour:
   prefabFloatingText: {fileID: 6975139298732545734, guid: a69c0c49998ce614fb4b8d874b10b2e4, type: 3}
   prefabCritFloatingText: {fileID: -7062248921582132845, guid: a6fc87ebf51f7ab4aa909d422823afeb, type: 3}
   talentViewPrefab: {fileID: 1806308915050764445, guid: 698620675062b224181cdccbd6117588, type: 3}
-  prefabWeakPoint: {fileID: 8726968288934103438, guid: 3746ddb90fe6374468d13c78055be22c, type: 3}
   dpsMeterView: {fileID: 709101904}
   abilitiesParent: {fileID: 917459633}
   abilityButtonPrefab: {fileID: 1536124745922874444, guid: 9c97364d08e2f494a91d3c8fdcacd3d6, type: 3}

@@ -358,7 +358,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasGroup: {fileID: 5327689013203262988}
-  visible: 1
+  visible: 0
   interactable: 1
   blocksRaycast: 1
   duration: 0.2

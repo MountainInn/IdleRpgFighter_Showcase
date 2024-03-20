@@ -6,6 +6,8 @@ using UnityEngine.Events;
 
 public class Mob : AnimatorCombatant
 {
+    [SerializeField] public MobStatsSO startingMobStats;
+
     protected bool mobCanAttack;
 
     [Inject] FloatingTextSpawner takeDamagFloatingTextSpawner;
