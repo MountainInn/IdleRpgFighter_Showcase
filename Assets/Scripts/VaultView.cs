@@ -5,19 +5,21 @@ using UniRx;
 
 public class VaultView : MonoBehaviour
 {
-    [SerializeField] CurrencyView soulsView;
-    [SerializeField] FloatingTextSpawner floatingTextSpawner;
+    [SerializeField] public CurrencyView goldView;
+    [SerializeField] public FloatingTextSpawner floatingTextSpawner;
 
-    [Inject] public void Construct(Vault vault)
+    [Inject]
+    public void Construct(Vault vault)
     {
-        soulsView.InitAndSubscribe(vault.souls);
+        goldView.InitAndSubscribe(vault.gold);
 
-        vault.souls
-            .ObserveChange()
-            .Subscribe(change =>
-            {                
-                floatingTextSpawner.Float(change.ToString());
-            })
-            .AddTo(this);
+        if (floatingTextSpawner)
+            vault.gold
+                .ObserveChange()
+                .Subscribe(change =>
+                {
+                    floatingTextSpawner.Float(change.ToString());
+                })
+                .AddTo(this);
     }
 }

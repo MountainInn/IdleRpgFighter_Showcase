@@ -1,15 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using System.Linq;
 using DG.Tweening;
+using Cysharp.Threading.Tasks;
 
 [RequireComponent(typeof(CanvasGroup))]
 public class Fade : MonoBehaviour
 {
     [SerializeField] CanvasGroup canvasGroup;
-
     [SerializeField] bool visible;
+    [SerializeField] bool interactable;
+    [SerializeField] bool blocksRaycast;
+    [SerializeField] public float duration;
+    [Space]
+    [SerializeField] public UnityEvent onFadeIn, onFadeOut;
 
     void Awake()
     {
@@ -27,33 +33,47 @@ public class Fade : MonoBehaviour
             FadeIn();
     }
 
-    void FadeIn()
+    public async UniTask FadeIn()
     {
         canvasGroup.DOKill();
 
-        canvasGroup
-            .DOFade(1, 0.25f)
+        await
+            canvasGroup
+            .DOFade(1, duration)
             .SetEase(Ease.OutQuad)
             .OnKill(() =>
             {
-                visible =
-                    canvasGroup.blocksRaycasts =
-                    canvasGroup.interactable = true;
-            });
+                visible = true;
+
+                ToggleInteractable();
+
+                onFadeIn?.Invoke();
+            })
+            .AsyncWaitForKill();
     }
 
-    void FadeOut()
+    public async UniTask FadeOut()
     {
         canvasGroup.DOKill();
 
-        canvasGroup
-            .DOFade(0, 0.25f)
+        await
+            canvasGroup
+            .DOFade(0, duration)
             .SetEase(Ease.OutQuad)
             .OnStart(() =>
             {
-                visible =
-                    canvasGroup.blocksRaycasts =
-                    canvasGroup.interactable = false;
-            });
+                visible = false;
+
+                ToggleInteractable();
+               
+                onFadeOut?.Invoke();
+            })
+            .AsyncWaitForKill();
+    }
+
+    void ToggleInteractable()
+    {
+        canvasGroup.blocksRaycasts = (visible && blocksRaycast);
+        canvasGroup.interactable = (visible && interactable);
     }
 }

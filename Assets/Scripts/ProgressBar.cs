@@ -6,42 +6,39 @@ using UniRx;
 using TMPro;
 using System.Collections.Generic;
 using DG.Tweening;
+using System;
 
 public class ProgressBar : MonoBehaviour
 {
-    [SerializeField] Sprite borderSprite;
-    [SerializeField] Sprite maskSprite;
-    [SerializeField] Sprite fillSprite;
-    [SerializeField] float underFillDelay;
+    [SerializeField] protected Sprite borderSprite;
+    [SerializeField] protected Sprite maskSprite;
+    [SerializeField] protected Sprite fillSprite;
+    [SerializeField] protected float underFillDelay;
     [Space]
-    [SerializeField] [Range(0,1f)] float fillAmount;
-    [SerializeField] float pixelsPerUnit;
-    [SerializeField] Color borderColor;
-    [SerializeField] Color fillColor;
+    [SerializeField] [Range(0,1f)] protected float fillAmount;
+    [SerializeField] protected float pixelsPerUnit;
+    [SerializeField] protected Color borderColor;
+    [SerializeField] protected Color fillColor;
     [Space]
-    [SerializeField] Image borderImage;
-    [SerializeField] Image maskImage;
-    [SerializeField] Image fillImage;
+    [SerializeField] protected Slider slider;
+    [SerializeField] protected Image borderImage;
+    [SerializeField] protected Image maskImage;
+    [SerializeField] protected Image fillImage;
     [Space]
-    [SerializeField] TextMeshProUGUI label;
+    [SerializeField] protected TextMeshProUGUI label;
     [Header("Afterimage")]
-    [SerializeField] ProgressBar afterimage;
-    [SerializeField] Sprite afterimageSprite;
-    [SerializeField] Color afterimageColor;
+    [SerializeField] protected ProgressBar afterimage;
+    [SerializeField] protected Sprite afterimageSprite;
+    [SerializeField] protected Color afterimageColor;
 
-    Slider slider;
+    protected Queue<Tween> queue = new();
 
-    Queue<Tween> queue = new();
-
-    void OnValidate()
+    protected void OnValidate()
     {
-        slider = GetComponent<Slider>();
-
         if (slider)
         {
             slider.value = fillAmount;
         }
-
 
         if (afterimage)
         {
@@ -80,26 +77,32 @@ public class ProgressBar : MonoBehaviour
         }
     }
 
-    public void Subscribe(GameObject volumeOwner, Volume volume)
+    public IDisposable Subscribe(GameObject volumeOwner, Volume volume)
     {
-        volume
+        return
+            volume
             .ObserveAll()
             .TakeWhile(_ => volumeOwner.activeSelf)
             .Subscribe(tup =>
             {
+                if (float.IsNaN(tup.ratio))
+                    return;
+               
                 if (label)
                     label.text = volume.ToString();
 
                 slider.value = tup.ratio;
 
-                var tween = afterimage.slider.DOValue(tup.ratio, underFillDelay);
+                if (afterimage != null)
+                {
+                    var tween = afterimage.slider.DOValue(tup.ratio, underFillDelay);
 
-                QueueTween(tween);
-            })
-            .AddTo(volumeOwner);
+                    QueueTween(tween);
+                }
+            });
     }
 
-    void QueueTween(Tween tween)
+    protected void QueueTween(Tween tween)
     {
         queue.Enqueue(tween);
 

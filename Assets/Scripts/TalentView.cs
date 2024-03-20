@@ -18,7 +18,8 @@ public class TalentView : MonoBehaviour
 
     public void SetDescription(string description)
     {
-        descriptionLabel.text = description;
+        if (descriptionLabel)
+            descriptionLabel.text = description;
     }
 
     public void ConnectBase(Talent talent)

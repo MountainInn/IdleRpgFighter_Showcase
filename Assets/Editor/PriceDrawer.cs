@@ -14,18 +14,20 @@ public class PriceDrawer : PropertyDrawer
     {
         EditorGUI.BeginProperty(position, label, property);
 
-        EditorGUILayout.BeginHorizontal();
-        {
-            EditorGUILayout.LabelField(property.name);
-            EditorGUILayout.PropertyField(property.FindPropertyRelative("currency"),
-                                          new GUIContent(""),
-                                          width3);
+        Rect r = position;
+        r.width = 100;
 
-            EditorGUILayout.PropertyField(property.FindPropertyRelative("cost"),
-                                          new GUIContent(""),
-                                          width3);
-        }
-        EditorGUILayout.EndHorizontal();
+        EditorGUI.LabelField(r, property.name);
+
+        r.x += r.width;
+        r.width = 140;
+        EditorGUI.PropertyField(r, property.FindPropertyRelative("currency"),
+                                new GUIContent(""));
+
+        r.x += r.width;
+        r.width = 80;
+        EditorGUI.PropertyField(r, property.FindPropertyRelative("cost"),
+                                new GUIContent(""));
 
         EditorGUI.EndProperty();
     }

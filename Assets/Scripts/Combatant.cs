@@ -1,56 +1,29 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
-using UniRx;
-using UniRx.Triggers;
 using Zenject;
 
 abstract public class Combatant : MonoBehaviour
 {
     [SerializeField] public Volume health;
     [SerializeField] public Volume attackTimer;
-    [SerializeField] protected LayerMask targetLayers;
-    [Space]
-    [SerializeField] protected StatsSO stats;
     [Space]
     [SerializeField] public UnityEvent onDie;
     [SerializeField] public UnityEvent onRespawn;
     [SerializeField] public UnityEvent<Combatant> onKill;
-    [HeaderAttribute("Animations")]
-    [SerializeField] protected Animator combatantAnimator;
-    [SerializeField] protected string attackTriggerName;
+    [Space]
+    [HideInInspector] public DropList dropList;
 
-    [HideInInspector] public int defense;
+    [HideInInspector] [SerializeField] public StatsSO Stats;
 
-    [Inject] protected Combatant target;
+    [InjectOptional] protected Combatant target;
 
-    public StatsSO Stats => stats;
-    public LayerMask TargetLayers => targetLayers;
-
-
+    [HideInInspector]
     public UnityEvent<DamageArgs>
         preAttack,
         preTakeDamage,
         postTakeDamage,
         postAttack;
-
-    protected int attackTriggerId;
-
-    protected ObservableStateMachineTrigger ObserveStateMachine;
-
-    public void Construct(StatsSO stats)
-    {
-        ObserveStateMachine = combatantAnimator.GetBehaviour<ObservableStateMachineTrigger>();
-
-        this.stats = Instantiate(stats);
-
-        health.ResizeAndRefill(stats.health);
-        attackTimer.Resize(stats.attackSpeed);
-
-        attackTriggerId = Animator.StringToHash(attackTriggerName);
-    }
 
     protected void OnEnable()
     {
@@ -69,18 +42,16 @@ abstract public class Combatant : MonoBehaviour
         return isFull;
     }
 
-    public void InflictDamage_OnAnimEvent()
-    {
-        InflictDamage(target, stats.attackDamage);
-    }
-
     public void InflictDamage(Combatant defender)
     {
-        InflictDamage(defender, stats.attackDamage);
+        InflictDamage(defender, Stats.attackDamage);
     }
 
     public void InflictDamage(Combatant defender, float damage)
     {
+        if (!defender.IsAlive)
+            return;
+       
         DamageArgs args = new DamageArgs()
         {
             attacker = this,

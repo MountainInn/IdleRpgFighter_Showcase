@@ -5,8 +5,6 @@ using UnityEngine.UI;
 
 public class UiInstaller : MonoInstaller
 {
-    [SerializeField] FloatingText prefabFloatingText;
-    [SerializeField] CritFloatingText prefabCritFloatingText;
     [SerializeField] FloatingTextSpawner mobDamagedFloatingText;
     [Space]
     [SerializeField] Transform canvasTransform;
@@ -16,9 +14,51 @@ public class UiInstaller : MonoInstaller
     [SerializeField] MobView mobView;
     [Space]
     [SerializeField] Button attackButton;
+    [Space]
+    [SerializeField] Transform talentsParent;
+    [Space]
+    [SerializeField] VaultView vaultView;
+    [Space]
+    [SerializeField] Transform shopPanel;
+    [Space]
+    [SerializeField] SegmentedProgressBar arenaProgressBar;
+    [Space]
+    [SerializeField] FloatingText prefabFloatingText;
+    [SerializeField] CritFloatingText prefabCritFloatingText;
+    [SerializeField] TalentView talentViewPrefab;
+    [Space]
+    [SerializeField] DPSMeterView dpsMeterView;
+    [Space]
+    [SerializeField] Transform abilitiesParent;
+    [SerializeField] AbilityButton abilityButtonPrefab;
+
+    new void Start()
+    {
+        base.Start();
+        shopPanel.gameObject.SetActive(true);
+    }
 
     override public void InstallBindings()
     {
+        Container .Bind<DPSMeterView>() .FromInstance(dpsMeterView);
+
+        Container
+            .Bind<CharacterController>()
+            .FromComponentInHierarchy()
+            .AsSingle();
+       
+        Container
+            .Bind<SegmentedProgressBar>()
+            .FromMethod(() => arenaProgressBar)
+            .WhenInjectedInto<Journey>();
+
+        BindView(talentViewPrefab, talentsParent);
+        BindView(abilityButtonPrefab, abilitiesParent);
+
+        Container
+            .Bind<VaultView>()
+            .FromMethod(() => vaultView);
+
         Container
             .Bind<Button>()
             .FromMethod(() => attackButton)
@@ -52,7 +92,21 @@ public class UiInstaller : MonoInstaller
             .Bind<FloatingTextSpawner>()
             .FromMethod(_ => mobDamagedFloatingText)
             .AsSingle()
-            .WhenInjectedInto<Mob>();
-
+            .WhenInjectedInto(typeof(Mob), typeof(Rock));
     }
+
+    void BindView<T>(T prefabView, Transform parent)
+        where T : Component
+    {
+        Container
+            .Bind<T>()
+            .FromComponentInNewPrefab(prefabView)
+            .AsTransient()
+            .OnInstantiated<T>((ctx, view) =>
+            {
+                view.transform.SetParent(parent);
+                view.transform.localScale = Vector3.one;
+            });
+    }
+
 }

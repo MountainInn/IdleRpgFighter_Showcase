@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
@@ -7,19 +6,21 @@ public class Vault : MonoBehaviour
     static public Vault instance => _inst ??= FindObjectOfType<Vault>();
     static Vault _inst;
 
-    [SerializeField] public Currency souls;
+    [SerializeField] public Currency gold;
 
+    [Inject] SaveSystem saveSystem;
     [Inject]
-    public void Construct(Character character)
+    void RegisterWithSaveSystem()
     {
-        // character.onKill.AddListener((combatant) =>
-        // {
-        //     if (combatant is Mob mob)
-        //         souls.value.Value += mob.MobStats.soulReward;
-        // });
+        saveSystem
+            .MaybeRegister<int>(this,
+                                "gold",
+                                () => gold.value.Value,
+                                (val) => gold.value.Value = val);
     }
+
     void Awake()
     {
-        souls.value.Value = 0;
+        gold.value.Value = 0;
     }
 }

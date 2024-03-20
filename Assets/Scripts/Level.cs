@@ -14,7 +14,7 @@ public class Level
             statsCalculation
         };
 
-        SetLevel(1);
+        SetLevel(0);
     }
 
     public void AddCalculation(params Action<int>[] statCalculations)
@@ -27,7 +27,7 @@ public class Level
         SetLevel(level.Value + 1);
     }
 
-    void SetLevel(int level)
+    public void SetLevel(int level)
     {
         this.level.Value = level;
 

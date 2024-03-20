@@ -1,55 +1,18 @@
 using UnityEngine;
-using UnityEngine.Events;
 using Zenject;
 using UniRx;
-using UniRx.Triggers;
 using System;
-using System.Collections;
-using DG.Tweening;
+using UnityEngine.Events;
 
-public partial class Mob : Combatant
+public class Mob : AnimatorCombatant
 {
-    [SerializeField] MeshRenderer meshRenderer;
-    [SerializeField] public UnityEvent onAskedToReturnToPool;
-    [SerializeField] public UnityEvent onEnterPreparationState;
-    [SerializeField] public UnityEvent onExitPreparationState;
-    [Space]
-    [Header("Mob")]
-    [SerializeField] StatsSO mobStats;
-
-    public StatsSO MobStats => mobStats;
-
-    Color baseColor;
+    protected bool mobCanAttack;
 
     [Inject] FloatingTextSpawner takeDamagFloatingTextSpawner;
 
-    [Inject] public void Construct(Character character, MobView mobView)
+    protected void Awake()
     {
-        base.Construct(mobStats);
-
-        this.mobStats = (StatsSO)this.stats;
-
-        mobView.Subscribe(this);
-
-        attackTimer.ObserveFull()
-            .WhereEqual(true)
-            .Subscribe(_ => combatantAnimator.SetTrigger(attackTriggerId))
-            .AddTo(this);
-
-
-        ObserveStateMachine
-            .OnStateExitAsObservable()
-            .Subscribe(exit =>
-            {
-                bool isAttack = exit.StateInfo.IsName("standing melee attack downward");
-
-                if (isAttack)
-                {
-                    Debug.Log($"{target}");
-                    InflictDamage(target);
-                }
-            })
-            .AddTo(this);
+        SubscribeToAttackTimerFull();
 
         postTakeDamage.AsObservable()
             .Subscribe(args =>
@@ -57,16 +20,61 @@ public partial class Mob : Combatant
                 takeDamagFloatingTextSpawner?.FloatDamage(args);
             })
             .AddTo(this);
+
+        SubscribeCanAttack();
     }
 
-    void Update()
+    protected void SubscribeToAttackTimerFull()
     {
-        if (CanContinueBattle())
+        attackTimer.ObserveFull()
+            .WhereEqual(true)
+            .Subscribe(_ => combatantAnimator.SetTrigger(attackTriggerId))
+            .AddTo(this);
+    }
+
+    protected void SubscribeCanAttack()
+    {
+        mobCanAttack = true;
+        onDie.AddListener(() => mobCanAttack = false);
+        onRespawn.AddListener(() => mobCanAttack = true);
+    }
+
+    [Inject] void SubToView(MobView mobView)
+    {
+        mobView.Subscribe(this);
+
+        var fade = mobView.GetComponent<Fade>();
+
+        afterDeathAnimation.AddListener(() => fade.FadeOut());
+        onRespawn.AddListener(() => fade.FadeIn());
+    }
+
+    [Inject] void SubscribeToCharacter(Character character)
+    {
+        character.SetTarget(this);
+    }
+
+    [Inject] void SubscribeToDPSMeter(DPSMeter dpsMeter, DPSMeterView dpsView)
+    {
+        dpsMeter
+            .ObserveDPS(this)
+            .Subscribe(dpsView.SetText)
+            .AddTo(this);
+    }
+
+    [Inject] void SubscribeToLootManager(LootManager lootManager)
+    {
+        lootManager.Subscribe(this);
+    }
+
+    [Inject] void SubscribeToGang(Gang gang)
+    {
+        gang.Initialize(this, (Character)target);
+    }
+
+    public void Update()
+    {
+        if (mobCanAttack && CanContinueBattle())
             AttackTimerTick(Time.deltaTime);
-    }
-
-    public void ReturnToPool()
-    {
-        onAskedToReturnToPool.Invoke();
     }
 }

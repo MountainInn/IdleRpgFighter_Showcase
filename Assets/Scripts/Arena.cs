@@ -2,9 +2,13 @@ using UnityEngine;
 using UnityEngine.Events;
 using DG.Tweening;
 using Zenject;
+using System;
+using Cysharp.Threading.Tasks;
 
 public class Arena : MonoBehaviour
 {
+    [SerializeField] bool dontSwitchScenes;
+    [Space]
     [SerializeField] float slideDistance;
     [SerializeField] float slideDuration;
     [Space]
@@ -19,33 +23,45 @@ public class Arena : MonoBehaviour
     [SerializeField] Transform mobRespawn, mobHatch;
     [SerializeField] Transform characterRespawn, characterHatch;
     [Space]
-    [SerializeField] UnityEvent onCharacterReset;
-    [SerializeField] UnityEvent onMobReset;
-   
+    [SerializeField] public UnityEvent onCharacterMovedToRespawnPosition;
+    [SerializeField] public UnityEvent onCharacterReset;
+    [SerializeField] public UnityEvent onMobMovedToRespawnPosition;
+    [SerializeField] public UnityEvent onMobReset;
+
     [Inject] Character character;
     [Inject] Mob mob;
+    [Inject] SceneLoader sceneLoader;
   
-    [Inject] public void Construct()
+    void Start()
     {
-        character.onDie.AddListener( SlideCharacter );
+        characterRoot = character.transform.parent;
 
-        mob.onDie.AddListener( SlideMob );
+        character.afterDeathAnimation
+            .AddListener( SlideCharacter );
 
-        onCharacterReset.AddListener(() =>
-        {
-            character.Respawn();
-        });
+        mob.afterDeathAnimation
+            .AddListener( SlideMob );
 
-        onMobReset.AddListener(() =>
-        {
-            mob.Respawn();
-        });
+        onCharacterReset
+            .AddListener( character.Respawn );
+
+        onMobReset
+            .AddListener( mob.Respawn );
     }
 
     public void SlideCharacter()
     {
         DoSlide(characterRoot, characterHatch, slideDistance, openHatchAngle)
-            .OnKill( ResetCharacter );
+            .OnKill(() =>
+            {
+                if (dontSwitchScenes)
+                    ResetCharacter();
+                else
+                {
+                    ResetCharacterTransform();
+                    sceneLoader.SwitchToGulag().Forget();
+                }
+            });
     }
 
     public void SlideMob()
@@ -56,25 +72,39 @@ public class Arena : MonoBehaviour
 
     Tween DoSlide(Transform combatant, Transform hatch, float endZ, float endAngle)
     {
+        Vector3 position = combatant.position;
+        position.z =+ endZ;
+        position = Quaternion.AngleAxis(endAngle, Vector3.right) * position;
         return
             DOTween
             .Sequence()
             .Append(hatch
                     .DORotate(new Vector3(endAngle, 0, 0), hatchOpeningDuration)
             )
-            .Insert(hatchOpeningDuration * .8f,
+            .Insert(0f,combatant
+                    .DORotate(new Vector3(endAngle, 0, 0), hatchOpeningDuration)
+            )
+            .Insert(hatchOpeningDuration * .4f,
                     combatant
-                    .DOLocalMoveZ(combatant.position.z + endZ, slideDuration)
+                    .DOLocalMove(position, slideDuration)
                     .SetEase(Ease.InQuad)
             )
             .Append(hatch
                     .DORotate(new Vector3(0, 0, 0), hatchClosingDuration)
             );
     }
-
-    void ResetCharacter()
+    void ResetCharacterTransform()
     {
         characterRoot.position = characterRespawn.position;
+        characterRoot.localRotation = Quaternion.identity;
+    }
+    void ResetCharacter()
+    {
+
+        ResetCharacterTransform();
+        onCharacterMovedToRespawnPosition?.Invoke();
+
+        character.combatantAnimator.SetTrigger("respawn");
 
         characterRoot
             .DOLocalMove(Vector3.zero, returnDuration)
@@ -84,6 +114,10 @@ public class Arena : MonoBehaviour
     void ResetMob()
     {
         mobRoot.position = mobRespawn.position;
+        mobRoot.localRotation = Quaternion.identity;
+        onMobMovedToRespawnPosition?.Invoke();
+
+        mob.combatantAnimator.SetTrigger("respawn");
 
         mobRoot
             .DOLocalMove(Vector3.zero, returnDuration)

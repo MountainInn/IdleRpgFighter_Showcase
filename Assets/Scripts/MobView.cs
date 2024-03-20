@@ -2,9 +2,19 @@ using UnityEngine;
 
 public class MobView : MonoBehaviour
 {
-    [SerializeField] ProgressBar healthBar;
-    [SerializeField] ProgressBar attackTimerBar;
+    [SerializeField] protected ProgressBar healthBar;
+    [SerializeField] protected ProgressBar attackTimerBar;
 
+    public void Subscribe(Rock rock)
+    {
+        healthBar.Subscribe(rock.gameObject, rock.health);
+        // attackTimerBar.Subscribe(rock.gameObject, rock.attackTimer);
+    }
+
+    public void SubscribeGulagTimer(Gulag gulag, Volume timer)
+    {
+        attackTimerBar.Subscribe(gulag.gameObject, timer);
+    }
 
     public void Subscribe(Mob mob)
     {

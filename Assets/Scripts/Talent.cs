@@ -8,28 +8,33 @@ public abstract class Talent : ScriptableObject
 
     [HideInInspector] public Buyable<Level> buyableLevel;
 
-    [Inject] public void Construct(Vault vault, TalentView talentView)
-    {
-        InitializeBuyableLevel(vault);
-
-        ConnectToView(talentView);
-    }
 
     protected abstract void OnLevelUp(int level, Price price);
+
     public abstract IObservable<string> ObserveDescription();
 
-    protected void ConnectToView(TalentView talentView)
+    [Inject]
+    public void RegisterWithSaveSystem(SaveSystem saveSystem)
     {
-        talentView.ConnectBase(this);
+        saveSystem
+            .MaybeRegister<int>(this,
+                                $"{name}:level",
+                                () => buyableLevel.ware.level.Value,
+                                (val) => buyableLevel.ware.SetLevel(val));
     }
 
-    protected void InitializeBuyableLevel(Vault vault)
+    [Inject] protected void InitializeBuyableLevel(Vault vault)
     {
-        Price price = new Price(vault.souls);
+        Price price = new Price(vault.gold);
         Level level = new Level(l => OnLevelUp(l, price));
 
         buyableLevel = new Buyable<Level>(level,
                                           level => level.Up(),
                                           price);
+    }
+
+    [Inject] protected void ConnectToView(TalentView talentView)
+    {
+        talentView.ConnectBase(this);
     }
 }

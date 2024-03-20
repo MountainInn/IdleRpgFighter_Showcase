@@ -3,8 +3,17 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using System.Collections;
 using UniRx;
+
+static public class UnityEventExtension
+{
+    static public ObservableYieldInstruction<Unit> TakeYield(this UnityEvent unityEvent, int count)
+    {
+        return unityEvent.AsObservable().Take(count).ToYieldInstruction();
+    }
+}
 
 static public class GameObjectExtension
 {
@@ -15,6 +24,17 @@ static public class GameObjectExtension
         LayerMask thisLayerMask = LayerMask.GetMask(layerName);
 
         return thisLayerMask;
+    }
+    public static void DelayAction(this MonoBehaviour go, float seconds, Action action)
+    {
+        go.StartCoroutine(InvokeDelayedAction(seconds, action));
+    }
+
+    private static IEnumerator InvokeDelayedAction(float seconds, Action action)
+    {
+        if (action == null) yield break;
+        yield return new WaitForSeconds(seconds);
+        action.Invoke();
     }
 }
 
@@ -71,6 +91,32 @@ static public class TransformExtension
 
 static public class StringExtension
 {
+    static public string Encode(this string str, string key)
+    {
+        return Code(str, key, (a, b) => (char)(a + b));
+    }
+
+    static public string Decode(this string str, string key)
+    {
+        return Code(str, key, (a, b) => (char)(a - b));
+    }
+
+    static private string Code(this string str, string key, Func<char, char, char> func)
+    {
+        string keyHash = Hash128.Compute(key).ToString();
+        Debug.Log($"keyHash: {keyHash}");
+
+        return
+            str
+            .Select((strChar, i) =>
+            {
+                char keyChar = keyHash[i % keyHash.Length];
+                return func.Invoke(strChar, keyChar);
+            })
+            .JoinAsString();
+    }
+
+
     static public string JoinAsString(this IEnumerable<string> strs, string delimeter)
     {
         return string.Join(delimeter, strs);
@@ -247,6 +293,27 @@ static public class IntExt
 
 static public class IEnumerableExt
 {
+    public static IEnumerable<T> Scan<T>(this IEnumerable<T> source,
+                                         Func<T, T, T> scanner)
+    {
+        return
+            source
+            .Skip(1)
+            .Aggregate(new [] { source.First() }.AsEnumerable(),
+                       (acum, border) =>
+                       acum.Append( scanner.Invoke(acum.Last(), border) ));
+    }
+
+    public static IEnumerable<IEnumerable<T>> Chunks<T>(this IEnumerable<T> source, int size)
+    {
+        return
+            source
+            .Select((obj, i) => (obj, chunkIndex: i / size))
+            .GroupBy(tuple => tuple.chunkIndex)
+            .Select(gr =>
+                    gr.Select(tuple => tuple.obj));
+    }
+
     public static void DestroyAll<T>(this IEnumerable<T> source)
         where T : Component
     {
@@ -379,7 +446,7 @@ static public class IEnumerableExt
 
     static public IEnumerable<T> Map<T>(this IEnumerable<T> source, Action<T> action)
     {
-        if (source.Count() == 0)
+        if (source.None())
         {
             return source;
         }

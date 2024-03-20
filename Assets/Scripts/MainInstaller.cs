@@ -1,84 +1,108 @@
 using System.Linq;
 using UnityEngine;
 using Zenject;
-using UnityEngine.Events;
-using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
-public class MainInstaller : MonoInstaller
+public class MainInstaller : BaseInstaller
 {
-    
-    // [SerializeField] TalentView prefabTalentView;
-    // [SerializeField] Transform talentViewParent;
-    // [Space]
-    // [SerializeField] AbilityView prefabAbilityView;
-    // [SerializeField] AbilityButton prefabAbilityButton;
-    // [SerializeField] Transform abilityButtonParent;
-    // [Space]
-    // [SerializeField] StatsSO characterStats;
-    // [SerializeField] ProgressBar mobHealthView;
-    // [Space]
-    // [SerializeField] BoxCollider characterHitBox;
+    [Space]
+    [SerializeField] BlockVfx blockVfx;
+    [SerializeField] AttackBonusVfx attackBonusVfx;
+    [Space]
+    [SerializeField] Transform levelHolder;
+    [Space]
+    [SerializeField] WeakPointView prefabWeakPoint;
 
-    // StatsSO[] mobStatSOs;
-    // Talent[] talents;
+    [Inject] Ally prefabAlly;
 
-    // void Awake()
-    // {
-    //     mobStatSOs = Resources.LoadAll<StatsSO>("SO/MobStats");
 
-    //     InstantiateSOs<Talent>("SO/Talents");
-    //     InstantiateSOs<Ability>("SO/Abilities");
-    // }
-
-    // void InstantiateSOs<T>(string path)
-    //     where T : ScriptableObject
-    // {
-    //     var objects = Resources.LoadAll<T>(path);
-    //     objects
-    //         .Select(t => Instantiate(t))
-    //         .Map(Container.Inject);
-    // }
 
     override public void InstallBindings()
     {
         Container
             .Bind(
                 typeof(Mob),
-                typeof(Character)
-                // typeof(DungeonGuide),
-                // typeof(MobSpawner),
-                // typeof(Battle),
-                // typeof(Corridor),
-                // typeof(HitAnimation)
+                typeof(Arena),
+                typeof(LevelSwitcher),
+                typeof(CharacterSpawnPoint)
             )
             .FromComponentInHierarchy()
             .AsSingle();
 
-        Container
-            .Bind<Combatant>().To<Mob>()
-            .FromResolve()
-            .WhenInjectedInto<Character>();
 
         Container
-            .Bind<Combatant>().To<Character>()
+            .BindMemoryPool<WeakPointView, WeakPointView.Pool>()
+            .FromComponentInNewPrefab(prefabWeakPoint)
+            .UnderTransform(canvasTransform);
+
+        Container
+            .Bind<RuntimeAnimatorController>()
+            .FromInstance(characterAnimatorController)
+            .WhenInjectedInto<AttackInput>();
+
+        Container
+            .Bind<List<Talent>>()
+            .FromMethod(() => InstantiateSOs<Talent>("SO/Talents/"))
+            .AsSingle();
+
+        Container
+            .Bind<List<Ability>>()
+            .FromMethod(() => InstantiateSOs<Ability>("SO/Abilities/"))
+            .AsSingle();
+
+        Container
+            .Bind<TalentUser>()
+            .FromMethod(() =>
+            {
+                var users =
+                    GameObject
+                    .FindObjectsOfType<TalentUser>();
+
+                var injected = users.FirstOrDefault(u => u.alreadyInjected);
+
+                if (injected != null)
+                    return injected;
+                else
+                {
+                    var user =
+                        new GameObject(nameof(TalentUser))
+                        .AddComponent<TalentUser>();
+
+                    Container.Inject(user);
+
+                    DontDestroyOnLoad(user);
+                    user.alreadyInjected = true;
+
+                    return user;
+                }
+            })
+            .AsSingle()
+            .NonLazy();
+
+        Container
+            .BindMemoryPool<Ally, Ally.Pool>()
+            .FromComponentInNewPrefab( prefabAlly )
+            .AsTransient();
+
+
+        Container
+            .Bind(typeof(Combatant), typeof(AnimatorCombatant))
+            .To<Mob>()
             .FromResolve()
-            .WhenInjectedInto<Mob>();
+            .WhenInjectedInto(typeof(Character), typeof(Ally));
 
         Container
             .Bind(typeof(DamageModifier), typeof(IInitializable))
             .To(t => t.AllTypes().DerivingFrom<DamageModifier>())
             .AsTransient()
             .NonLazy();
-    }
 
-    void BindView<T>(T prefabView, Transform parent)
-        where T : Component
-    {
+        Container .Bind<BlockVfx>() .FromInstance(blockVfx);
+        Container .Bind<AttackBonusVfx>() .FromInstance(attackBonusVfx);
+
         Container
-            .Bind<T>()
-            .FromComponentInNewPrefab(prefabView)
-            .AsTransient()
-            .OnInstantiated<T>((ctx, view) =>
-                               view.transform.SetParent(parent));
+            .Bind<Transform>()
+            .FromInstance(levelHolder)
+            .WhenInjectedInto<LevelSwitcher>();
     }
 }

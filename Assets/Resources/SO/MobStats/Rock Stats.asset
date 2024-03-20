@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d24eeae49a3e3c40bb378451f1c2723, type: 3}
+  m_Name: Rock Stats
+  m_EditorClassIdentifier: 
+  health: 3000
+  attackDamage: 0
+  attackTimer: 30
+  template: {fileID: 11400000, guid: eacbc44d21bb47440bed075be4a315df, type: 2}
+  dropList: {fileID: 11400000, guid: bd07a9960762d634b85a0a4e70016cb4, type: 2}

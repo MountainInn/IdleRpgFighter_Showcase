@@ -3,7 +3,6 @@ using UnityEngine.Events;
 using UniRx;
 using System;
 using System.Linq;
-using Zenject;
 using TMPro;
 using System.Collections.Generic;
 
@@ -12,42 +11,35 @@ public class DPSMeter : MonoBehaviour
     [SerializeField] int seconds = 10;
 
     Queue<float> damageSecondsQueue = new();
-    TextMeshProUGUI dpsLabel;
 
-    void Awake()
+    public IObservable<float> ObserveDPS(Combatant combatant)
     {
-        SetText(0);
-    }
-
-    [Inject] void Construct(Mob mob, TextMeshProUGUI dpsLabel)
-    {
-        this.dpsLabel = dpsLabel;
-       
-        mob.postTakeDamage.AsObservable()
+        return combatant.postTakeDamage.AsObservable()
             .Select(args => args.damage)
             .Buffer(TimeSpan.FromSeconds(1))
             .Select(damagesInSecond =>
-                    damagesInSecond.DefaultIfEmpty(0).Sum())
-            .Subscribe(damageSecond =>
             {
-                int count = damageSecondsQueue.Count;
+                float sum = damagesInSecond.DefaultIfEmpty(0).Sum();
 
-                if (count >= seconds)
-                    damageSecondsQueue.Dequeue();
+                float dps = CalculateDPS(sum);
 
-                damageSecondsQueue.Enqueue(damageSecond);
-
-                count += 1;
-
-                float dps = damageSecondsQueue.Sum() / count;
-
-                SetText(dps);
+                return dps;
             })
-            .AddTo(this);
+            .StartWith(0);
     }
 
-    void SetText(float dps)
+    float CalculateDPS(float damageSecond)
     {
-        dpsLabel.text = $"DPS: {dps:F0}";
+        int count = damageSecondsQueue.Count;
+
+        if (count >= seconds)
+            damageSecondsQueue.Dequeue();
+
+        damageSecondsQueue.Enqueue(damageSecond);
+
+        count += 1;
+
+        float dps = damageSecondsQueue.Sum() / count;
+        return dps;
     }
 }
