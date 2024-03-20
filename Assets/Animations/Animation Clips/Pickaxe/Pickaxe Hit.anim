@@ -26413,7 +26413,7 @@ AnimationClip:
   m_HasMotionFloatCurves: 1
   m_Events:
   - time: 0.3
-    functionName: Hit
+    functionName: MaybeHitWithPickaxe_OnAnimEvent
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
