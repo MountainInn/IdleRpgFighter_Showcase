@@ -242,68 +242,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 25369149}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1001 &309714017
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 942386164}
-    m_Modifications:
-    - target: {fileID: 5425609117058094668, guid: 7db84c14686f5c2449af0ba0008a94dd, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5425609117058094668, guid: 7db84c14686f5c2449af0ba0008a94dd, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5425609117058094668, guid: 7db84c14686f5c2449af0ba0008a94dd, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5425609117058094668, guid: 7db84c14686f5c2449af0ba0008a94dd, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5425609117058094668, guid: 7db84c14686f5c2449af0ba0008a94dd, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5425609117058094668, guid: 7db84c14686f5c2449af0ba0008a94dd, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5425609117058094668, guid: 7db84c14686f5c2449af0ba0008a94dd, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5425609117058094668, guid: 7db84c14686f5c2449af0ba0008a94dd, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5425609117058094668, guid: 7db84c14686f5c2449af0ba0008a94dd, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5425609117058094668, guid: 7db84c14686f5c2449af0ba0008a94dd, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8463969633121829928, guid: 7db84c14686f5c2449af0ba0008a94dd, type: 3}
-      propertyPath: m_Name
-      value: Env_DefaultArena
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 7db84c14686f5c2449af0ba0008a94dd, type: 3}
---- !u!4 &309714018 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5425609117058094668, guid: 7db84c14686f5c2449af0ba0008a94dd, type: 3}
-  m_PrefabInstance: {fileID: 309714017}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -466,11 +404,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 85.8, y: -93.8, z: 0}
---- !u!4 &942386164 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8403402293155246076, guid: 14ca7196a953664469a98999343fbb3b, type: 3}
-  m_PrefabInstance: {fileID: 6765775530532176803}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &947488049
 GameObject:
   m_ObjectHideFlags: 0
@@ -505,7 +438,7 @@ MonoBehaviour:
   canvasTransform: {fileID: 1739952483}
   blockVfx: {fileID: 25369150}
   attackBonusVfx: {fileID: 1296036958}
-  levelHolder: {fileID: 942386164}
+  levelHolder: {fileID: 0}
   prefabWeakPoint: {fileID: 8726968288934103438, guid: 3746ddb90fe6374468d13c78055be22c, type: 3}
 --- !u!114 &947488051
 MonoBehaviour:
@@ -1084,10 +1017,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 7879550803927406034, guid: 14ca7196a953664469a98999343fbb3b, type: 3}
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 8403402293155246076, guid: 14ca7196a953664469a98999343fbb3b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 309714018}
+    m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 4591835241867888524, guid: 14ca7196a953664469a98999343fbb3b, type: 3}
       insertIndex: -1
