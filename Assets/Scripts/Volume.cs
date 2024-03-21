@@ -15,8 +15,8 @@ public class Volume
 
 
     public Volume() {}
-    public Volume(float current)
-        :this(current, current)
+    public Volume(float currentAndMaximum)
+        :this(currentAndMaximum, currentAndMaximum)
     {
 
     }
@@ -137,6 +137,6 @@ public class Volume
 
     public override string ToString()
     {
-        return $"{current.Value}/{maximum.Value}";
+        return $"{current.Value:0}/{maximum.Value:0}";
     }
 }

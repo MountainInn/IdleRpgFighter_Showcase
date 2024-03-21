@@ -82,7 +82,7 @@ public class ProgressBar : MonoBehaviour
         return
             volume
             .ObserveAll()
-            .TakeWhile(_ => volumeOwner.activeSelf)
+            .TakeWhile(_ => volumeOwner != null && volumeOwner.activeSelf)
             .Subscribe(tup =>
             {
                 if (float.IsNaN(tup.ratio))

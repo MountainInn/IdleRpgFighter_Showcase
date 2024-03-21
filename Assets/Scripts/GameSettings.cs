@@ -7,4 +7,6 @@ public class GameSettings : ScriptableObject
     public float intervalBetweenDrops;
     [Header("Save System")]
     public double autoSaveInterval;
+    [Header("Gulag")]
+    public float gulagDuration;
 }

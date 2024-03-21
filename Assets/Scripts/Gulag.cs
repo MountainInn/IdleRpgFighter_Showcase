@@ -4,16 +4,15 @@ using UniRx;
 
 public class Gulag : MonoBehaviour
 {
-    [SerializeField] float gulagDuration;
-
     [Inject] SceneLoader sceneLoader;
     [Inject] MobView rockView;
+    [Inject] GameSettings gameSettings;
 
     Volume timer;
 
     void Start()
     {
-        timer = new(gulagDuration, gulagDuration);
+        timer = new(gameSettings.gulagDuration);
 
         rockView.SubscribeGulagTimer(this, timer);
 
