@@ -27,6 +27,9 @@ public class SaveSystem : MonoBehaviour
         if (!keys.Contains(key))
             keys.Add(key);
 
+        /// TODO: Сделать проверку на повторяющиеся ключи,
+        /// TODO: чтобы не сделать один и тот же ключи двум разным объектам
+
         bool isPresent = subs.TryGetValue(key, out object cachedSub);
         //
         // Same null check as in PopulateSaveDict()
