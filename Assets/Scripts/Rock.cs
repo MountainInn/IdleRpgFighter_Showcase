@@ -16,10 +16,6 @@ public class Rock : Combatant
     [Inject]
     public void Construct(FloatingTextSpawner floatingTextSpawner, MobView mobView)
     {
-        Respawn();
-
-        mobView.Subscribe(this);
-
         postTakeDamage.AsObservable()
             .Subscribe(args =>
             {
@@ -34,6 +30,8 @@ public class Rock : Combatant
     {
         originalScale = transform.lossyScale;
         squishScale = originalScale * 0.8f;
+
+        Respawn();
     }
 
     Sequence squish;
@@ -53,6 +51,16 @@ public class Rock : Combatant
             .Join(transform
                   .DOPunchScale(squishScale, .15f)
             );
+    }
+
+    [Inject] void SubToView(MobView mobView)
+    {
+        mobView.Subscribe(this);
+
+        var fade = mobView.GetComponent<Fade>();
+
+        onDie.AddListener(() => fade.FadeOut());
+        onRespawn.AddListener(() => fade.FadeIn());
     }
 
     [Inject] void SubscribeToCharacter(Character character)
