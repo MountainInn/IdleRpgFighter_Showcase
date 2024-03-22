@@ -8,6 +8,8 @@ public class GulagInstaller : BaseInstaller
 
     override public void InstallBindings()
     {
+        BindSpawnPoint();
+
         Container
             .Bind<RuntimeAnimatorController>()
             .FromInstance(characterAnimatorController)
@@ -18,8 +20,7 @@ public class GulagInstaller : BaseInstaller
         Container
             .Bind(
                 typeof(PickaxeInput),
-                typeof(Rock),
-                typeof(CharacterSpawnPoint)
+                typeof(Rock)
             )
             .FromComponentInHierarchy()
             .AsSingle();

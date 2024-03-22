@@ -8,6 +8,22 @@ public abstract class BaseInstaller : MonoInstaller
     [SerializeField] protected RuntimeAnimatorController characterAnimatorController;
     [Space]
     [SerializeField] protected Transform canvasTransform;
+    [Space]
+    [SerializeField] protected CharacterSpawnPoint characterSpawnPoint;
+    [SerializeField] protected ParticleSystemForceField particleSystemForce;
+
+    protected void BindSpawnPoint()
+    {
+        Container
+            .Bind<CharacterSpawnPoint>()
+            .FromInstance(characterSpawnPoint)
+            .AsSingle();
+
+        Container
+            .Bind<ParticleSystemForceField>()
+            .FromInstance(particleSystemForce)
+            .AsSingle();
+    }
 
     protected List<T> InstantiateSOs<T>(string path)
         where T : ScriptableObject

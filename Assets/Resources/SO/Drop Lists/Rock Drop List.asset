@@ -15,7 +15,3 @@ MonoBehaviour:
   entries:
   - chance: 1
     drop: {fileID: 11400000, guid: ec542e323bc971c48bcde586419abc41, type: 2}
-  - chance: 0.5
-    drop: {fileID: 11400000, guid: ec542e323bc971c48bcde586419abc41, type: 2}
-  - chance: 0.25
-    drop: {fileID: 11400000, guid: ec542e323bc971c48bcde586419abc41, type: 2}
