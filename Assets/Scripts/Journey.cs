@@ -17,6 +17,7 @@ public class Journey : MonoBehaviour
     SuperVolume arenaProgress;
 
     SaveState saveState;
+    IEnumerable<IEnumerable<MobStatsSO>> queue;
 
     public struct SaveState
     {
@@ -69,10 +70,12 @@ public class Journey : MonoBehaviour
         saveState.queueIndex = 0;
     }
 
-    void SubscribeArenaProgress(IEnumerable<int> subLengths)
+    void SubscribeArenaProgress(MobQueue mobQueue)
     {
         subscriptions?.Dispose();
         subscriptions = new();
+
+        mobQueue.GetSubLengthsAndTotalLength(out IEnumerable<int> subLengths, out int totalLength);
 
         arenaProgress = new SuperVolume(subLengths);
 
@@ -82,7 +85,7 @@ public class Journey : MonoBehaviour
             .AddTo(subscriptions);
 
         arenaProgressBar
-            .Subscribe(arenaProgress, subscriptions);
+            .Subscribe(queue, arenaProgress, subscriptions);
     }
 
     void OnSegmentFinished()
@@ -110,10 +113,9 @@ public class Journey : MonoBehaviour
             mobQueue.GetSubLengthsAndTotalLength(out IEnumerable<int> subLengths,
                                                  out int totalLength);
 
-            SubscribeArenaProgress(subLengths);
+            queue = mobQueue.GenerateQueue();
 
-
-            IEnumerable<IEnumerable<MobStatsSO>> queue = mobQueue.GenerateQueue();
+            SubscribeArenaProgress(mobQueue);
 
             for (; saveState.segmentIndex < queue.Count(); saveState.segmentIndex++)
             {
