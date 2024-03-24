@@ -23,7 +23,8 @@ public class MainInstaller : BaseInstaller
             .Bind(
                 typeof(Mob),
                 typeof(Arena),
-                typeof(LevelSwitcher)
+                typeof(LevelSwitcher),
+                typeof(AttackInput)
             )
             .FromComponentInHierarchy()
             .AsSingle();
