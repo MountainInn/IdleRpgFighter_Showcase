@@ -69,30 +69,32 @@ public class LootManager : MonoBehaviour
 
     void DropGold(int amount)
     {
-        int a = amount;
-
-        DropParticlesConfig.Field cacheField = default;
+        int range = 2;
 
         foreach (var field in dropParticlesConfig.fields)
         {
-            cacheField = field;
-
-            while (a > 0 &&
-                   a > field.goldAmount)
+            if (amount <= 0)
             {
-                a -= field.goldAmount;
-
-                field.lootParticles.Emit();
+                goldMargin = amount;
+                break;
             }
-        }
 
-        if (a > 0)
-        {
-            a -= cacheField.goldAmount;
+            int ceil = Mathf.CeilToInt((float)amount / field.goldAmount);
+            int count;
 
-            cacheField.lootParticles.Emit();
+            if (field == dropParticlesConfig.fields.Last())
+            {
+                count = ceil;
+            }
+            else
+            {
+                int floor = Mathf.Max(0, ceil - range);
+                count = UnityEngine.Random.Range(floor, ceil+1);
+            }
 
-            goldMargin = a;
+            count.ForLoop(_ => field.lootParticles.Emit());
+
+            amount -= field.goldAmount * count;
         }
     }
 
