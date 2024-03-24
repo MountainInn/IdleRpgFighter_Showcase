@@ -25,7 +25,7 @@ public class TemplateEditorData : ScriptableSingleton<TemplateEditorData>
     void Rebuild()
     {
         modularCharacterPrefab =
-            PrefabUtility .LoadPrefabContents("Assets/PolygonFantasyHeroCharacters/Prefabs/Characters_Presets/Chr_FantasyHero_Preset_1.prefab");
+            PrefabUtility .LoadPrefabContents("Assets/Resources/UnityStoreAssets/PolygonFantasyHeroCharacters/Prefabs/Characters_Presets/Chr_FantasyHero_Preset_1.prefab");
 
 
         parts = new();

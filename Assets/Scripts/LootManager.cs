@@ -4,6 +4,7 @@ using UniRx;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using System;
+using System.Collections.Generic;
 
 public class LootManager : MonoBehaviour
 {
@@ -63,6 +64,42 @@ public class LootManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    int maxCount = 5;
+
+    void _RecurseDropGold(int amount, int count,
+                          int fieldId = 0, List<(int, int)> res = default)
+    {
+        if (fieldId == dropParticlesConfig.fields.Count ||
+            count > maxCount)
+        {
+            res = null;
+            return;
+        }
+
+        var field = dropParticlesConfig.fields[fieldId];
+
+        int ceil = Mathf.CeilToInt((float)amount / field.goldAmount);
+
+        ceil
+            .ToRange()
+            .Shuffle()
+            .Map(r =>
+            {
+                int newCount = count + r;
+
+                _RecurseDropGold(amount, newCount, fieldId+1, res);
+
+            });
+
+        // count += random;
+
+        amount -= count * field.goldAmount;
+
+        res.Add((fieldId, count));
+
+        _RecurseDropGold(amount, fieldId+1, count, res);
     }
 
     int goldMargin;

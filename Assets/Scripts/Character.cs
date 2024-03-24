@@ -13,8 +13,10 @@ public class Character : AnimatorCombatant
 
     [Inject] DiContainer Container;
     [Inject]
-    public void Construct()
+    public void Construct(LevelSwitcher levelSwitcher)
     {
+        levelSwitcher.AddSceneLoadedCallback(() => Respawn());
+
         characterStatsSO . ToStats() . Apply(this);
     }
 

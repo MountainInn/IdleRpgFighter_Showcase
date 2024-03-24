@@ -4,7 +4,7 @@ using UniRx;
 
 public class Gulag : MonoBehaviour
 {
-    [Inject] SceneLoader sceneLoader;
+    [Inject] LevelSwitcher levelSwitcher;
     [Inject] MobView rockView;
     [Inject] GameSettings gameSettings;
 
@@ -21,7 +21,7 @@ public class Gulag : MonoBehaviour
             .WhereEqual(true)
             .Subscribe(_ =>
             {
-                sceneLoader.SwitchToArena();
+                levelSwitcher.SwitchToArena();
             })
             .AddTo(this);
     }

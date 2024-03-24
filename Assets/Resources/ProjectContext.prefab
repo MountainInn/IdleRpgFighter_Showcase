@@ -91,6 +91,52 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gold: {fileID: 11400000, guid: b9ab8636c1d943e44a6a011b931ebec7, type: 2}
+--- !u!1 &3642182293411970922
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1659956593623733712}
+  - component: {fileID: 5687281920451038366}
+  m_Layer: 0
+  m_Name: Level Switcher
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1659956593623733712
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3642182293411970922}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.4651187, y: -0.5348753, z: 0.49703673, w: 0.5005274}
+  m_LocalPosition: {x: 2.85, y: 5.43, z: -8.73}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8857178695800857441}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5687281920451038366
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3642182293411970922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76ba29889c61304499dd653eeda28789, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gulagSceneBuildIndex: 3
+  transitionDuration: 0.2
 --- !u!1 &4636823567322888457
 GameObject:
   m_ObjectHideFlags: 0
@@ -368,52 +414,6 @@ MonoBehaviour:
   onFadeOut:
     m_PersistentCalls:
       m_Calls: []
---- !u!1 &7024323376975371566
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6658463287234139018}
-  - component: {fileID: 7883270502167863191}
-  m_Layer: 0
-  m_Name: Scene Loader
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &6658463287234139018
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7024323376975371566}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 8857178695800857441}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7883270502167863191
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7024323376975371566}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 79136c1697cc58948a8444ba22b19839, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  arenaSceneBuildIndex: 2
-  gulagSceneBuildIndex: 3
 --- !u!1 &8409171426398874777
 GameObject:
   m_ObjectHideFlags: 0
@@ -449,7 +449,7 @@ Transform:
   - {fileID: 3228254635999133636}
   - {fileID: 4503794221274879336}
   - {fileID: 681780593607840356}
-  - {fileID: 6658463287234139018}
+  - {fileID: 1659956593623733712}
   - {fileID: 3418119020546372690}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

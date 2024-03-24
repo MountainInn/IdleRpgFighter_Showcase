@@ -25,7 +25,7 @@ public abstract class AnimatorCombatant : Combatant
         combatantAnimator.runtimeAnimatorController = controller;
         InitObserveStateMachine();
     }
-    protected void InitObserveStateMachine()
+    public void InitObserveStateMachine()
     {
         ObserveStateMachine = combatantAnimator.GetBehaviour<ObservableStateMachineTrigger>();
     }

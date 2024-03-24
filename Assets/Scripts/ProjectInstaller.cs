@@ -21,7 +21,7 @@ public class ProjectInstaller : MonoInstaller
                 typeof(LootManager),
                 typeof(Gang),
                 typeof(DPSMeter),
-                typeof(SceneLoader),
+                typeof(LevelSwitcher),
                 typeof(FullScreenCover)
             )
             .FromComponentsInHierarchy()

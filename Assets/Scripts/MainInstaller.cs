@@ -9,8 +9,6 @@ public class MainInstaller : BaseInstaller
     [SerializeField] BlockVfx blockVfx;
     [SerializeField] AttackBonusVfx attackBonusVfx;
     [Space]
-    [SerializeField] Transform levelHolder;
-    [Space]
     [SerializeField] WeakPointView prefabWeakPoint;
 
     [Inject] Ally prefabAlly;
@@ -23,7 +21,6 @@ public class MainInstaller : BaseInstaller
             .Bind(
                 typeof(Mob),
                 typeof(Arena),
-                typeof(LevelSwitcher),
                 typeof(AttackInput)
             )
             .FromComponentInHierarchy()
@@ -103,10 +100,5 @@ public class MainInstaller : BaseInstaller
 
         Container .Bind<BlockVfx>() .FromInstance(blockVfx);
         Container .Bind<AttackBonusVfx>() .FromInstance(attackBonusVfx);
-
-        Container
-            .Bind<Transform>()
-            .FromInstance(levelHolder)
-            .WhenInjectedInto<LevelSwitcher>();
     }
 }
