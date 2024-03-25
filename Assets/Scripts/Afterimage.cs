@@ -49,6 +49,18 @@ public class Afterimage : MonoBehaviour
                 if (!_.StateInfo.IsTag("attack"))
                     return;
 
+                AnimatorClipInfo[] animatorClipInfos =
+                    character
+                    .combatantAnimator
+                    .GetNextAnimatorClipInfo(0);
+
+                if (animatorClipInfos.None())
+                    return;
+
+                string name = animatorClipInfos.ElementAt(0).clip.name;
+
+                _.Animator.Play(name, 0, .8f);
+
                 AnimatorStateInfo animatorStateInfo =
                     character
                     .combatantAnimator
