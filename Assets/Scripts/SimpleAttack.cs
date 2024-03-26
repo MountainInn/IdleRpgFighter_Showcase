@@ -17,13 +17,12 @@ public class SimpleAttack : Ability
     }
 
     [Inject]
-    public void Construct(Character character,
-                          AttackInput attackInput)
+    public void Construct(Character character)
     {
         abilityButton
             .OnClickAsObservable()
             .Subscribe(_ => character.Attack())
-            .AddTo(attackInput.gameObject);
+            .AddTo(character);
     }
 
     public override IObservable<string> ObserveDescription()

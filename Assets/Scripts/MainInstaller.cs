@@ -10,13 +10,15 @@ public class MainInstaller : BaseInstaller
     [SerializeField] AttackBonusVfx attackBonusVfx;
     [Space]
     [SerializeField] WeakPointView prefabWeakPoint;
+    [Space]
+    [SerializeField] SegmentedProgressBar arenaProgressBar;
 
     [Inject] Ally prefabAlly;
 
-
-
     override public void InstallBindings()
     {
+        base.InstallBindings();
+       
         Container
             .Bind(
                 typeof(Mob),
@@ -27,10 +29,10 @@ public class MainInstaller : BaseInstaller
             .AsSingle();
 
         Container
-            .Bind<CharacterSpawnPoint>()
-            .FromInstance(characterSpawnPoint)
-            .AsSingle();
-
+            .Bind<SegmentedProgressBar>()
+            .FromMethod(() => arenaProgressBar)
+            .WhenInjectedInto<Journey>();
+       
         Container
             .BindMemoryPool<WeakPointView, WeakPointView.Pool>()
             .FromComponentInNewPrefab(prefabWeakPoint)

@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using Zenject;
 
@@ -12,9 +13,37 @@ public class ProjectInstaller : MonoInstaller
     [Header("Game Settings")]
     [SerializeField] GameSettings gameSettings;
     [SerializeField] DropParticlesConfig dropParticlesConfig;
+    [Space]
+    [SerializeField] DPSMeterView dpsMeterView;
+    [Space]
+    [SerializeField] Transform talentsParent;
+    [Space]
+    [SerializeField] VaultView vaultView;
+    [Space]
+    [SerializeField] Transform shopPanel;
+    [SerializeField] TalentView talentViewPrefab;
+    [Space]
+    [SerializeField] Transform abilitiesParent;
+    [SerializeField] AbilityButton abilityButtonPrefab;
+    [SerializeField] Canvas canvas;
+
+
+    new void Start()
+    {
+        base.Start();
+        shopPanel.gameObject.SetActive(true);
+    }
 
     override public void InstallBindings()
     {
+        BindView(talentViewPrefab, talentsParent);
+
+        BindView(abilityButtonPrefab, abilitiesParent);
+
+        Container
+            .Bind<VaultView>()
+            .FromMethod(() => vaultView);
+
         Container
             .Bind(
                 typeof(Vault),
@@ -22,10 +51,14 @@ public class ProjectInstaller : MonoInstaller
                 typeof(Gang),
                 typeof(DPSMeter),
                 typeof(LevelSwitcher),
+                typeof(MobView),
                 typeof(FullScreenCover)
             )
             .FromComponentsInHierarchy()
             .AsSingle();
+
+        Container .Bind<DPSMeterView>() .FromInstance(dpsMeterView);
+
 
         Container.Bind<DropParticlesConfig>() .FromInstance(dropParticlesConfig) .AsSingle();
 
@@ -74,4 +107,19 @@ public class ProjectInstaller : MonoInstaller
             .FromNewComponentOnNewPrefab(prefabDropable)
             .AsTransient();
     }
+
+    void BindView<T>(T prefabView, Transform parent)
+        where T : Component
+    {
+        Container
+            .Bind<T>()
+            .FromComponentInNewPrefab(prefabView)
+            .AsTransient()
+            .OnInstantiated<T>((ctx, view) =>
+            {
+                view.transform.SetParent(parent);
+                view.transform.localScale = Vector3.one;
+            });
+    }
+
 }

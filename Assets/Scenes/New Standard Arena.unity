@@ -3781,9 +3781,37 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3245529743446490036, guid: 2e10d3ccc9007ad4b9114e3780148585, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3245529743446490036, guid: 2e10d3ccc9007ad4b9114e3780148585, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4625351770104989002, guid: 2e10d3ccc9007ad4b9114e3780148585, type: 3}
+      propertyPath: enable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5973673148246563294, guid: 2e10d3ccc9007ad4b9114e3780148585, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5973673148246563294, guid: 2e10d3ccc9007ad4b9114e3780148585, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8035939441008725022, guid: 2e10d3ccc9007ad4b9114e3780148585, type: 3}
       propertyPath: m_Name
       value: Arena Scene Context
+      objectReference: {fileID: 0}
+    - target: {fileID: 9150915934079690530, guid: 2e10d3ccc9007ad4b9114e3780148585, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9150915934079690530, guid: 2e10d3ccc9007ad4b9114e3780148585, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

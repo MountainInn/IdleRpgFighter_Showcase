@@ -11,8 +11,13 @@ public abstract class BaseInstaller : MonoInstaller
     [Space]
     [SerializeField] protected CharacterSpawnPoint characterSpawnPoint;
     [SerializeField] protected ParticleSystemForceField particleSystemForce;
+    [Space]
+    [SerializeField] FloatingText prefabFloatingText;
+    [SerializeField] CritFloatingText prefabCritFloatingText;
+    [Space]
+    [SerializeField] FloatingTextSpawner mobDamagedFloatingText;
 
-    protected void BindSpawnPoint()
+    override public void InstallBindings()
     {
         Container
             .Bind<CharacterSpawnPoint>()
@@ -23,6 +28,26 @@ public abstract class BaseInstaller : MonoInstaller
             .Bind<ParticleSystemForceField>()
             .FromInstance(particleSystemForce)
             .AsSingle();
+
+
+        Container
+            .Bind<FloatingTextSpawner>()
+            .FromMethod(_ => mobDamagedFloatingText)
+            .AsSingle()
+            .WhenInjectedInto(typeof(Mob), typeof(Rock));
+
+        Container
+            .BindMemoryPool<FloatingText, FloatingText.Pool>()
+            .WithInitialSize(5)
+            .FromComponentInNewPrefab(prefabFloatingText)
+            .UnderTransform(canvasTransform);
+
+        Container
+            .BindMemoryPool<CritFloatingText, CritFloatingText.Pool>()
+            .WithInitialSize(3)
+            .FromComponentInNewPrefab(prefabCritFloatingText)
+            .UnderTransform(canvasTransform);
+
     }
 
     protected List<T> InstantiateSOs<T>(string path)

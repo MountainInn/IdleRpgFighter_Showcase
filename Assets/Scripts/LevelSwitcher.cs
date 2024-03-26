@@ -13,15 +13,26 @@ public class LevelSwitcher : MonoBehaviour
     public Scene currentLevelScene {get; private set;}
 
     int previousArenaSceneIndex;
-    bool firstCheck = false;
-
     Action onSceneLoadCallback;
+    private const string V = "Stupid Hack Scene";
 
     [Inject] FullScreenCover cover;
     [Inject]
     void Construct()
     {
         cover.duration = transitionDuration;
+
+        bool isStupidHackScenePresent =
+            SceneManager
+            .sceneCount
+            .ToRange()
+            .Select(SceneManager.GetSceneAt)
+            .Any(sc => (sc.name == V));
+
+        if (!isStupidHackScenePresent)
+        {
+            SceneManager.CreateScene(V);
+        }
     }
 
     public void AddSceneLoadedCallback(Action onSceneLoadCallback)
@@ -43,25 +54,30 @@ public class LevelSwitcher : MonoBehaviour
 
     public async UniTask<bool> MaybeSwitchLevel(int levelSceneBuildIndex)
     {
-        int sceneIndex =
+        bool alreadyLoaded =
             SceneManager
             .sceneCount
             .ToRange()
             .Select(SceneManager.GetSceneAt)
-            .ToList()
-            .FindIndex(sc => (sc.buildIndex == levelSceneBuildIndex));
+            .Any(sc => (sc.buildIndex == levelSceneBuildIndex));
 
-        bool alreadyLoaded = (sceneIndex != -1);
-        bool haveToLoad = (!alreadyLoaded);
+        bool haveToLoad = !alreadyLoaded;
 
         if (alreadyLoaded)
+        {
             GetCurrentLevelScene(levelSceneBuildIndex);
-
-        if (haveToLoad)
+        }
+        else
         {
             await cover.FadeIn();
 
-            UniTask unloadTask = UniTask.CompletedTask;
+            UniTask loadTask =
+                SceneManager
+                .LoadSceneAsync(levelSceneBuildIndex, LoadSceneMode.Additive)
+                .ToUniTask();
+
+            UniTask unloadTask;
+           
             if (currentLevelScene.IsValid())
             {
                 unloadTask =
@@ -69,11 +85,10 @@ public class LevelSwitcher : MonoBehaviour
                     .UnloadSceneAsync(currentLevelScene)
                     .ToUniTask();
             }
-
-            UniTask loadTask =
-                SceneManager
-                .LoadSceneAsync(levelSceneBuildIndex, LoadSceneMode.Additive)
-                .ToUniTask();
+            else
+            {
+                unloadTask = UniTask.CompletedTask;
+            }
 
             await UniTask.WhenAll(unloadTask, loadTask);
 
