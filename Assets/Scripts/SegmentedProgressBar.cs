@@ -6,6 +6,7 @@ using DG.Tweening;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class SegmentedProgressBar : ProgressBar
 {
@@ -19,54 +20,39 @@ public class SegmentedProgressBar : ProgressBar
         borderIcon.gameObject.SetActive(false);
     }
 
-    public void Subscribe(SuperVolume superVolume, CompositeDisposable subscriptions)
+    public void Subscribe(IEnumerable<IEnumerable<MobStatsSO>> queue, SuperVolume superVolume, CompositeDisposable subscriptions)
     {
         base.Subscribe(gameObject, superVolume)
             .AddTo(subscriptions);
        
         float width = maskImage.rectTransform.rect.width;
 
-        float superMax = superVolume.maximum.Value;
+        var mobs = queue .SelectMany(segment => segment);
+
+        int mobsCount = mobs.Count();
 
         var xPositions =
-            superVolume.subvolumes
-            .Select(v => v.maximum.Value)
-            .Scan((a, b) => a + b)
-            .Select(x => x / superMax * width);
+            mobsCount
+            .ToRange()
+            .Select(i => (float)i / mobsCount * width);
 
-        icons =
-            icons
-            .ResizeDestructive(xPositions.Count(),
-                               () =>
-                               {
-                                   var icon = Instantiate(borderIcon, maskImage.rectTransform);
 
-                                   icon.gameObject.SetActive(true);
-                                   // ToggleIcon(icon, false);
+        icons.DestroyAll();
 
-                                   return icon;
-                               },
-                               (icon) => Destroy(icon.gameObject))
-            .Zip(xPositions,
-                 (icon, x) =>
-                 {
-                     icon.anchoredPosition = new Vector2(x, 0);
-                     return icon;
-                 })
-            .ToList();
+        foreach (var (mob, x) in mobs.Zip(xPositions))
+        {
+            Image icon =
+                Instantiate(borderIcon, maskImage.rectTransform)
+                .GetComponent<Image>();
 
-        superVolume.ObserveSubvolumeFull()
-            .Subscribe(tuple =>
-            {
-                ToggleIcon(icons[tuple.index], tuple.isFull);
-            })
-            .AddTo(subscriptions);
-    }
+            icon.sprite = mob.icon;
+            icon.gameObject.SetActive(true);
 
-    void ToggleIcon(RectTransform icon, bool toggle)
-    {
-        icon
-            .GetChild(0)
-            .gameObject.SetActive(toggle);
+            RectTransform rect = icon.transform as RectTransform;
+
+            rect.anchoredPosition = new Vector2(x, 0);
+
+            icons.Add(rect);
+        }
     }
 }

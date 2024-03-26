@@ -358,7 +358,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasGroup: {fileID: 5327689013203262988}
-  visible: 1
+  visible: 0
   interactable: 1
   blocksRaycast: 1
   duration: 0.2
@@ -500,6 +500,7 @@ MonoBehaviour:
   onPickupPS: {fileID: 4977700661301901759, guid: d9e6e2eaea9404d47a037474309bec79, type: 3}
   vaultInstance: {fileID: 5772903999246625768}
   gameSettings: {fileID: 11400000, guid: 2e2e41ab9de26cb42b7a0edc1a681d59, type: 2}
+  dropParticlesConfig: {fileID: 11400000, guid: 06abb5c1d9436aa4bafdb557a0215f32, type: 2}
 --- !u!1 &8870410820895108880
 GameObject:
   m_ObjectHideFlags: 0

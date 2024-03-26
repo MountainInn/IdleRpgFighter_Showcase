@@ -10,6 +10,8 @@ public class MobStatsSO : ScriptableObject
     [SerializeField] public CombatantTemplate template;
     [Space]
     [SerializeField] public DropList dropList;
+    [Space]
+    [SerializeField] public Sprite icon;
 
     public StatsSO ToStats()
     {

@@ -7,7 +7,7 @@ using Zenject;
 
 public class PickaxeInput : MonoBehaviour, IDisposable
 {
-    [SerializeField] float baseDamage = 100;
+    [SerializeField] float baseDamage = 30;
     [SerializeField] float damageOnFullCharge = 100;
     [Space]
     [SerializeField] float maxCharge = 100;

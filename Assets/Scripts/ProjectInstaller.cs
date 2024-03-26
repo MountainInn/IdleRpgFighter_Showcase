@@ -11,6 +11,7 @@ public class ProjectInstaller : MonoInstaller
     [SerializeField] Vault vaultInstance;
     [Header("Game Settings")]
     [SerializeField] GameSettings gameSettings;
+    [SerializeField] DropParticlesConfig dropParticlesConfig;
 
     override public void InstallBindings()
     {
@@ -25,6 +26,8 @@ public class ProjectInstaller : MonoInstaller
             )
             .FromComponentsInHierarchy()
             .AsSingle();
+
+        Container.Bind<DropParticlesConfig>() .FromInstance(dropParticlesConfig) .AsSingle();
 
         Container.Bind<GameSettings>() .FromInstance(gameSettings) .AsSingle();
 

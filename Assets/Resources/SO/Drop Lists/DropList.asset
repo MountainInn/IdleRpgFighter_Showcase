@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: DropList
   m_EditorClassIdentifier: 
   entries:
-  - chance: 0.591
+  - chance: 1
     drop: {fileID: 11400000, guid: ec542e323bc971c48bcde586419abc41, type: 2}

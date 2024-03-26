@@ -23,12 +23,15 @@ public class MainInstaller : BaseInstaller
             .Bind(
                 typeof(Mob),
                 typeof(Arena),
-                typeof(LevelSwitcher),
-                typeof(CharacterSpawnPoint)
+                typeof(LevelSwitcher)
             )
             .FromComponentInHierarchy()
             .AsSingle();
 
+        Container
+            .Bind<CharacterSpawnPoint>()
+            .FromInstance(characterSpawnPoint)
+            .AsSingle();
 
         Container
             .BindMemoryPool<WeakPointView, WeakPointView.Pool>()
