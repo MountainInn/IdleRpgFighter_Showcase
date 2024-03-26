@@ -10,6 +10,7 @@ public class Rock : Combatant
     [SerializeField] float minHealth = 30;
     [SerializeField] float maxHealth = 130;
     [SerializeField] float crushTweenDuration = .3f;
+    [SerializeField] private RockEffectHandler effectHandler;
 
     Vector3 originalScale, squishScale;
 
@@ -94,15 +95,9 @@ public class Rock : Combatant
     async UniTask OnCrushed()
     {
         // await squish?.AsyncWaitForKill();
+        effectHandler.CrushRock();
 
-        await transform
-            .DOScaleY(0, crushTweenDuration)
-            .AsyncWaitForKill();
-
-        await transform
-            .DOScale(originalScale, crushTweenDuration)
-            .AsyncWaitForKill();
-
+        await UniTask.WaitForSeconds(crushTweenDuration);
         Respawn();
     }
 
@@ -110,6 +105,7 @@ public class Rock : Combatant
     {
         float newMaximum = UnityEngine.Random.Range(minHealth, maxHealth);
         health.ResizeAndRefill(newMaximum);
+        effectHandler.SpawnRock();
         onRespawn?.Invoke();
     }
 }
