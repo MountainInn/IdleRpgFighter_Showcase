@@ -9,12 +9,6 @@ EditorBuildSettings:
     path: Assets/Scenes/PreloadScene.unity
     guid: 5054b42d2263aa04d9071ab7ac137117
   - enabled: 1
-    path: Assets/Scenes/UIScene.unity
-    guid: d8b3aa10bff272e4d8808839992ac6ea
-  - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: 9fc0d4010bbf28b4594072e72b8655ab
-  - enabled: 1
     path: Assets/Scenes/GulagInCave.unity
     guid: 1f629e813606b30458a7051c94e717f1
   - enabled: 1
