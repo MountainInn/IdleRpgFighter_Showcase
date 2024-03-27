@@ -7,9 +7,13 @@ using System.Collections.Generic;
 
 public class Afterimage : MonoBehaviour
 {
+    [SerializeField] bool enable;
+    [Space]
     [SerializeField] int afterimageCount;
+    [SerializeField] int afterimageLifetimeDivisor = 4;
     [Space]
     [SerializeField] Animator afterimagePrefab;
+    [SerializeField] TrailRenderer trail;
 
     List<Animator> afterimages;
 
@@ -18,6 +22,10 @@ public class Afterimage : MonoBehaviour
     [Inject]
     public void Construct()
     {
+        if (!enable)
+            return;
+        // trail.emitting = false;
+
         afterimages =
             afterimageCount
             .ToRange()
@@ -47,7 +55,10 @@ public class Afterimage : MonoBehaviour
             .Subscribe(_ =>
             {
                 if (!_.StateInfo.IsTag("attack"))
+                {
+                    trail.emitting = false;
                     return;
+                }
 
                 AnimatorClipInfo[] animatorClipInfos =
                     character
@@ -67,6 +78,17 @@ public class Afterimage : MonoBehaviour
                     .GetNextAnimatorStateInfo(0);
 
                 MakeAfterimage(animatorStateInfo);
+
+                // Vector3 swordTrailPosition =
+                //     _
+                //     .Animator
+                //     .GetComponent<SwordEdgePosition>()
+                //     .swordTransform
+                //     .position;
+
+                // trail.AddPosition(swordTrailPosition);
+
+                // trail.emitting = true;
             })
             .AddTo(this);
     }
@@ -75,9 +97,22 @@ public class Afterimage : MonoBehaviour
     {
         foreach (var (i, afterimage) in afterimages.Enumerate())
         {
+            afterimage.gameObject.SetActive(true);
+           
             float time = i / (float)afterimages.Count;
 
             afterimage.Play(state.fullPathHash, 0, time);
+
+            this.StartInvokeAfter(() => afterimage.gameObject.SetActive(false),
+                                  time/ afterimageLifetimeDivisor);
+
+            // Vector3 swordTrailPosition =
+            //     afterimage
+            //     .GetComponent<SwordEdgePosition>()
+            //     .swordTransform
+            //     .position;
+
+            // trail.AddPosition(swordTrailPosition);
         };
     }
 }
