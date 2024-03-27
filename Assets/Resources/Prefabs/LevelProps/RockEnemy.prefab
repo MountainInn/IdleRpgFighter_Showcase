@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1707953098379494415}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.068059586, y: 0.20363994, z: -0.30958775, w: 0.9263121}
+  m_LocalRotation: {x: -0.06805907, y: 0.20363753, z: -0.30958906, w: 0.9263122}
   m_LocalPosition: {x: -0.038, y: 0.933, z: -0.379}
   m_LocalScale: {x: 2.2551, y: 2.2551, z: 2.2551}
   m_ConstrainProportionsScale: 0
@@ -81,6 +81,7 @@ MonoBehaviour:
   minHealth: 30
   maxHealth: 130
   crushTweenDuration: 0.3
+  squishMult: 0.95
   effectHandler: {fileID: 3657718739729519012}
 --- !u!1001 &1268072722603881752
 PrefabInstance:
@@ -128,10 +129,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1188240932512555926, guid: 27fdbcade0e255f40981eeb8921671ea, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3420780072743050703, guid: 27fdbcade0e255f40981eeb8921671ea, type: 3}
-      propertyPath: stopAction
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4592284780991838188, guid: 27fdbcade0e255f40981eeb8921671ea, type: 3}
