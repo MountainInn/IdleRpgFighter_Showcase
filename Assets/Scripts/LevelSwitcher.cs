@@ -1,49 +1,114 @@
 using UnityEngine;
+using System.Linq;
+using UnityEngine.SceneManagement;
 using Zenject;
 using Cysharp.Threading.Tasks;
+using System;
 
 public class LevelSwitcher : MonoBehaviour
 {
-    [SerializeField] GameObject defaultLevel;
+    [SerializeField] int gulagSceneBuildIndex = 3;
     [SerializeField] float transitionDuration;
 
-    GameObject currentLevel;
+    public Scene currentLevelScene {get; private set;}
 
-    [Inject] Transform levelHolder;
+    int previousArenaSceneIndex;
+    Action onSceneLoadCallback;
+    private const string V = "Stupid Hack Scene";
+
     [Inject] FullScreenCover cover;
     [Inject]
     void Construct()
     {
         cover.duration = transitionDuration;
+
+        bool isStupidHackScenePresent =
+            SceneManager
+            .sceneCount
+            .ToRange()
+            .Select(SceneManager.GetSceneAt)
+            .Any(sc => (sc.name == V));
+
+        if (!isStupidHackScenePresent)
+        {
+            SceneManager.CreateScene(V);
+        }
     }
 
-    public async UniTask<bool> MaybeSwitchLevel(GameObject prefabLevel)
+    public void AddSceneLoadedCallback(Action onSceneLoadCallback)
     {
-        Debug.Log($"Switch Level");
-        bool needToSwitch = (currentLevel?.name != prefabLevel.name);
+        this.onSceneLoadCallback += onSceneLoadCallback;
+    }
 
-        if (needToSwitch)
+    public async UniTask SwitchToGulag()
+    {
+        previousArenaSceneIndex = currentLevelScene.buildIndex;
+
+        await MaybeSwitchLevel(gulagSceneBuildIndex);
+    }
+
+    public async UniTask SwitchToArena()
+    {
+        await MaybeSwitchLevel(previousArenaSceneIndex);
+    }
+
+    public async UniTask<bool> MaybeSwitchLevel(int levelSceneBuildIndex)
+    {
+        bool alreadyLoaded =
+            SceneManager
+            .sceneCount
+            .ToRange()
+            .Select(SceneManager.GetSceneAt)
+            .Any(sc => (sc.buildIndex == levelSceneBuildIndex));
+
+        bool haveToLoad = !alreadyLoaded;
+
+        if (alreadyLoaded)
+        {
+            GetCurrentLevelScene(levelSceneBuildIndex);
+        }
+        else
         {
             await cover.FadeIn();
 
-            if (currentLevel != null)
+            UniTask loadTask =
+                SceneManager
+                .LoadSceneAsync(levelSceneBuildIndex, LoadSceneMode.Additive)
+                .ToUniTask();
+
+            UniTask unloadTask;
+           
+            if (currentLevelScene.IsValid())
             {
-                Destroy(currentLevel.gameObject);
-                currentLevel = null;
+                unloadTask =
+                    SceneManager
+                    .UnloadSceneAsync(currentLevelScene)
+                    .ToUniTask();
+            }
+            else
+            {
+                unloadTask = UniTask.CompletedTask;
             }
 
-            foreach (Transform child in levelHolder)
-            {
-                Destroy(child.gameObject);
-            }
+            await UniTask.WhenAll(unloadTask, loadTask);
 
-            currentLevel = Instantiate(prefabLevel, levelHolder);
-            currentLevel.transform.localScale = Vector3.one;
-            currentLevel.transform.localPosition = Vector3.zero;
+            GetCurrentLevelScene(levelSceneBuildIndex);
+
+            onSceneLoadCallback?.Invoke();
 
             await cover.FadeOut();
         }
 
-        return needToSwitch;
+        return haveToLoad;
+    }
+
+    private void GetCurrentLevelScene(int levelSceneBuildIndex)
+    {
+        string targetSceneName =
+            SceneManager
+            .GetSceneByBuildIndex(levelSceneBuildIndex)
+            .name;
+
+        currentLevelScene = SceneManager.GetSceneByName(targetSceneName);
     }
 }

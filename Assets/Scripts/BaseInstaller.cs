@@ -7,13 +7,23 @@ public abstract class BaseInstaller : MonoInstaller
 {
     [SerializeField] protected RuntimeAnimatorController characterAnimatorController;
     [Space]
-    [SerializeField] protected Transform canvasTransform;
+    [SerializeField] protected Canvas canvas;
     [Space]
     [SerializeField] protected CharacterSpawnPoint characterSpawnPoint;
     [SerializeField] protected ParticleSystemForceField particleSystemForce;
+    [Space]
+    [SerializeField] FloatingText prefabFloatingText;
+    [SerializeField] CritFloatingText prefabCritFloatingText;
+    [Space]
+    [SerializeField] FloatingTextSpawner mobDamagedFloatingText;
 
-    protected void BindSpawnPoint()
+    override public void InstallBindings()
     {
+        Container
+            .Bind<Canvas>()
+            .FromInstance(canvas)
+            .AsCached();
+
         Container
             .Bind<CharacterSpawnPoint>()
             .FromInstance(characterSpawnPoint)
@@ -23,6 +33,26 @@ public abstract class BaseInstaller : MonoInstaller
             .Bind<ParticleSystemForceField>()
             .FromInstance(particleSystemForce)
             .AsSingle();
+
+
+        Container
+            .Bind<FloatingTextSpawner>()
+            .FromMethod(_ => mobDamagedFloatingText)
+            .AsSingle()
+            .WhenInjectedInto(typeof(Mob), typeof(Rock));
+
+        Container
+            .BindMemoryPool<FloatingText, FloatingText.Pool>()
+            .WithInitialSize(5)
+            .FromComponentInNewPrefab(prefabFloatingText)
+            .UnderTransform(canvas.transform);
+
+        Container
+            .BindMemoryPool<CritFloatingText, CritFloatingText.Pool>()
+            .WithInitialSize(3)
+            .FromComponentInNewPrefab(prefabCritFloatingText)
+            .UnderTransform(canvas.transform);
+
     }
 
     protected List<T> InstantiateSOs<T>(string path)

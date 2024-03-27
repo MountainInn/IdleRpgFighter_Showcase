@@ -30,7 +30,7 @@ public class Arena : MonoBehaviour
 
     [Inject] Character character;
     [Inject] Mob mob;
-    [Inject] SceneLoader sceneLoader;
+    [Inject] LevelSwitcher levelSwitcher;
   
     void Start()
     {
@@ -59,7 +59,7 @@ public class Arena : MonoBehaviour
                 else
                 {
                     ResetCharacterTransform();
-                    sceneLoader.SwitchToGulag().Forget();
+                    levelSwitcher.SwitchToGulag().Forget();
                 }
             });
     }

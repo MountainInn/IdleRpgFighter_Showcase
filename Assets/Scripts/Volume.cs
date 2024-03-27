@@ -6,9 +6,10 @@ using System;
 [System.SerializableAttribute]
 public class Volume
 {
-    public FloatReactiveProperty
-        maximum,
-        current;
+    public FloatReactiveProperty maximum => _maximum ??= new();
+    public FloatReactiveProperty current => _current ??= new();
+
+    protected FloatReactiveProperty _current, _maximum;
 
 
     public float Unfilled => maximum.Value - current.Value;
@@ -23,8 +24,8 @@ public class Volume
 
     public Volume(float current, float maximum)
     {
-        this.current = new FloatReactiveProperty(current);
-        this.maximum = new FloatReactiveProperty(maximum);
+        this._current = new FloatReactiveProperty(current);
+        this._maximum = new FloatReactiveProperty(maximum);
     }
 
     public IObservable<(float current, float maximum, float ratio)> ObserveAll() =>

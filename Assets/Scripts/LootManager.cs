@@ -4,6 +4,7 @@ using UniRx;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using System;
+using System.Collections.Generic;
 
 public class LootManager : MonoBehaviour
 {
@@ -65,34 +66,72 @@ public class LootManager : MonoBehaviour
         }
     }
 
+    int maxCount = 5;
+
+    void _RecurseDropGold(int amount, int count,
+                          int fieldId = 0, List<(int, int)> res = default)
+    {
+        if (fieldId == dropParticlesConfig.fields.Count ||
+            count > maxCount)
+        {
+            res = null;
+            return;
+        }
+
+        var field = dropParticlesConfig.fields[fieldId];
+
+        int ceil = Mathf.CeilToInt((float)amount / field.goldAmount);
+
+        ceil
+            .ToRange()
+            .Shuffle()
+            .Map(r =>
+            {
+                int newCount = count + r;
+
+                _RecurseDropGold(amount, newCount, fieldId+1, res);
+
+            });
+
+        // count += random;
+
+        amount -= count * field.goldAmount;
+
+        res.Add((fieldId, count));
+
+        _RecurseDropGold(amount, fieldId+1, count, res);
+    }
+
     int goldMargin;
 
     void DropGold(int amount)
     {
-        int a = amount;
-
-        DropParticlesConfig.Field cacheField = default;
+        int range = 2;
 
         foreach (var field in dropParticlesConfig.fields)
         {
-            cacheField = field;
-
-            while (a > 0 &&
-                   a > field.goldAmount)
+            if (amount <= 0)
             {
-                a -= field.goldAmount;
-
-                field.lootParticles.Emit();
+                goldMargin = amount;
+                break;
             }
-        }
 
-        if (a > 0)
-        {
-            a -= cacheField.goldAmount;
+            int ceil = Mathf.CeilToInt((float)amount / field.goldAmount);
+            int count;
 
-            cacheField.lootParticles.Emit();
+            if (field == dropParticlesConfig.fields.Last())
+            {
+                count = ceil;
+            }
+            else
+            {
+                int floor = Mathf.Max(0, ceil - range);
+                count = UnityEngine.Random.Range(floor, ceil+1);
+            }
 
-            goldMargin = a;
+            count.ForLoop(_ => field.lootParticles.Emit());
+
+            amount -= field.goldAmount * count;
         }
     }
 
