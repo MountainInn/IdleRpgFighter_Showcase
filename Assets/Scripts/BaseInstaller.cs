@@ -7,7 +7,7 @@ public abstract class BaseInstaller : MonoInstaller
 {
     [SerializeField] protected RuntimeAnimatorController characterAnimatorController;
     [Space]
-    [SerializeField] protected Transform canvasTransform;
+    [SerializeField] protected Canvas canvas;
     [Space]
     [SerializeField] protected CharacterSpawnPoint characterSpawnPoint;
     [SerializeField] protected ParticleSystemForceField particleSystemForce;
@@ -19,6 +19,11 @@ public abstract class BaseInstaller : MonoInstaller
 
     override public void InstallBindings()
     {
+        Container
+            .Bind<Canvas>()
+            .FromInstance(canvas)
+            .AsCached();
+
         Container
             .Bind<CharacterSpawnPoint>()
             .FromInstance(characterSpawnPoint)
@@ -40,13 +45,13 @@ public abstract class BaseInstaller : MonoInstaller
             .BindMemoryPool<FloatingText, FloatingText.Pool>()
             .WithInitialSize(5)
             .FromComponentInNewPrefab(prefabFloatingText)
-            .UnderTransform(canvasTransform);
+            .UnderTransform(canvas.transform);
 
         Container
             .BindMemoryPool<CritFloatingText, CritFloatingText.Pool>()
             .WithInitialSize(3)
             .FromComponentInNewPrefab(prefabCritFloatingText)
-            .UnderTransform(canvasTransform);
+            .UnderTransform(canvas.transform);
 
     }
 

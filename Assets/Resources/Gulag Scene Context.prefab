@@ -82,7 +82,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterAnimatorController: {fileID: 9100000, guid: a4f4468f67961e14bb9ec10582bfe1c2, type: 2}
-  canvasTransform: {fileID: 5781788262178613409}
+  canvas: {fileID: 5724797017939176486}
   characterSpawnPoint: {fileID: 0}
   particleSystemForce: {fileID: 0}
   prefabFloatingText: {fileID: 6975139298732545734, guid: a69c0c49998ce614fb4b8d874b10b2e4, type: 3}

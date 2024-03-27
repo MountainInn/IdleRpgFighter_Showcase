@@ -16,12 +16,16 @@ public class SimpleAttack : Ability
         public int price;
     }
 
-    [Inject]
-    public void Construct(Character character)
+    protected override void ConcreteSubscribe()
     {
         abilityButton
             .OnClickAsObservable()
-            .Subscribe(_ => character.Attack())
+            .Subscribe(_ =>
+            {
+                character.Attack();
+                DrainEnergy();
+                cooldown.ResetToZero();
+            })
             .AddTo(character);
     }
 

@@ -23,8 +23,6 @@ public class ProjectInstaller : MonoInstaller
     [SerializeField] Transform shopPanel;
     [SerializeField] TalentView talentViewPrefab;
     [Space]
-    [SerializeField] Transform abilitiesParent;
-    [SerializeField] AbilityButton abilityButtonPrefab;
     [SerializeField] Canvas canvas;
 
 
@@ -36,9 +34,8 @@ public class ProjectInstaller : MonoInstaller
 
     override public void InstallBindings()
     {
-        BindView(talentViewPrefab, talentsParent);
-
-        BindView(abilityButtonPrefab, abilitiesParent);
+        Container
+            .BindView(talentViewPrefab, talentsParent);
 
         Container
             .Bind<VaultView>()
@@ -107,19 +104,4 @@ public class ProjectInstaller : MonoInstaller
             .FromNewComponentOnNewPrefab(prefabDropable)
             .AsTransient();
     }
-
-    void BindView<T>(T prefabView, Transform parent)
-        where T : Component
-    {
-        Container
-            .Bind<T>()
-            .FromComponentInNewPrefab(prefabView)
-            .AsTransient()
-            .OnInstantiated<T>((ctx, view) =>
-            {
-                view.transform.SetParent(parent);
-                view.transform.localScale = Vector3.one;
-            });
-    }
-
 }

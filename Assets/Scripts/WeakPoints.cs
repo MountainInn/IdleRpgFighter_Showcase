@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using Zenject;
+using Cysharp.Threading.Tasks;
 
 [CreateAssetMenu(fileName = "WeakPoints", menuName = "SO/Talents/WeakPoints")]
 public class WeakPoints : Talent
 {
+    [SerializeField] float lifespan = 2;
     [SerializeField] List<Field> fields;
 
     [Serializable]
@@ -20,29 +22,24 @@ public class WeakPoints : Talent
     public float chanceToAppearAfterAttack {get; protected set;}
     public float damageMult {get; protected set;}
 
-
+    [Inject] Canvas canvas;
     [Inject]
-    public void Construct(CharacterController characterController,
-                          Character character,
+    public void Construct(Character character,
                           Mob mob,
                           WeakPointView.Pool weakPointViewPool)
     {
-        UnityEngine.UI.Button attackButton = characterController.AttackButton;
-
         character.onAttackAnimEvent
             .AddListener(() =>
             {
                 if (UnityEngine.Random.value < chanceToAppearAfterAttack)
                 {
-                    SpawnWeakPoint(attackButton, weakPointViewPool);
+                    SpawnWeakPoint(canvas, weakPointViewPool);
                 }
             });
 
         weakPointViewPool.onWeakPointClicked = () =>
         {
             Shoot(mob, character);
-
-            attackButton.onClick.Invoke();
         };
     }
 
@@ -53,11 +50,11 @@ public class WeakPoints : Talent
         character.InflictDamage(mob, damage);
     }
 
-    static void SpawnWeakPoint(UnityEngine.UI.Button attackButton, WeakPointView.Pool weakPointViewPool)
+    void SpawnWeakPoint(Canvas canvas, WeakPointView.Pool weakPointViewPool)
     {
         WeakPointView view = weakPointViewPool.Spawn();
 
-        RectTransform rectTransform = attackButton.GetComponent<RectTransform>();
+        RectTransform rectTransform = canvas.GetComponent<RectTransform>();
         Rect rect = rectTransform.rect;
 
         Vector3 canvasScale = Vector3.one * 0.4f;
@@ -69,6 +66,15 @@ public class WeakPoints : Talent
         position.Scale(halfSize * 0.8f);
 
         view.transform.position = position + halfSize;
+
+        UniTask
+            .WaitForSeconds(lifespan)
+            .ContinueWith(() =>
+            {
+                if (view.gameObject.activeSelf)
+                    weakPointViewPool.DisableButtonAndDespawn(view);
+            })
+            .Forget();
     }
 
     protected override void OnLevelUp(int level, Price price)

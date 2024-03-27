@@ -13,11 +13,8 @@ MonoBehaviour:
   m_Name: Block
   m_EditorClassIdentifier: 
   sprite: {fileID: 21300000, guid: dcc6431eaf1034e5790811cfe17e6f58, type: 3}
-  cooldown:
-    maximum:
-      value: 4
-    current:
-      value: 0
+  _cooldown: 4
+  energyCost: 5
   parryTimeWindow: 0.5
   damageReductionMultiplier: 0.5
   canCounterAttack: 1

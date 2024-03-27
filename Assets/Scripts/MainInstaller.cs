@@ -36,7 +36,7 @@ public class MainInstaller : BaseInstaller
         Container
             .BindMemoryPool<WeakPointView, WeakPointView.Pool>()
             .FromComponentInNewPrefab(prefabWeakPoint)
-            .UnderTransform(canvasTransform);
+            .UnderTransform(canvas.transform);
 
         Container
             .Bind<RuntimeAnimatorController>()
