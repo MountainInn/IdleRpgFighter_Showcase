@@ -51,7 +51,7 @@ public class Rock : Combatant
             squish = DOTween
             .Sequence()
             .Join(transform
-                  .DOPunchScale(squishScale, .15f)
+                  .DOPunchScale(Vector3.one * squishMult, .15f, elasticity:1)
             );
     }
 
