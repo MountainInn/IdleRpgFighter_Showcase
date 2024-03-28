@@ -3,8 +3,6 @@ using Zenject;
 using UniRx;
 using System.Linq;
 using Cysharp.Threading.Tasks;
-using System;
-using System.Collections.Generic;
 
 public class LootManager : MonoBehaviour
 {
@@ -59,49 +57,13 @@ public class LootManager : MonoBehaviour
         }
     }
 
-    int maxCount = 5;
-
-    void _RecurseDropGold(int amount, int count,
-                          int fieldId = 0, List<(int, int)> res = default)
-    {
-        if (fieldId == dropParticlesConfig.fields.Count ||
-            count > maxCount)
-        {
-            res = null;
-            return;
-        }
-
-        var field = dropParticlesConfig.fields[fieldId];
-
-        int ceil = Mathf.CeilToInt((float)amount / field.goldAmount);
-
-        ceil
-            .ToRange()
-            .Shuffle()
-            .Map(r =>
-            {
-                int newCount = count + r;
-
-                _RecurseDropGold(amount, newCount, fieldId+1, res);
-
-            });
-
-        // count += random;
-
-        amount -= count * field.goldAmount;
-
-        res.Add((fieldId, count));
-
-        _RecurseDropGold(amount, fieldId+1, count, res);
-    }
-
     int goldMargin;
 
     void DropGold(int amount)
     {
         int range = 2;
 
-        foreach (var field in dropParticlesConfig.fields)
+        foreach (var field in nominalParticles.Fields)
         {
             if (amount <= 0)
             {
@@ -109,10 +71,10 @@ public class LootManager : MonoBehaviour
                 break;
             }
 
-            int ceil = Mathf.CeilToInt((float)amount / field.goldAmount);
+            int ceil = Mathf.CeilToInt((float)amount / field.amount);
             int count;
 
-            if (field == dropParticlesConfig.fields.Last())
+            if (field == nominalParticles.Fields.Last())
             {
                 count = ceil;
             }
@@ -122,9 +84,9 @@ public class LootManager : MonoBehaviour
                 count = UnityEngine.Random.Range(floor, ceil+1);
             }
 
-            count.ForLoop(_ => field.lootParticles.Emit());
+            count.ForLoop(_ => field.particles.Emit());
 
-            amount -= field.goldAmount * count;
+            amount -= field.amount * count;
         }
     }
 

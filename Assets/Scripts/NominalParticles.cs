@@ -13,7 +13,7 @@ public class NominalParticles : MonoBehaviour
     }
 
     [System.Serializable]
-    public struct Field
+    public class Field
     {
         public int amount;
         public LootParticles particles;
