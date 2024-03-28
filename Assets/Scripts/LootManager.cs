@@ -59,55 +59,72 @@ public class LootManager : MonoBehaviour
         }
     }
 
+    int maxCount = 5;
+
+    void _RecurseDropGold(int amount, int count,
+                          int fieldId = 0, List<(int, int)> res = default)
+    {
+        if (fieldId == dropParticlesConfig.fields.Count ||
+            count > maxCount)
+        {
+            res = null;
+            return;
+        }
+
+        var field = dropParticlesConfig.fields[fieldId];
+
+        int ceil = Mathf.CeilToInt((float)amount / field.goldAmount);
+
+        ceil
+            .ToRange()
+            .Shuffle()
+            .Map(r =>
+            {
+                int newCount = count + r;
+
+                _RecurseDropGold(amount, newCount, fieldId+1, res);
+
+            });
+
+        // count += random;
+
+        amount -= count * field.goldAmount;
+
+        res.Add((fieldId, count));
+
+        _RecurseDropGold(amount, fieldId+1, count, res);
+    }
+
     int goldMargin;
 
     void DropGold(int amount)
     {
-        var nominals =
-            nominalParticles
-            .Fields
-            .Select(f => f.amount);
+        int range = 2;
 
-        var res = Recurse(amount, nominals, 0);
-
-
-
-        List<int> Recurse(int amount, IEnumerable<int> nominals, int totalQuantity)
+        foreach (var field in dropParticlesConfig.fields)
         {
-            List<int> res = new();
+            if (amount <= 0)
+            {
+                goldMargin = amount;
+                break;
+            }
 
-            int nominal = nominals.First();
+            int ceil = Mathf.CeilToInt((float)amount / field.goldAmount);
+            int count;
 
-            int maxQuantity = amount / nominal;
+            if (field == dropParticlesConfig.fields.Last())
+            {
+                count = ceil;
+            }
+            else
+            {
+                int floor = Mathf.Max(0, ceil - range);
+                count = UnityEngine.Random.Range(floor, ceil+1);
+            }
 
-            (maxQuantity + 1)
-                .ToRange().Shuffle()
-                .Map(quantity =>
-                {
-                    List<int> res = new();
+            count.ForLoop(_ => field.lootParticles.Emit());
 
-                    int nextAmount = amount - quantity * nominal;
-
-                    int nextTotalQuantity = totalQuantity + quantity;
-
-                    if (nextTotalQuantity > gameSettings.maxParticleCount)
-                        return;
-
-                    res.Add(quantity);
-
-                    if (nominals.Count() == 1)
-                    {
-                        res.Log();
-                        return;
-                    }
-
-                    res.AddRange(
-                        Recurse(nextAmount,
-                                nominals.Skip(1),
-                                totalQuantity + quantity) );
-                });
-
-            return res;
+            amount -= field.goldAmount * count;
         }
     }
 
