@@ -402,7 +402,7 @@ AnimatorStateTransition:
   m_TransitionDuration: 0.24948609
   m_TransitionOffset: 0
   m_ExitTime: 0.5060993
-  m_HasExitTime: 0
+  m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
@@ -425,9 +425,9 @@ AnimatorStateTransition:
   m_IsExit: 0
   serializedVersion: 3
   m_TransitionDuration: 0.14252698
-  m_TransitionOffset: 0.3015857
+  m_TransitionOffset: 0.17860444
   m_ExitTime: 0.46113688
-  m_HasExitTime: 0
+  m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
@@ -562,43 +562,43 @@ AnimatorController:
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: get damage Trigger
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: death Trigger
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: stand up Trigger
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: speed
     m_Type: 1
     m_DefaultFloat: 1
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: respawn
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: block
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
@@ -659,7 +659,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: 2Hand-Sword-Attack6
+  m_Name: 2Hand-Sword-Attack4
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -674,7 +674,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 9a6397b0c49043f42b30e2b50d72ef1e, type: 2}
+  m_Motion: {fileID: 7400000, guid: bb09c4c3682f6cd479490fb4f06c4517, type: 2}
   m_Tag: attack
   m_SpeedParameter: speed
   m_MirrorParameter: 
@@ -740,7 +740,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: 2Hand-Sword-Attack3
+  m_Name: 2Hand-Sword-Attack2
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -755,7 +755,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: b3fe3c75e4145f141aa7241c9aba5da8, type: 2}
+  m_Motion: {fileID: 7400000, guid: f4ab5f8ad5211a546a8b00619679b49a, type: 2}
   m_Tag: attack
   m_SpeedParameter: speed
   m_MirrorParameter: 
@@ -778,10 +778,10 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.15788984
-  m_TransitionOffset: 0.19251733
-  m_ExitTime: 0.5939505
-  m_HasExitTime: 0
+  m_TransitionDuration: 0.36242825
+  m_TransitionOffset: 0
+  m_ExitTime: 0.42350185
+  m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
@@ -808,7 +808,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 33892fbb99780ff4c9d866c4c4295286, type: 2}
+  m_Motion: {fileID: 7400000, guid: b872b4e29609ac243979713eb3725d83, type: 2}
   m_Tag: attack
   m_SpeedParameter: speed
   m_MirrorParameter: 
@@ -930,7 +930,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: 2Hand-Sword-Attack5
+  m_Name: 2Hand-Sword-Attack3
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -945,7 +945,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 70d08af16045d8f408b98a638eb8bb19, type: 2}
+  m_Motion: {fileID: 7400000, guid: 72f86207f72cbc444840a91d3b9d3aa9, type: 2}
   m_Tag: attack
   m_SpeedParameter: speed
   m_MirrorParameter: 
@@ -996,9 +996,9 @@ AnimatorStateTransition:
   m_IsExit: 0
   serializedVersion: 3
   m_TransitionDuration: 0.3578586
-  m_TransitionOffset: 0.19971214
+  m_TransitionOffset: 0
   m_ExitTime: 0.35947007
-  m_HasExitTime: 0
+  m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
   m_OrderedInterruption: 1

@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1105 &110500000
+HumanTemplate:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 3dCharacterBoneMap
+  m_BoneTemplate:
+    Chest: B_Spine1
+    Head: B_Head
+    Hips: B_Pelvis
+    Left Index Distal: B_L_Finger12
+    Left Index Intermediate: B_L_Finger11
+    Left Index Proximal: B_L_Finger1
+    Left Little Distal: B_L_Finger42
+    Left Little Intermediate: B_L_Finger41
+    Left Little Proximal: B_L_Finger4
+    Left Middle Distal: B_L_Finger22
+    Left Middle Intermediate: B_L_Finger21
+    Left Middle Proximal: B_L_Finger2
+    Left Ring Distal: B_L_Finger32
+    Left Ring Intermediate: B_L_Finger31
+    Left Ring Proximal: B_L_Finger3
+    Left Thumb Distal: B_L_Finger02
+    Left Thumb Intermediate: B_L_Finger01
+    Left Thumb Proximal: B_L_Finger0
+    LeftFoot: B_L_Foot
+    LeftHand: B_L_Hand
+    LeftLowerArm: B_L_Forearm
+    LeftLowerLeg: B_L_Calf
+    LeftShoulder: B_L_Clavicle
+    LeftToes: B_L_Toe0
+    LeftUpperArm: B_L_UpperArm
+    LeftUpperLeg: B_L_Thigh
+    Neck: B_Neck
+    Right Index Distal: B_R_Finger12
+    Right Index Intermediate: B_R_Finger11
+    Right Index Proximal: B_R_Finger1
+    Right Little Distal: B_R_Finger42
+    Right Little Intermediate: B_R_Finger41
+    Right Little Proximal: B_R_Finger4
+    Right Middle Distal: B_R_Finger22
+    Right Middle Intermediate: B_R_Finger21
+    Right Middle Proximal: B_R_Finger2
+    Right Ring Distal: B_R_Finger32
+    Right Ring Intermediate: B_R_Finger31
+    Right Ring Proximal: B_R_Finger3
+    Right Thumb Distal: B_R_Finger02
+    Right Thumb Intermediate: B_R_Finger01
+    Right Thumb Proximal: B_R_Finger0
+    RightFoot: B_R_Foot
+    RightHand: B_R_Hand
+    RightLowerArm: B_R_Forearm
+    RightLowerLeg: B_R_Calf
+    RightShoulder: B_R_Clavicle
+    RightToes: B_R_Toe0
+    RightUpperArm: B_R_UpperArm
+    RightUpperLeg: B_R_Thigh
+    Spine: B_Spine
+    UpperChest: B_Spine2
