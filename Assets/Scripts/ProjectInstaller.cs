@@ -8,11 +8,9 @@ public class ProjectInstaller : MonoInstaller
     [SerializeField] CollectionAnimation prefabDropable;
     [SerializeField] Ally prefabAlly;
     [SerializeField] GameObject prefabCharacter;
+    [Header("Instances")]
     [SerializeField] ParticleSystem onPickupPS;
     [SerializeField] Vault vaultInstance;
-    [Header("Game Settings")]
-    [SerializeField] GameSettings gameSettings;
-    [SerializeField] DropParticlesConfig dropParticlesConfig;
     [Space]
     [SerializeField] DPSMeterView dpsMeterView;
     [Space]
@@ -24,6 +22,9 @@ public class ProjectInstaller : MonoInstaller
     [SerializeField] TalentView talentViewPrefab;
     [Space]
     [SerializeField] Canvas canvas;
+    [Header("Game Settings")]
+    [SerializeField] GameSettings gameSettings;
+    [SerializeField] Cheats cheats;
 
 
     new void Start()
@@ -57,9 +58,8 @@ public class ProjectInstaller : MonoInstaller
         Container .Bind<DPSMeterView>() .FromInstance(dpsMeterView);
 
 
-        Container.Bind<DropParticlesConfig>() .FromInstance(dropParticlesConfig) .AsSingle();
-
         Container.Bind<GameSettings>() .FromInstance(gameSettings) .AsSingle();
+        Container.Bind<Cheats>() .FromInstance(cheats) .AsSingle();
 
         Container
             .Bind<SaveSystem>()

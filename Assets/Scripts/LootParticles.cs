@@ -10,9 +10,9 @@ public class LootParticles : MonoBehaviour
 
     List<ParticleSystem.Particle> enter = new();
 
-    void Start()
+    [Inject]
+    void Construct(ParticleSystemForceField collectionField)
     {
-        ParticleSystemForceField collectionField = FindObjectOfType<ParticleSystemForceField>();
         SphereCollider sphereCollider = collectionField.GetComponent<SphereCollider>();
 
         ps.trigger.AddCollider(sphereCollider);

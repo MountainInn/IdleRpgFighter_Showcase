@@ -76,9 +76,9 @@ public class Rock : Combatant
             .AddTo(this);
     }
 
-    [Inject] void SubscribeToLootManager(LootManager lootManager)
+    [Inject] void SubscribeToLootManager(LootManager lootManager, NominalParticles nominalParticles)
     {
-        lootManager.Subscribe(this);
+        lootManager.Subscribe(this, nominalParticles);
     }
 
 

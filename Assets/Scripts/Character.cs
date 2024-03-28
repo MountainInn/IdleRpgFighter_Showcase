@@ -5,6 +5,7 @@ using UnityEngine.Events;
 using UniRx;
 using Zenject;
 using System.Collections.Generic;
+using System;
 
 public class Character : AnimatorCombatant
 {
@@ -24,6 +25,46 @@ public class Character : AnimatorCombatant
         levelSwitcher.AddSceneLoadedCallback(() => Respawn());
 
         characterStatsSO . ToStats() . Apply(this);
+    }
+
+    [Inject]
+    public void SubscribeToCheats(Cheats cheats)
+    {
+        cheats.oneShotMob
+            .WhereEqual(true)
+            .Subscribe(_ =>
+            {
+                preAttack
+                    .AsObservable()
+                    .TakeUntil(cheats.oneShotMob.WhereEqual(false))
+                    .Subscribe(args =>
+                               args.damage = args.defender.health.maximum.Value)
+                    .AddTo(this);
+            })
+            .AddTo(this);
+
+        cheats.oneShotCharacter
+            .WhereEqual(true)
+            .Subscribe(toggle =>
+            {
+                preTakeDamage
+                    .AsObservable()
+                    .TakeUntil(cheats.oneShotCharacter.WhereEqual(false))
+                    .Subscribe(args =>
+                               args.damage = args.defender.health.maximum.Value)
+                    .AddTo(this);
+            })
+            .AddTo(this);
+
+        cheats.godMode
+            .Subscribe(toggle =>
+            {
+                if (toggle)
+                    health.ResizeAndRefill(int.MaxValue);
+                else
+                    health.ResizeAndRefill(characterStatsSO.health);
+            })
+            .AddTo(this);
     }
 
     public void AddTickable(ITickable tickable)

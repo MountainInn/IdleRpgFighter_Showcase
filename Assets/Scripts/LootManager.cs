@@ -3,20 +3,17 @@ using Zenject;
 using UniRx;
 using System.Linq;
 using Cysharp.Threading.Tasks;
-using System;
-using System.Collections.Generic;
 
 public class LootManager : MonoBehaviour
 {
-    DropParticlesConfig dropParticlesConfig;
+    NominalParticles nominalParticles;
 
     [Inject] Character character;
-    [Inject] CollectionAnimation.Pool dropablesPool;
     [Inject] GameSettings gameSettings;
     [Inject] Vault vault;
     [Inject] DiContainer Container;
 
-    public void Subscribe(Combatant combatant)
+    public void Subscribe(Combatant combatant, NominalParticles nominalParticles)
     {
         combatant.onDie
             .AsObservable()
@@ -26,22 +23,16 @@ public class LootManager : MonoBehaviour
             })
             .AddTo(combatant);
 
-        dropParticlesConfig = Container.Resolve<DropParticlesConfig>();
-        dropParticlesConfig.fields .Sort((a, b) => b.goldAmount.CompareTo(a.goldAmount));
-        dropParticlesConfig = Instantiate(dropParticlesConfig);
+        this.nominalParticles = nominalParticles;
 
-        foreach (var field in dropParticlesConfig.fields)
+        foreach (var field in nominalParticles.Fields)
         {
-            field.lootParticles =
-                Container
-                .InstantiatePrefabForComponent<LootParticles>(field.lootParticles);
-
-            field.lootParticles.transform.position =
+            field.particles.transform.position =
                 combatant.transform.position + new Vector3(0, 0.5f, 0);
            
-            field.lootParticles
+            field.particles
                 .onParticleHitCharacter
-                .AddListener(() => LootGold(field.goldAmount));
+                .AddListener(() => LootGold(field.amount));
         }
     }
 
@@ -66,49 +57,13 @@ public class LootManager : MonoBehaviour
         }
     }
 
-    int maxCount = 5;
-
-    void _RecurseDropGold(int amount, int count,
-                          int fieldId = 0, List<(int, int)> res = default)
-    {
-        if (fieldId == dropParticlesConfig.fields.Count ||
-            count > maxCount)
-        {
-            res = null;
-            return;
-        }
-
-        var field = dropParticlesConfig.fields[fieldId];
-
-        int ceil = Mathf.CeilToInt((float)amount / field.goldAmount);
-
-        ceil
-            .ToRange()
-            .Shuffle()
-            .Map(r =>
-            {
-                int newCount = count + r;
-
-                _RecurseDropGold(amount, newCount, fieldId+1, res);
-
-            });
-
-        // count += random;
-
-        amount -= count * field.goldAmount;
-
-        res.Add((fieldId, count));
-
-        _RecurseDropGold(amount, fieldId+1, count, res);
-    }
-
     int goldMargin;
 
     void DropGold(int amount)
     {
         int range = 2;
 
-        foreach (var field in dropParticlesConfig.fields)
+        foreach (var field in nominalParticles.Fields)
         {
             if (amount <= 0)
             {
@@ -116,10 +71,10 @@ public class LootManager : MonoBehaviour
                 break;
             }
 
-            int ceil = Mathf.CeilToInt((float)amount / field.goldAmount);
+            int ceil = Mathf.CeilToInt((float)amount / field.amount);
             int count;
 
-            if (field == dropParticlesConfig.fields.Last())
+            if (field == nominalParticles.Fields.Last())
             {
                 count = ceil;
             }
@@ -129,9 +84,9 @@ public class LootManager : MonoBehaviour
                 count = UnityEngine.Random.Range(floor, ceil+1);
             }
 
-            count.ForLoop(_ => field.lootParticles.Emit());
+            count.ForLoop(_ => field.particles.Emit());
 
-            amount -= field.goldAmount * count;
+            amount -= field.amount * count;
         }
     }
 

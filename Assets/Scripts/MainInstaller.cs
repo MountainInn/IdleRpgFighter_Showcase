@@ -23,6 +23,7 @@ public class MainInstaller : BaseInstaller
             .Bind(
                 typeof(Mob),
                 typeof(Arena),
+                typeof(Battle),
                 typeof(AttackInput)
             )
             .FromComponentInHierarchy()

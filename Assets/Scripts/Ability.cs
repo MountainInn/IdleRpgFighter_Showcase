@@ -27,7 +27,7 @@ public abstract class Ability : Talent, ITickable
                            ObserveHaveEnoughEnergy(),
                            (isReady, isEnough) => isReady && isEnough)
             .SubscribeToInteractable(abilityButton)
-            .AddTo(character);
+            .AddTo(abilityButton);
 
         ConcreteSubscribe();
     }

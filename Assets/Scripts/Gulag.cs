@@ -7,6 +7,7 @@ public class Gulag : MonoBehaviour
     [Inject] LevelSwitcher levelSwitcher;
     [Inject] MobView rockView;
     [Inject] GameSettings gameSettings;
+    [Inject] Cheats cheats;
 
     Volume timer;
 
@@ -28,6 +29,9 @@ public class Gulag : MonoBehaviour
 
     void Update()
     {
+        if (cheats.everlastingGulag.Value)
+            return;
+       
         timer.Subtract(Time.deltaTime);
     }
 }

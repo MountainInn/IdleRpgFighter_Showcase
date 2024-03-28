@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: GameSettings
   m_EditorClassIdentifier: 
   intervalBetweenDrops: 0.15
+  maxParticleCount: 8
   autoSaveInterval: 15
   gulagDuration: 12
