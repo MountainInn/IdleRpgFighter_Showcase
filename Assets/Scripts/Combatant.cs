@@ -6,7 +6,7 @@ using Zenject;
 abstract public class Combatant : MonoBehaviour
 {
     [SerializeField] public Volume health;
-    [SerializeField] public Volume attackTimer;
+    [SerializeField] public Volume attackTimer = new();
     [Space]
     [SerializeField] public UnityEvent onDie;
     [SerializeField] public UnityEvent onRespawn;
