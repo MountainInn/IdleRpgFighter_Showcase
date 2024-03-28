@@ -11,6 +11,19 @@ public class Mob : AnimatorCombatant
     protected bool mobCanAttack;
 
     [Inject] FloatingTextSpawner takeDamagFloatingTextSpawner;
+    [Inject]
+    public void Construct(Cheats cheats)
+    {
+        cheats.mobOneSecondAttackTimer
+            .Subscribe(toggle =>
+            {
+                if (toggle)
+                    attackTimer.Resize(1);
+                else
+                    attackTimer.Resize(Stats.attackTimer);
+            })
+            .AddTo(this);
+    }
 
     protected void Awake()
     {
