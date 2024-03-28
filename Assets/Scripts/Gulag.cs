@@ -4,9 +4,10 @@ using UniRx;
 
 public class Gulag : MonoBehaviour
 {
-    [Inject] SceneLoader sceneLoader;
+    [Inject] LevelSwitcher levelSwitcher;
     [Inject] MobView rockView;
     [Inject] GameSettings gameSettings;
+    [Inject] Cheats cheats;
 
     Volume timer;
 
@@ -21,13 +22,16 @@ public class Gulag : MonoBehaviour
             .WhereEqual(true)
             .Subscribe(_ =>
             {
-                sceneLoader.SwitchToArena();
+                levelSwitcher.SwitchToArena();
             })
             .AddTo(this);
     }
 
     void Update()
     {
+        if (cheats.everlastingGulag.Value)
+            return;
+       
         timer.Subtract(Time.deltaTime);
     }
 }

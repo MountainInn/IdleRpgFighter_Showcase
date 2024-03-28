@@ -270,6 +270,20 @@ static public class IntExt
         }
     }
 
+    static public IEnumerable<TResult> PairSelect<T, TResult>(this IEnumerable<T> source,
+                                                              Func<(T a, T b), TResult> func)
+    {
+        int count = source.Count() - 1;
+       
+        return
+            IEnumerableExt
+            .Zip(source.Take(count),
+                 source.TakeLast(count))
+            .Select(tup =>
+                    func.Invoke((tup.Item1, tup.Item2)));
+    }
+
+
     static public void ForPairLoop(this int i, Action<int> forAction, Action<int,int> pairAction)
     {
         Enumerable.Range(0, i).Map(forAction);

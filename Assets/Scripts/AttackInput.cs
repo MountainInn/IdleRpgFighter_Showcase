@@ -5,18 +5,9 @@ using Zenject;
 public class AttackInput : MonoBehaviour
 {
     [Inject]
-    public void Construct(CharacterController characterController,
-                          Character character,
+    public void Construct(Character character,
                           RuntimeAnimatorController attackAnimatorController)
     {
         character.SetAnimatorController(attackAnimatorController);
-
-        characterController.AttackButton
-            .OnClickAsObservable()
-            .Subscribe(_ =>
-            {
-                character.Attack();
-            })
-            .AddTo(this);
     }
 }

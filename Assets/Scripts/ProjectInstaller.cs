@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using Zenject;
 
@@ -7,29 +8,58 @@ public class ProjectInstaller : MonoInstaller
     [SerializeField] CollectionAnimation prefabDropable;
     [SerializeField] Ally prefabAlly;
     [SerializeField] GameObject prefabCharacter;
+    [Header("Instances")]
     [SerializeField] ParticleSystem onPickupPS;
     [SerializeField] Vault vaultInstance;
+    [Space]
+    [SerializeField] DPSMeterView dpsMeterView;
+    [Space]
+    [SerializeField] Transform talentsParent;
+    [Space]
+    [SerializeField] VaultView vaultView;
+    [Space]
+    [SerializeField] Transform shopPanel;
+    [SerializeField] TalentView talentViewPrefab;
+    [Space]
+    [SerializeField] Canvas canvas;
     [Header("Game Settings")]
     [SerializeField] GameSettings gameSettings;
-    [SerializeField] DropParticlesConfig dropParticlesConfig;
+    [SerializeField] Cheats cheats;
+
+
+    new void Start()
+    {
+        base.Start();
+        shopPanel.gameObject.SetActive(true);
+    }
 
     override public void InstallBindings()
     {
+        Container
+            .BindView(talentViewPrefab, talentsParent);
+
+        Container
+            .Bind<VaultView>()
+            .FromMethod(() => vaultView);
+
         Container
             .Bind(
                 typeof(Vault),
                 typeof(LootManager),
                 typeof(Gang),
                 typeof(DPSMeter),
-                typeof(SceneLoader),
+                typeof(LevelSwitcher),
+                typeof(MobView),
                 typeof(FullScreenCover)
             )
             .FromComponentsInHierarchy()
             .AsSingle();
 
-        Container.Bind<DropParticlesConfig>() .FromInstance(dropParticlesConfig) .AsSingle();
+        Container .Bind<DPSMeterView>() .FromInstance(dpsMeterView);
+
 
         Container.Bind<GameSettings>() .FromInstance(gameSettings) .AsSingle();
+        Container.Bind<Cheats>() .FromInstance(cheats) .AsSingle();
 
         Container
             .Bind<SaveSystem>()

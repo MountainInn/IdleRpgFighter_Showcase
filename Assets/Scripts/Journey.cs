@@ -107,7 +107,7 @@ public class Journey : MonoBehaviour
 
             yield return
                 LevelSwitcher
-                .MaybeSwitchLevel(journeyField.levelPrefab);
+                .MaybeSwitchLevel(journeyField.levelSceneBuildIndex);
 
             MobQueue mobQueue = journeyField.mobQueue;
             mobQueue.GetSubLengthsAndTotalLength(out IEnumerable<int> subLengths,

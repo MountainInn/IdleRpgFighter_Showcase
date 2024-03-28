@@ -9,34 +9,35 @@ public class MainInstaller : BaseInstaller
     [SerializeField] BlockVfx blockVfx;
     [SerializeField] AttackBonusVfx attackBonusVfx;
     [Space]
-    [SerializeField] Transform levelHolder;
-    [Space]
     [SerializeField] WeakPointView prefabWeakPoint;
+    [Space]
+    [SerializeField] SegmentedProgressBar arenaProgressBar;
 
     [Inject] Ally prefabAlly;
 
-
-
     override public void InstallBindings()
     {
+        base.InstallBindings();
+       
         Container
             .Bind(
                 typeof(Mob),
                 typeof(Arena),
-                typeof(LevelSwitcher)
+                typeof(Battle),
+                typeof(AttackInput)
             )
             .FromComponentInHierarchy()
             .AsSingle();
 
         Container
-            .Bind<CharacterSpawnPoint>()
-            .FromInstance(characterSpawnPoint)
-            .AsSingle();
-
+            .Bind<SegmentedProgressBar>()
+            .FromMethod(() => arenaProgressBar)
+            .WhenInjectedInto<Journey>();
+       
         Container
             .BindMemoryPool<WeakPointView, WeakPointView.Pool>()
             .FromComponentInNewPrefab(prefabWeakPoint)
-            .UnderTransform(canvasTransform);
+            .UnderTransform(canvas.transform);
 
         Container
             .Bind<RuntimeAnimatorController>()
@@ -102,10 +103,5 @@ public class MainInstaller : BaseInstaller
 
         Container .Bind<BlockVfx>() .FromInstance(blockVfx);
         Container .Bind<AttackBonusVfx>() .FromInstance(attackBonusVfx);
-
-        Container
-            .Bind<Transform>()
-            .FromInstance(levelHolder)
-            .WhenInjectedInto<LevelSwitcher>();
     }
 }

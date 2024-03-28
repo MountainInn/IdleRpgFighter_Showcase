@@ -5,10 +5,12 @@ using UnityEngine.UI;
 public class GulagInstaller : BaseInstaller
 {
     [SerializeField] ProgressBar chargeProgressBar;
+    [Space]
+    [SerializeField] Button attackButton;
 
     override public void InstallBindings()
     {
-        BindSpawnPoint();
+        base.InstallBindings();
 
         Container
             .Bind<RuntimeAnimatorController>()
@@ -25,6 +27,15 @@ public class GulagInstaller : BaseInstaller
             .FromComponentInHierarchy()
             .AsSingle();
 
+        Container
+            .Bind<CharacterController>()
+            .FromComponentInHierarchy()
+            .AsSingle();
+
+        Container
+            .Bind<Button>()
+            .FromMethod(() => attackButton)
+            .WhenInjectedInto<CharacterController>();
         Container.Bind<Combatant>().To<Rock>().FromResolve().WhenInjectedInto<Character>();
 
         Container.Bind<ProgressBar>().FromInstance(chargeProgressBar).AsSingle();

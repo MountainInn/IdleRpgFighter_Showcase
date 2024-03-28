@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using UnityEngine.Events;
 
@@ -11,7 +12,7 @@ public class JourneySO : ScriptableObject
     public struct Field
     {
         [SerializeField] public MobQueue mobQueue;
-        [SerializeField] public GameObject levelPrefab;
+        [SerializeField] public int levelSceneBuildIndex;
         [SerializeField] public UnityEvent onQueueCompleted;
 
     }

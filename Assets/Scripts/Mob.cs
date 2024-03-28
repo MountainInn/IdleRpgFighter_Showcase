@@ -64,9 +64,9 @@ public class Mob : AnimatorCombatant
             .AddTo(this);
     }
 
-    [Inject] void SubscribeToLootManager(LootManager lootManager)
+    [Inject] void SubscribeToLootManager(LootManager lootManager, NominalParticles nominalParticles)
     {
-        lootManager.Subscribe(this);
+        lootManager.Subscribe(this, nominalParticles);
     }
 
     [Inject] void SubscribeToGang(Gang gang)

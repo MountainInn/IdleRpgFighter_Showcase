@@ -25,12 +25,19 @@ public abstract class Talent : ScriptableObject
 
     [Inject] protected void InitializeBuyableLevel(Vault vault)
     {
+        Talent_SubInitialize();
+
         Price price = new Price(vault.gold);
         Level level = new Level(l => OnLevelUp(l, price));
 
         buyableLevel = new Buyable<Level>(level,
                                           level => level.Up(),
                                           price);
+    }
+
+    protected virtual void Talent_SubInitialize()
+    {
+
     }
 
     [Inject] protected void ConnectToView(TalentView talentView)

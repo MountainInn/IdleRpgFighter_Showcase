@@ -17,11 +17,12 @@ public class Block : Ability
     [SerializeField] float bonusDuration;
 
     float activeBonus = 1f;
+    bool isHoldingBlock;
 
     [Inject] BlockVfx blockVfx;
     [Inject] AttackBonusVfx attackBonusVfx;
-    [Inject]
-    public void Construct(Character character)
+
+    protected override void ConcreteSubscribe()
     {
         character.preAttack.AddListener( ApplyCounterAttackBonus );
 
@@ -43,10 +44,12 @@ public class Block : Ability
     void SubscribeBlock(Character character)
     {
         character.preTakeDamage.AsObservable()
-            .TakeUntil(abilityButton.OnPointerUpAsObservable())
+            .TakeUntil( ObserveHaveEnoughEnergy(Time.deltaTime).WhereEqual(false) )
+            .TakeUntil( abilityButton.OnPointerUpAsObservable() )
             .DoOnSubscribe(() =>
             {
                 blockVfx.ShowBlock();
+                isHoldingBlock = true;
             })
             .Do(hit =>
             {
@@ -56,6 +59,7 @@ public class Block : Ability
             {
                 blockVfx.HideBlock();
                 cooldown.ResetToZero();
+                isHoldingBlock = false;
             })
             .Subscribe()
             .AddTo(character);
@@ -105,6 +109,14 @@ public class Block : Ability
     {
         activeBonus = 1f;
         attackBonusVfx.HideBonus();
+    }
+
+    public override void Tick()
+    {
+        base.Tick();
+
+        if (isHoldingBlock)
+            DrainEnergy(Time.deltaTime);
     }
 
     public override IObservable<string> ObserveDescription()

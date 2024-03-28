@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using Zenject;
+using Cysharp.Threading.Tasks;
 
 [CreateAssetMenu(fileName = "WeakPoints", menuName = "SO/Talents/WeakPoints")]
 public class WeakPoints : Talent
 {
+    [SerializeField] float timer = 5;
+    [SerializeField] float lifespan = 2;
     [SerializeField] List<Field> fields;
 
     [Serializable]
@@ -17,47 +20,30 @@ public class WeakPoints : Talent
         public int cost;
     }
 
-    public float chanceToAppearAfterAttack {get; protected set;}
+    public TimeSpan rollInterval => TimeSpan.FromSeconds(timer);
+    public float chanceToAppear {get; protected set;}
     public float damageMult {get; protected set;}
 
-
-    [Inject]
-    public void Construct(CharacterController characterController,
-                          Character character,
-                          Mob mob,
-                          WeakPointView.Pool weakPointViewPool)
+    public void Roll(Canvas canvas, WeakPointView.Pool pool)
     {
-        UnityEngine.UI.Button attackButton = characterController.AttackButton;
-
-        character.onAttackAnimEvent
-            .AddListener(() =>
-            {
-                if (UnityEngine.Random.value < chanceToAppearAfterAttack)
-                {
-                    SpawnWeakPoint(attackButton, weakPointViewPool);
-                }
-            });
-
-        weakPointViewPool.onWeakPointClicked = () =>
+        if (UnityEngine.Random.value < chanceToAppear)
         {
-            Shoot(mob, character);
-
-            attackButton.onClick.Invoke();
-        };
+            SpawnWeakPoint(canvas, pool);
+        }
     }
 
-    void Shoot(Mob mob, Character character)
+    public void Shoot(Mob mob, Character character)
     {
         float damage = character.Stats.attackDamage * damageMult;
 
         character.InflictDamage(mob, damage);
     }
 
-    static void SpawnWeakPoint(UnityEngine.UI.Button attackButton, WeakPointView.Pool weakPointViewPool)
+    void SpawnWeakPoint(Canvas canvas, WeakPointView.Pool weakPointViewPool)
     {
         WeakPointView view = weakPointViewPool.Spawn();
 
-        RectTransform rectTransform = attackButton.GetComponent<RectTransform>();
+        RectTransform rectTransform = canvas.GetComponent<RectTransform>();
         Rect rect = rectTransform.rect;
 
         Vector3 canvasScale = Vector3.one * 0.4f;
@@ -69,13 +55,22 @@ public class WeakPoints : Talent
         position.Scale(halfSize * 0.8f);
 
         view.transform.position = position + halfSize;
+
+        UniTask
+            .WaitForSeconds(lifespan)
+            .ContinueWith(() =>
+            {
+                if (view.gameObject.activeSelf)
+                    weakPointViewPool.DisableButtonAndDespawn(view);
+            })
+            .Forget();
     }
 
     protected override void OnLevelUp(int level, Price price)
     {
         price.cost.Value = fields[level].cost;
 
-        chanceToAppearAfterAttack = fields[level].chanceToAppearAfterClick;
+        chanceToAppear = fields[level].chanceToAppearAfterClick;
         damageMult = fields[level].damageMult;
     }
 

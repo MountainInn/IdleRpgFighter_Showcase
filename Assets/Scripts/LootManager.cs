@@ -3,19 +3,17 @@ using Zenject;
 using UniRx;
 using System.Linq;
 using Cysharp.Threading.Tasks;
-using System;
 
 public class LootManager : MonoBehaviour
 {
-    DropParticlesConfig dropParticlesConfig;
+    NominalParticles nominalParticles;
 
     [Inject] Character character;
-    [Inject] CollectionAnimation.Pool dropablesPool;
     [Inject] GameSettings gameSettings;
     [Inject] Vault vault;
     [Inject] DiContainer Container;
 
-    public void Subscribe(Combatant combatant)
+    public void Subscribe(Combatant combatant, NominalParticles nominalParticles)
     {
         combatant.onDie
             .AsObservable()
@@ -25,22 +23,16 @@ public class LootManager : MonoBehaviour
             })
             .AddTo(combatant);
 
-        dropParticlesConfig = Container.Resolve<DropParticlesConfig>();
-        dropParticlesConfig.fields .Sort((a, b) => b.goldAmount.CompareTo(a.goldAmount));
-        dropParticlesConfig = Instantiate(dropParticlesConfig);
+        this.nominalParticles = nominalParticles;
 
-        foreach (var field in dropParticlesConfig.fields)
+        foreach (var field in nominalParticles.Fields)
         {
-            field.lootParticles =
-                Container
-                .InstantiatePrefabForComponent<LootParticles>(field.lootParticles);
-
-            field.lootParticles.transform.position =
+            field.particles.transform.position =
                 combatant.transform.position + new Vector3(0, 0.5f, 0);
            
-            field.lootParticles
+            field.particles
                 .onParticleHitCharacter
-                .AddListener(() => LootGold(field.goldAmount));
+                .AddListener(() => LootGold(field.amount));
         }
     }
 
@@ -69,30 +61,32 @@ public class LootManager : MonoBehaviour
 
     void DropGold(int amount)
     {
-        int a = amount;
+        int range = 2;
 
-        DropParticlesConfig.Field cacheField = default;
-
-        foreach (var field in dropParticlesConfig.fields)
+        foreach (var field in nominalParticles.Fields)
         {
-            cacheField = field;
-
-            while (a > 0 &&
-                   a > field.goldAmount)
+            if (amount <= 0)
             {
-                a -= field.goldAmount;
-
-                field.lootParticles.Emit();
+                goldMargin = amount;
+                break;
             }
-        }
 
-        if (a > 0)
-        {
-            a -= cacheField.goldAmount;
+            int ceil = Mathf.CeilToInt((float)amount / field.amount);
+            int count;
 
-            cacheField.lootParticles.Emit();
+            if (field == nominalParticles.Fields.Last())
+            {
+                count = ceil;
+            }
+            else
+            {
+                int floor = Mathf.Max(0, ceil - range);
+                count = UnityEngine.Random.Range(floor, ceil+1);
+            }
 
-            goldMargin = a;
+            count.ForLoop(_ => field.particles.Emit());
+
+            amount -= field.amount * count;
         }
     }
 

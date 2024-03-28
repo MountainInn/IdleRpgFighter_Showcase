@@ -12,11 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6911e5b12b2410a4c86675496beb1109, type: 3}
   m_Name: WeakPoints
   m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: 8e60f363d26d54980a1ea31cff65ca24, type: 3}
+  sprite: {fileID: 21300000, guid: 8a7bbcc6d60694f1880ad1618120ec55, type: 3}
+  timer: 0.3
+  lifespan: 2
   fields:
   - chanceToAppearAfterClick: 1
-    damageMult: 1.5
+    damageMult: 2
     cost: 0
   - chanceToAppearAfterClick: 1
-    damageMult: 2
-    cost: 15
+    damageMult: 3
+    cost: 1

@@ -1,5 +1,6 @@
 using UnityEngine;
 using DG.Tweening;
+using Zenject;
 
 public class BlockVfx : MonoBehaviour
 {
@@ -12,6 +13,8 @@ public class BlockVfx : MonoBehaviour
     [Space]
     [SerializeField] MeshRenderer blockRenderer;
 
+    [Inject] Character character;
+
     void Start()
     {
         HideBlock();
@@ -22,6 +25,8 @@ public class BlockVfx : MonoBehaviour
         blockRenderer
             .material
             .DOFade(1f, "_TintColor", blockFadeDuration);
+
+        character.combatantAnimator.SetBool("block", true);
     }
 
     public void HideBlock()
@@ -29,6 +34,8 @@ public class BlockVfx : MonoBehaviour
         blockRenderer
             .material
             .DOFade(0f, "_TintColor", blockFadeDuration);
+
+        character.combatantAnimator.SetBool("block", false);
     }
 
     public void ShowParry()

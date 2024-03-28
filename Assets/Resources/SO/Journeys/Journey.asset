@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   queues:
   - mobQueue: {fileID: 11400000, guid: bff53d02b671f734c92c3d206eae8214, type: 2}
-    levelPrefab: {fileID: 8463969633121829928, guid: 7db84c14686f5c2449af0ba0008a94dd, type: 3}
+    levelSceneBuildIndex: 2
     onQueueCompleted:
       m_PersistentCalls:
         m_Calls: []

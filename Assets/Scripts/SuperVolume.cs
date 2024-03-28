@@ -18,8 +18,8 @@ public class SuperVolume : Volume
     public SuperVolume(IEnumerable<int> sublengths)
     {
         subvolumes = sublengths.Select(l => new Volume(0, l)).ToList();
-        current = new FloatReactiveProperty(0);
-        maximum = new FloatReactiveProperty(sublengths.Sum());
+        _current = new FloatReactiveProperty(0);
+        _maximum = new FloatReactiveProperty(sublengths.Sum());
     }
 
     public new void Add(float amount)
