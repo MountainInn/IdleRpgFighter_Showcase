@@ -34,7 +34,8 @@ public abstract class AnimatorCombatant : Combatant
     {
         attackTriggerId = Animator.StringToHash(attackTriggerName);
 
-        onDie.AddListener(() => combatantAnimator.SetTrigger("death Trigger"));
+        onDie.AddListener(() => combatantAnimator.SetBool("death", true));
+        onRespawn.AddListener(() => combatantAnimator.SetBool("death", false));
     }
 
     public void InflictDamage_OnAnimEvent()
