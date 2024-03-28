@@ -1,0 +1,158 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1707953098379494415
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4026072395427183482}
+  - component: {fileID: 6373786025917671058}
+  m_Layer: 0
+  m_Name: RockEnemy
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4026072395427183482
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1707953098379494415}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.06805907, y: 0.20363753, z: -0.30958906, w: 0.9263122}
+  m_LocalPosition: {x: -0.038, y: 0.933, z: -0.379}
+  m_LocalScale: {x: 2.2551, y: 2.2551, z: 2.2551}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 136343535314523790}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 24.797, z: -36.961}
+--- !u!114 &6373786025917671058
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1707953098379494415}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 849b9ddce05ee1f4bb1e560c978738e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health:
+    maximum:
+      value: 0
+    current:
+      value: 0
+  attackTimer:
+    maximum:
+      value: 0
+    current:
+      value: 0
+  onDie:
+    m_PersistentCalls:
+      m_Calls: []
+  onRespawn:
+    m_PersistentCalls:
+      m_Calls: []
+  onKill:
+    m_PersistentCalls:
+      m_Calls: []
+  dropList: {fileID: 11400000, guid: d3ed6c9482c8b884ca59ee8c44365dcb, type: 2}
+  Stats: {fileID: 0}
+  preAttack:
+    m_PersistentCalls:
+      m_Calls: []
+  preTakeDamage:
+    m_PersistentCalls:
+      m_Calls: []
+  postTakeDamage:
+    m_PersistentCalls:
+      m_Calls: []
+  postAttack:
+    m_PersistentCalls:
+      m_Calls: []
+  minHealth: 30
+  maxHealth: 130
+  crushTweenDuration: 0.3
+  squishMult: 0.95
+  effectHandler: {fileID: 3657718739729519012}
+--- !u!1001 &1268072722603881752
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 4026072395427183482}
+    m_Modifications:
+    - target: {fileID: 1188240932512555926, guid: 27fdbcade0e255f40981eeb8921671ea, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1188240932512555926, guid: 27fdbcade0e255f40981eeb8921671ea, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1188240932512555926, guid: 27fdbcade0e255f40981eeb8921671ea, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1188240932512555926, guid: 27fdbcade0e255f40981eeb8921671ea, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.9263121
+      objectReference: {fileID: 0}
+    - target: {fileID: 1188240932512555926, guid: 27fdbcade0e255f40981eeb8921671ea, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.068059586
+      objectReference: {fileID: 0}
+    - target: {fileID: 1188240932512555926, guid: 27fdbcade0e255f40981eeb8921671ea, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.20363994
+      objectReference: {fileID: 0}
+    - target: {fileID: 1188240932512555926, guid: 27fdbcade0e255f40981eeb8921671ea, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.30958775
+      objectReference: {fileID: 0}
+    - target: {fileID: 1188240932512555926, guid: 27fdbcade0e255f40981eeb8921671ea, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1188240932512555926, guid: 27fdbcade0e255f40981eeb8921671ea, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1188240932512555926, guid: 27fdbcade0e255f40981eeb8921671ea, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4592284780991838188, guid: 27fdbcade0e255f40981eeb8921671ea, type: 3}
+      propertyPath: m_Name
+      value: RockEffectHandler
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 27fdbcade0e255f40981eeb8921671ea, type: 3}
+--- !u!4 &136343535314523790 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1188240932512555926, guid: 27fdbcade0e255f40981eeb8921671ea, type: 3}
+  m_PrefabInstance: {fileID: 1268072722603881752}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3657718739729519012 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2547852924318688444, guid: 27fdbcade0e255f40981eeb8921671ea, type: 3}
+  m_PrefabInstance: {fileID: 1268072722603881752}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3a7ef7f7cf1f454a8c0346cb2ea3395, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

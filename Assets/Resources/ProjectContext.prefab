@@ -1167,7 +1167,7 @@ MonoBehaviour:
   talentViewPrefab: {fileID: 1806308915050764445, guid: 698620675062b224181cdccbd6117588, type: 3}
   canvas: {fileID: 585503841116163551}
   gameSettings: {fileID: 11400000, guid: 2e2e41ab9de26cb42b7a0edc1a681d59, type: 2}
-  cheats: {fileID: 11400000, guid: 9f26f867c3ccd0e438dce9c57940fb15, type: 2}
+  cheats: {fileID: 11400000, guid: f2e5672497909d44e8023018b1d09f82, type: 2}
 --- !u!1 &8544098224708768588
 GameObject:
   m_ObjectHideFlags: 0
