@@ -34,6 +34,10 @@ public abstract class BaseInstaller : MonoInstaller
             .FromInstance(particleSystemForce)
             .AsSingle();
 
+        Container
+            .Bind<NominalParticles>()
+            .FromComponentInHierarchy()
+            .AsSingle();
 
         Container
             .Bind<FloatingTextSpawner>()

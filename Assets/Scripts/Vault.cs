@@ -1,4 +1,6 @@
 using UnityEngine;
+using System;
+using UniRx;
 using Zenject;
 
 public class Vault : MonoBehaviour
@@ -17,6 +19,36 @@ public class Vault : MonoBehaviour
                                 "gold",
                                 () => gold.value.Value,
                                 (val) => gold.value.Value = val);
+    }
+
+    [Inject]
+    public void SubscribeToCheats(Cheats cheats)
+    {
+        int cachedGold = gold.value.Value;
+        IDisposable moneySubscription = null;
+
+        cheats.infinitMoney
+            .Subscribe(toggle =>
+            {
+                if (toggle)
+                {
+                    cachedGold = gold.value.Value;
+
+                    moneySubscription =
+                        gold
+                        .ObserveChange()
+                        .StartWith(int.MaxValue)
+                        .Subscribe(_ => gold.value.Value = int.MaxValue);
+                }
+                else
+                {
+                    moneySubscription?.Dispose();
+                    moneySubscription = null;
+
+                    gold.value.Value = cachedGold;
+                }
+            })
+            .AddTo(this);
     }
 
     void Awake()

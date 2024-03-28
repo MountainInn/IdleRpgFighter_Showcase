@@ -8,6 +8,7 @@ using Zenject;
 public class AttackLevel : Talent
 {
     [SerializeField] List<Field> fields;
+    [SerializeField] public StatList attackDamage;
 
     [Inject] Character character;
 

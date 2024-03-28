@@ -3198,16 +3198,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f690156fb9448af4a81fd68250debded, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health:
-    maximum:
-      value: 0
-    current:
-      value: 0
-  attackTimer:
-    maximum:
-      value: 0
-    current:
-      value: 0
   onDie:
     m_PersistentCalls:
       m_Calls: []
@@ -8770,16 +8760,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f690156fb9448af4a81fd68250debded, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health:
-    maximum:
-      value: 0
-    current:
-      value: 0
-  attackTimer:
-    maximum:
-      value: 0
-    current:
-      value: 0
   onDie:
     m_PersistentCalls:
       m_Calls: []
@@ -13932,16 +13912,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f690156fb9448af4a81fd68250debded, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health:
-    maximum:
-      value: 0
-    current:
-      value: 0
-  attackTimer:
-    maximum:
-      value: 0
-    current:
-      value: 0
   onDie:
     m_PersistentCalls:
       m_Calls: []
@@ -17019,16 +16989,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 849b9ddce05ee1f4bb1e560c978738e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health:
-    maximum:
-      value: 0
-    current:
-      value: 0
-  attackTimer:
-    maximum:
-      value: 0
-    current:
-      value: 0
   onDie:
     m_PersistentCalls:
       m_Calls: []
@@ -17764,6 +17724,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b48f97b26210b5241a676465be0b0d80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!330 &1554827537 stripped
+ParticleSystemForceField:
+  m_CorrespondingSourceObject: {fileID: 6107454334984993556, guid: 2034fbdf80dd393499624eff66487211, type: 3}
+  m_PrefabInstance: {fileID: 1554827534}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1564099173
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20647,16 +20612,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f690156fb9448af4a81fd68250debded, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health:
-    maximum:
-      value: 0
-    current:
-      value: 0
-  attackTimer:
-    maximum:
-      value: 0
-    current:
-      value: 0
   onDie:
     m_PersistentCalls:
       m_Calls: []
@@ -25104,16 +25059,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f690156fb9448af4a81fd68250debded, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health:
-    maximum:
-      value: 0
-    current:
-      value: 0
-  attackTimer:
-    maximum:
-      value: 0
-    current:
-      value: 0
   onDie:
     m_PersistentCalls:
       m_Calls: []
@@ -27424,6 +27369,10 @@ PrefabInstance:
       propertyPath: characterSpawnPoint
       value: 
       objectReference: {fileID: 1554827536}
+    - target: {fileID: 2410387453029088055, guid: 23f2f5c418b072b4da1e801401c9c781, type: 3}
+      propertyPath: particleSystemForce
+      value: 
+      objectReference: {fileID: 1554827537}
     - target: {fileID: 3801030205100398936, guid: 23f2f5c418b072b4da1e801401c9c781, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0

@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sprite: {fileID: 21300000, guid: 3eea92b60b81945068925f98ef44b940, type: 3}
   fields:
-  - attack: 1000
+  - attack: 10
     price: 10
   - attack: 15
     price: 15
-  - attack: 20
+  - attack: 19
     price: 20

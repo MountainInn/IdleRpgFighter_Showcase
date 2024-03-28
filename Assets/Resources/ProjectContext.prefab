@@ -1160,14 +1160,14 @@ MonoBehaviour:
   prefabCharacter: {fileID: 6859527260312034529, guid: 5700b25de6589b0499c093abc9fb792f, type: 3}
   onPickupPS: {fileID: 4977700661301901759, guid: d9e6e2eaea9404d47a037474309bec79, type: 3}
   vaultInstance: {fileID: 5772903999246625768}
-  gameSettings: {fileID: 11400000, guid: 2e2e41ab9de26cb42b7a0edc1a681d59, type: 2}
-  dropParticlesConfig: {fileID: 11400000, guid: 06abb5c1d9436aa4bafdb557a0215f32, type: 2}
   dpsMeterView: {fileID: 7583241485206985459}
   talentsParent: {fileID: 1457823307411122441}
   vaultView: {fileID: 6434243548242829520}
   shopPanel: {fileID: 557641492526651559}
   talentViewPrefab: {fileID: 1806308915050764445, guid: 698620675062b224181cdccbd6117588, type: 3}
   canvas: {fileID: 585503841116163551}
+  gameSettings: {fileID: 11400000, guid: 2e2e41ab9de26cb42b7a0edc1a681d59, type: 2}
+  cheats: {fileID: 11400000, guid: 9f26f867c3ccd0e438dce9c57940fb15, type: 2}
 --- !u!1 &8544098224708768588
 GameObject:
   m_ObjectHideFlags: 0

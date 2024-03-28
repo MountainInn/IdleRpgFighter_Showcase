@@ -21,7 +21,6 @@ public class SaveSystemUser : MonoBehaviour
             .Do(            _ => saveSystem.Save())
             .DoOnCancel(   () => saveSystem.Save())
 
-            .Debug("SaveSystemUser")
             .Subscribe()
             .AddTo(this);
     }

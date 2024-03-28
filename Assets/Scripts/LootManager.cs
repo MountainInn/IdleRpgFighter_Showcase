@@ -8,15 +8,14 @@ using System.Collections.Generic;
 
 public class LootManager : MonoBehaviour
 {
-    DropParticlesConfig dropParticlesConfig;
+    NominalParticles nominalParticles;
 
     [Inject] Character character;
-    [Inject] CollectionAnimation.Pool dropablesPool;
     [Inject] GameSettings gameSettings;
     [Inject] Vault vault;
     [Inject] DiContainer Container;
 
-    public void Subscribe(Combatant combatant)
+    public void Subscribe(Combatant combatant, NominalParticles nominalParticles)
     {
         combatant.onDie
             .AsObservable()
@@ -26,22 +25,16 @@ public class LootManager : MonoBehaviour
             })
             .AddTo(combatant);
 
-        dropParticlesConfig = Container.Resolve<DropParticlesConfig>();
-        dropParticlesConfig.fields .Sort((a, b) => b.goldAmount.CompareTo(a.goldAmount));
-        dropParticlesConfig = Instantiate(dropParticlesConfig);
+        this.nominalParticles = nominalParticles;
 
-        foreach (var field in dropParticlesConfig.fields)
+        foreach (var field in nominalParticles.Fields)
         {
-            field.lootParticles =
-                Container
-                .InstantiatePrefabForComponent<LootParticles>(field.lootParticles);
-
-            field.lootParticles.transform.position =
+            field.particles.transform.position =
                 combatant.transform.position + new Vector3(0, 0.5f, 0);
            
-            field.lootParticles
+            field.particles
                 .onParticleHitCharacter
-                .AddListener(() => LootGold(field.goldAmount));
+                .AddListener(() => LootGold(field.amount));
         }
     }
 
@@ -66,72 +59,55 @@ public class LootManager : MonoBehaviour
         }
     }
 
-    int maxCount = 5;
-
-    void _RecurseDropGold(int amount, int count,
-                          int fieldId = 0, List<(int, int)> res = default)
-    {
-        if (fieldId == dropParticlesConfig.fields.Count ||
-            count > maxCount)
-        {
-            res = null;
-            return;
-        }
-
-        var field = dropParticlesConfig.fields[fieldId];
-
-        int ceil = Mathf.CeilToInt((float)amount / field.goldAmount);
-
-        ceil
-            .ToRange()
-            .Shuffle()
-            .Map(r =>
-            {
-                int newCount = count + r;
-
-                _RecurseDropGold(amount, newCount, fieldId+1, res);
-
-            });
-
-        // count += random;
-
-        amount -= count * field.goldAmount;
-
-        res.Add((fieldId, count));
-
-        _RecurseDropGold(amount, fieldId+1, count, res);
-    }
-
     int goldMargin;
 
     void DropGold(int amount)
     {
-        int range = 2;
+        var nominals =
+            nominalParticles
+            .Fields
+            .Select(f => f.amount);
 
-        foreach (var field in dropParticlesConfig.fields)
+        var res = Recurse(amount, nominals, 0);
+
+
+
+        List<int> Recurse(int amount, IEnumerable<int> nominals, int totalQuantity)
         {
-            if (amount <= 0)
-            {
-                goldMargin = amount;
-                break;
-            }
+            List<int> res = new();
 
-            int ceil = Mathf.CeilToInt((float)amount / field.goldAmount);
-            int count;
+            int nominal = nominals.First();
 
-            if (field == dropParticlesConfig.fields.Last())
-            {
-                count = ceil;
-            }
-            else
-            {
-                int floor = Mathf.Max(0, ceil - range);
-                count = UnityEngine.Random.Range(floor, ceil+1);
-            }
+            int maxQuantity = amount / nominal;
 
-            count.ForLoop(_ => field.lootParticles.Emit());
+            (maxQuantity + 1)
+                .ToRange().Shuffle()
+                .Map(quantity =>
+                {
+                    List<int> res = new();
 
-            amount -= field.goldAmount * count;
+                    int nextAmount = amount - quantity * nominal;
+
+                    int nextTotalQuantity = totalQuantity + quantity;
+
+                    if (nextTotalQuantity > gameSettings.maxParticleCount)
+                        return;
+
+                    res.Add(quantity);
+
+                    if (nominals.Count() == 1)
+                    {
+                        res.Log();
+                        return;
+                    }
+
+                    res.AddRange(
+                        Recurse(nextAmount,
+                                nominals.Skip(1),
+                                totalQuantity + quantity) );
+                });
+
+            return res;
         }
     }
 

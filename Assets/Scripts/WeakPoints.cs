@@ -8,6 +8,7 @@ using Cysharp.Threading.Tasks;
 [CreateAssetMenu(fileName = "WeakPoints", menuName = "SO/Talents/WeakPoints")]
 public class WeakPoints : Talent
 {
+    [SerializeField] float timer = 5;
     [SerializeField] float lifespan = 2;
     [SerializeField] List<Field> fields;
 
@@ -19,31 +20,19 @@ public class WeakPoints : Talent
         public int cost;
     }
 
-    public float chanceToAppearAfterAttack {get; protected set;}
+    public TimeSpan rollInterval => TimeSpan.FromSeconds(timer);
+    public float chanceToAppear {get; protected set;}
     public float damageMult {get; protected set;}
 
-    [Inject] Canvas canvas;
-    [Inject]
-    public void Construct(Character character,
-                          Mob mob,
-                          WeakPointView.Pool weakPointViewPool)
+    public void Roll(Canvas canvas, WeakPointView.Pool pool)
     {
-        character.onAttackAnimEvent
-            .AddListener(() =>
-            {
-                if (UnityEngine.Random.value < chanceToAppearAfterAttack)
-                {
-                    SpawnWeakPoint(canvas, weakPointViewPool);
-                }
-            });
-
-        weakPointViewPool.onWeakPointClicked = () =>
+        if (UnityEngine.Random.value < chanceToAppear)
         {
-            Shoot(mob, character);
-        };
+            SpawnWeakPoint(canvas, pool);
+        }
     }
 
-    void Shoot(Mob mob, Character character)
+    public void Shoot(Mob mob, Character character)
     {
         float damage = character.Stats.attackDamage * damageMult;
 
@@ -81,7 +70,7 @@ public class WeakPoints : Talent
     {
         price.cost.Value = fields[level].cost;
 
-        chanceToAppearAfterAttack = fields[level].chanceToAppearAfterClick;
+        chanceToAppear = fields[level].chanceToAppearAfterClick;
         damageMult = fields[level].damageMult;
     }
 
