@@ -1,5 +1,10 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Resources/Prefabs/LevelProps/Gulag.meta
+guid: 6dfaa3f7673cc254e90d5ffc8a50d144
+folderAsset: yes
+========
 guid: 889a32d44666db847b5cecbf28d78d28
+>>>>>>>> main:Assets/Scenes/New Standard Arena.unity.meta
 DefaultImporter:
   externalObjects: {}
   userData: 
