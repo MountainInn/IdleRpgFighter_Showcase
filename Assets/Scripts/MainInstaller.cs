@@ -45,45 +45,6 @@ public class MainInstaller : BaseInstaller
             .WhenInjectedInto<AttackInput>();
 
         Container
-            .Bind<List<Talent>>()
-            .FromMethod(() => InstantiateSOs<Talent>("SO/Talents/"))
-            .AsSingle();
-
-        Container
-            .Bind<List<Ability>>()
-            .FromMethod(() => InstantiateSOs<Ability>("SO/Abilities/"))
-            .AsSingle();
-
-        Container
-            .Bind<TalentUser>()
-            .FromMethod(() =>
-            {
-                var users =
-                    GameObject
-                    .FindObjectsOfType<TalentUser>();
-
-                var injected = users.FirstOrDefault(u => u.alreadyInjected);
-
-                if (injected != null)
-                    return injected;
-                else
-                {
-                    var user =
-                        new GameObject(nameof(TalentUser))
-                        .AddComponent<TalentUser>();
-
-                    Container.Inject(user);
-
-                    DontDestroyOnLoad(user);
-                    user.alreadyInjected = true;
-
-                    return user;
-                }
-            })
-            .AsSingle()
-            .NonLazy();
-
-        Container
             .BindMemoryPool<Ally, Ally.Pool>()
             .FromComponentInNewPrefab( prefabAlly )
             .AsTransient();

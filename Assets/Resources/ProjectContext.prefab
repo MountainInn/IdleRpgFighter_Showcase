@@ -1108,6 +1108,7 @@ Transform:
   - {fileID: 5755672095648256387}
   - {fileID: 3228254635999133636}
   - {fileID: 4503794221274879336}
+  - {fileID: 1677697328940513550}
   - {fileID: 681780593607840356}
   - {fileID: 1659956593623733712}
   - {fileID: 8556509591868427917}
@@ -1284,6 +1285,53 @@ MonoBehaviour:
   onFadeOut:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &8712543818749948114
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1677697328940513550}
+  - component: {fileID: 3932863900613542932}
+  m_Layer: 0
+  m_Name: Talent User
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1677697328940513550
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8712543818749948114}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.4651187, y: -0.5348753, z: 0.49703673, w: 0.5005274}
+  m_LocalPosition: {x: 2.85, y: 5.43, z: -8.73}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8857178695800857441}
+  m_LocalEulerAnglesHint: {x: 85.8, y: -93.8, z: 0}
+--- !u!114 &3932863900613542932
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8712543818749948114}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48961fafe01332c43ade28e589e6b003, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  talents: []
+  abilities: []
+  alreadyInjected: 0
 --- !u!1 &8870410820895108880
 GameObject:
   m_ObjectHideFlags: 0

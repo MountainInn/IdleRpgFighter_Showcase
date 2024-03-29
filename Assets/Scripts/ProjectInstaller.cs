@@ -50,10 +50,14 @@ public class ProjectInstaller : MonoInstaller
                 typeof(DPSMeter),
                 typeof(LevelSwitcher),
                 typeof(MobView),
+                typeof(TalentUser),
                 typeof(FullScreenCover)
             )
             .FromComponentsInHierarchy()
             .AsSingle();
+
+        Container.BindSOs<Talent>("SO/Talents/");
+        Container.BindSOs<Ability>("SO/Abilities/");
 
         Container .Bind<DPSMeterView>() .FromInstance(dpsMeterView);
 

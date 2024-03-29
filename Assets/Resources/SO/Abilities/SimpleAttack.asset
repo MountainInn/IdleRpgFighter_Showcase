@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: SimpleAttack
   m_EditorClassIdentifier: 
   sprite: {fileID: 21300000, guid: 3eea92b60b81945068925f98ef44b940, type: 3}
-  _cooldown: 0
+  _cooldown: 1
   energyCost: 3
   fields:
-  - cooldown: 0
+  - cooldown: 1
     price: 0
   - cooldown: 0.95
     price: 0
