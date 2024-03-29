@@ -1,7 +1,9 @@
 using System;
+using System.Threading;
 using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
+using UniRx.Triggers;
 using Zenject;
 using Cysharp.Threading.Tasks;
 
@@ -56,14 +58,23 @@ public class WeakPoints : Talent
 
         view.transform.position = position + halfSize;
 
+
+        var cancel = canvas.GetCancellationTokenOnDestroy();
+
         UniTask
             .WaitForSeconds(lifespan)
-            .ContinueWith(() =>
+            .AttachExternalCancellation(cancel)
+            .SuppressCancellationThrow()
+            .ContinueWith(isCanceled =>
             {
-                if (view.gameObject.activeSelf)
+                if (isCanceled)
+                    return;
+
+                if (view?.gameObject?.activeSelf ?? false)
                     weakPointViewPool.DisableButtonAndDespawn(view);
             })
             .Forget();
+
     }
 
     protected override void OnLevelUp(int level, Price price)
