@@ -21,14 +21,7 @@ public class Rage : Ability
 
     protected override void ConcreteSubscribe()
     {
-        abilityButton
-            .OnClickAsObservable()
-            .Subscribe(_ =>
-            {
-                Use();
-                DrainEnergy();
-            })
-            .AddTo(abilityButton);
+        base.ConcreteSubscribe();
 
         attackBuff.Subscribe(character);
     }

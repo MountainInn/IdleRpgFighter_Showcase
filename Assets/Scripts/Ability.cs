@@ -33,7 +33,19 @@ public abstract class Ability : Talent, ITickable
     }
 
     abstract protected void Use();
-    abstract protected void ConcreteSubscribe();
+
+    virtual protected void ConcreteSubscribe()
+    {
+        abilityButton
+            .OnClickAsObservable()
+            .Subscribe(_ =>
+            {
+                Use();
+                DrainEnergy();
+                cooldown.ResetToZero();
+            })
+            .AddTo(abilityButton);
+    }
 
 
     public void SubscribeButton(Character character,
