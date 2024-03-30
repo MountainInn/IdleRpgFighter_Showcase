@@ -41,9 +41,19 @@ public class WeakPointView : MonoBehaviour
         {
             item.button.interactable = false;
 
+            var cancel = item.GetCancellationTokenOnDestroy();
+
             item.fade
                 .FadeOut()
-                .ContinueWith(() => Despawn(item))
+                .AttachExternalCancellation(cancel)
+                .SuppressCancellationThrow()
+                .ContinueWith(isCanceled =>
+                {
+                    if (isCanceled)
+                        return;
+
+                    Despawn(item);
+                })
                 .Forget();
         }
     }

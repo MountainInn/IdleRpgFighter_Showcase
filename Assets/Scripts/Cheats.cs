@@ -9,5 +9,6 @@ public class Cheats : ScriptableObject
     public BoolReactiveProperty godMode;
     public BoolReactiveProperty infinitMoney;
     public BoolReactiveProperty everlastingGulag;
+    public BoolReactiveProperty noCooldown;
 
 }

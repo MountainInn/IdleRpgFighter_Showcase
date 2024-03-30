@@ -3,6 +3,7 @@ using Zenject;
 using UniRx;
 using System;
 using UnityEngine.Events;
+using Cysharp.Threading.Tasks;
 
 public class Mob : AnimatorCombatant
 {
@@ -14,19 +15,24 @@ public class Mob : AnimatorCombatant
     [Inject]
     public void Construct(Cheats cheats)
     {
-        cheats.mobOneSecondAttackTimer
-            .Subscribe(toggle =>
-            {
-                if (toggle)
-                    attackTimer.Resize(1);
-                else
-                    attackTimer.Resize(Stats.attackTimer);
-            })
-            .AddTo(this);
+        UniTask
+            .WaitWhile(() => Stats is null)
+            .ContinueWith(() =>
+                          cheats.mobOneSecondAttackTimer
+                          .Subscribe(toggle =>
+                          {
+                              if (toggle)
+                                  attackTimer.Resize(1);
+                              else
+                                  attackTimer.Resize(Stats.attackTimer);
+                          })
+                          .AddTo(this));
     }
 
-    protected void Awake()
+    protected new void Awake()
     {
+        base.Awake();
+
         SubscribeToAttackTimerFull();
 
         postTakeDamage.AsObservable()
@@ -43,7 +49,7 @@ public class Mob : AnimatorCombatant
     {
         attackTimer.ObserveFull()
             .WhereEqual(true)
-            .Subscribe(_ => combatantAnimator.SetTrigger(attackTriggerId))
+            .Subscribe(_ => combatantAnimator.SetTrigger(basicAttackTriggerId))
             .AddTo(this);
     }
 

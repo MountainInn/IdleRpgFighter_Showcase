@@ -4,41 +4,65 @@ using UniRx;
 using UniRx.Triggers;
 using Zenject;
 using System.Linq;
+using System.Collections.Generic;
 
 [CreateAssetMenu(fileName = "Block", menuName = "SO/Abilities/Block")]
 public class Block : Ability
 {
     [SerializeField] float parryTimeWindow;
-    [SerializeField] float damageReductionMultiplier;
     [Space]
     [SerializeField] bool canCounterAttack;
     [Space]
     [SerializeField] float counterAttackDamageBonus;
     [SerializeField] float bonusDuration;
+    [SerializeField] List<Field> fields;
 
-    float activeBonus = 1f;
+    [Serializable]
+    struct Field
+    {
+        public float damageReductionFlat;
+        public int price;
+    }
+
     bool isHoldingBlock;
 
-    [Inject] BlockVfx blockVfx;
-    [Inject] AttackBonusVfx attackBonusVfx;
+    BlockVfx blockVfx;
+    AttackBonusVfx attackBonusVfx;
+    AttackBuff attackBuff;
+
+    float damageReductionFlat;
+    public float fortificationMult = 1;
+    public float energyDrainMult = 1;
+
+    public void Subscribe(BlockVfx blockVfx, AttackBonusVfx attackBonusVfx)
+    {
+        this.blockVfx = blockVfx;
+        this.attackBonusVfx = attackBonusVfx;
+    }
 
     protected override void ConcreteSubscribe()
     {
-        character.preAttack.AddListener( ApplyCounterAttackBonus );
+        attackBuff = new(){ duration = bonusDuration,
+                            multiplier = counterAttackDamageBonus };
+
+        attackBuff.Subscribe(character);
 
         abilityButton
             .OnPointerDownAsObservable()
             .Subscribe(_ =>
             {
-                SubscribeBlock(character);
-                SubscribeParry(character);
+                if (isReadyToUse.Value)
+                {
+                    Use();
+                }
             })
-            .AddTo(character);
+            .AddTo(abilityButton);
     }
 
-    void ApplyCounterAttackBonus(DamageArgs hit)
+    protected override void Use()
     {
-        hit.damage *= activeBonus;
+        SubscribeBlock(character);
+        SubscribeParry(character);
     }
 
     void SubscribeBlock(Character character)
@@ -53,16 +77,17 @@ public class Block : Ability
             })
             .Do(hit =>
             {
-                hit.damage *= damageReductionMultiplier;
+                float blockValue = damageReductionFlat * fortificationMult;
+
+                hit.damage = Mathf.Max(0, hit.damage - blockValue);
             })
             .DoOnCompleted(() =>
             {
                 blockVfx.HideBlock();
-                cooldown.ResetToZero();
                 isHoldingBlock = false;
             })
             .Subscribe()
-            .AddTo(character);
+            .AddTo(abilityButton);
     }
 
     void SubscribeParry(Character character)
@@ -79,7 +104,7 @@ public class Block : Ability
                 if (hit != null && canCounterAttack)
                 {
                     blockVfx.ShowCounterAttack();
-                    SubscribeCounterAttackBonus(character);
+                    attackBuff.StartBuff(character.gameObject);
                 }
             })
             .DoOnCompleted(() =>
@@ -87,28 +112,7 @@ public class Block : Ability
                 blockVfx.HideParry();
             })
             .Subscribe()
-            .AddTo(character);
-    }
-
-    void SubscribeCounterAttackBonus(Character character)
-    {
-        Observable
-            .Timer(TimeSpan.FromSeconds(bonusDuration))
-            .DoOnSubscribe( ActivateBonus )
-            .DoOnCompleted( DeactivateBonus )
-            .Subscribe()
-            .AddTo(character);
-    }
-
-    void ActivateBonus()
-    {
-        activeBonus = counterAttackDamageBonus;
-        attackBonusVfx.ShowBonus();
-    }
-    void DeactivateBonus()
-    {
-        activeBonus = 1f;
-        attackBonusVfx.HideBonus();
+            .AddTo(abilityButton);
     }
 
     public override void Tick()
@@ -116,7 +120,8 @@ public class Block : Ability
         base.Tick();
 
         if (isHoldingBlock)
-            DrainEnergy(Time.deltaTime);
+            DrainEnergy(energyCost * energyDrainMult,
+                        Time.deltaTime);
     }
 
     public override IObservable<string> ObserveDescription()
@@ -127,5 +132,8 @@ public class Block : Ability
 
     protected override void OnLevelUp(int level, Price price)
     {
+        price.cost.Value = fields[level].price;
+
+        damageReductionFlat = fields[level].damageReductionFlat;
     }
 }

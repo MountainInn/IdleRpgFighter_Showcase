@@ -9,6 +9,7 @@ public class Volume
     public FloatReactiveProperty maximum => _maximum ??= new();
     public FloatReactiveProperty current => _current ??= new();
 
+    [SerializeField]
     protected FloatReactiveProperty _current, _maximum;
 
 

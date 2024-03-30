@@ -1,7 +1,10 @@
 using UnityEngine;
 using UnityEngine.Events;
+using UniRx;
 using UniRx.Triggers;
 using Zenject;
+using System;
+using System.Collections.Generic;
 
 public abstract class AnimatorCombatant : Combatant
 {
@@ -9,15 +12,49 @@ public abstract class AnimatorCombatant : Combatant
     [SerializeField] protected string attackTriggerName = "attackTrigger";
     [SerializeField] public UnityEvent afterDeathAnimation;
     [SerializeField] public UnityEvent onAttackAnimEvent;
+    [SerializeField] public UnityEvent<DamageArgs> onAttackPushed;
 
-    [HideInInspector] public ObservableStateMachineTrigger ObserveStateMachine;
+    [HideInInspector] public ObservableStateMachineTrigger ObserveStateMachine
+    {
+        get {
+            if (_ObserveStateMachine == null)
+                InitObserveStateMachine();
 
-    protected int attackTriggerId;
+            return _ObserveStateMachine;
+        }
 
-    [Inject]
-    public void Construct()
+        protected set => _ObserveStateMachine = value;
+    }
+    [SerializeField] public  ObservableStateMachineTrigger _ObserveStateMachine;
+
+    protected int basicAttackTriggerId;
+
+    public System.IObservable<bool> ObserveIsPlaying()
+    {
+        return
+            Observable
+            .CombineLatest(ObserveStateMachine.OnStateEnterAsObservable(),
+                           ObserveStateMachine.OnStateExitAsObservable(),
+                           (enter, exit) => enter.Equals(exit));
+    }
+
+    protected bool isPlaying;
+
+    public void Awake()
     {
         InitObserveStateMachine();
+
+        ObserveIsPlaying()
+            .Subscribe(isPlaying =>
+            {
+                this.isPlaying = isPlaying;
+            })
+            .AddTo(this);
+
+        basicAttackTriggerId = Animator.StringToHash(attackTriggerName);
+
+        onDie.AddListener(() => combatantAnimator.SetBool("death", true));
+        onRespawn.AddListener(() => combatantAnimator.SetBool("death", false));
     }
 
     public void SetAnimatorController(RuntimeAnimatorController controller)
@@ -25,22 +62,29 @@ public abstract class AnimatorCombatant : Combatant
         combatantAnimator.runtimeAnimatorController = controller;
         InitObserveStateMachine();
     }
-    public void InitObserveStateMachine()
+
+    void InitObserveStateMachine()
     {
         ObserveStateMachine = combatantAnimator.GetBehaviour<ObservableStateMachineTrigger>();
     }
 
-    protected void Start()
-    {
-        attackTriggerId = Animator.StringToHash(attackTriggerName);
 
-        onDie.AddListener(() => combatantAnimator.SetBool("death", true));
-        onRespawn.AddListener(() => combatantAnimator.SetBool("death", false));
+    DamageArgs lastAttack;
+
+    public void PushAttack(DamageArgs attack)
+    {
+        if (!CanContinueBattle() || isPlaying)
+            return;
+
+        onAttackPushed?.Invoke(attack);
+
+        combatantAnimator.SetTrigger(attack.animationTrigger);
+        lastAttack = attack;
     }
 
     public void InflictDamage_OnAnimEvent()
     {
-        InflictDamage(target, Stats.attackDamage);
+        InflictDamage(lastAttack ?? CreateDamage());
 
         onAttackAnimEvent?.Invoke();
     }

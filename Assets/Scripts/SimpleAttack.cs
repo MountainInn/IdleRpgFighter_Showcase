@@ -5,7 +5,7 @@ using Zenject;
 using System.Collections.Generic;
 
 [CreateAssetMenu(fileName = "SimpleAttack", menuName = "SO/Abilities/SimpleAttack")]
-public class SimpleAttack : Ability
+public class SimpleAttack : Ability_Attack
 {
     [SerializeField] List<Field> fields;
 
@@ -16,17 +16,12 @@ public class SimpleAttack : Ability
         public int price;
     }
 
-    protected override void ConcreteSubscribe()
+    protected override void Use()
     {
-        abilityButton
-            .OnClickAsObservable()
-            .Subscribe(_ =>
-            {
-                character.Attack();
-                DrainEnergy();
-                cooldown.ResetToZero();
-            })
-            .AddTo(character);
+        lastCreatedArgs = character.CreateDamage();
+        lastCreatedArgs.animationTrigger = attackAnimationTrigger;
+
+        character.PushAttack(lastCreatedArgs);
     }
 
     public override IObservable<string> ObserveDescription()

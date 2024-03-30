@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
@@ -16,7 +17,7 @@ abstract public class Combatant : MonoBehaviour
 
     [HideInInspector] [SerializeField] public StatsSO Stats;
 
-    [InjectOptional] protected Combatant target;
+    [InjectOptional] public Combatant target;
 
     [HideInInspector]
     public UnityEvent<DamageArgs>
@@ -49,28 +50,42 @@ abstract public class Combatant : MonoBehaviour
 
     public void InflictDamage(Combatant defender, float damage)
     {
-        if (!defender.IsAlive)
+        DamageArgs args = CreateDamage(defender, damage);
+
+        InflictDamage(args);
+    }
+
+    public void InflictDamage(DamageArgs args)
+    {
+        if (!args.defender.IsAlive)
             return;
-       
-        DamageArgs args = new DamageArgs()
+
+        preAttack?.Invoke(args);
+
+        args.defender.TakeDamage(args);
+
+        postAttack?.Invoke(args);
+
+        if (!args.defender.IsAlive)
+        {
+            onKill?.Invoke(args.defender);
+
+            args.defender.onDie?.Invoke();
+        }
+    }
+
+    public DamageArgs CreateDamage()
+    {
+        return CreateDamage(target, Stats.attackDamage);
+    }
+    protected DamageArgs CreateDamage(Combatant defender, float damage)
+    {
+        return new DamageArgs()
         {
             attacker = this,
             defender = defender,
             damage = damage
         };
-
-        preAttack?.Invoke(args);
-
-        defender.TakeDamage(args);
-
-        postAttack?.Invoke(args);
-
-        if (!defender.IsAlive)
-        {
-            onKill?.Invoke(defender);
-
-            defender.onDie?.Invoke();
-        }
     }
 
     public void TakeDamage(DamageArgs args)

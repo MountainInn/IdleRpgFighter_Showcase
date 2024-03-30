@@ -7,8 +7,6 @@ using System.Collections.Generic;
 
 public class Afterimage : MonoBehaviour
 {
-    [SerializeField] bool enable;
-    [Space]
     [SerializeField] int afterimageCount;
     [SerializeField] int afterimageLifetimeDivisor = 4;
     [Space]
@@ -19,11 +17,10 @@ public class Afterimage : MonoBehaviour
 
     [Inject] Character character;
     [Inject] CharacterSpawnPoint spawnPoint;
+    [Inject] LightSpeedMode lightSpeedMode;
     [Inject]
     public void Construct()
     {
-        if (!enable)
-            return;
         // trail.emitting = false;
 
         afterimages =
@@ -43,65 +40,70 @@ public class Afterimage : MonoBehaviour
 
                 afterimage.transform.SetPositionAndRotation(pos, rot);
 
+                afterimage.gameObject.SetActive(false);
+
                 return afterimage;
             })
             .ToList();
 
-        if (character.ObserveStateMachine == null)
-            character.InitObserveStateMachine();
-
-        character.ObserveStateMachine
-            .OnStateEnterAsObservable()
+        lightSpeedMode.enabled
+            .WhereEqual(true)
             .Subscribe(_ =>
             {
-                if (!_.StateInfo.IsTag("attack"))
-                {
-                    trail.emitting = false;
-                    return;
-                }
+                character.ObserveStateMachine
+                    .OnStateEnterAsObservable()
+                    .TakeUntil( lightSpeedMode.enabled.WhereEqual(false) )
+                    .Subscribe(_ =>
+                    {
+                        if (!_.StateInfo.IsTag(lightSpeedMode.noTimeAttack_AnimationTag))
+                        {
+                            trail.emitting = false;
+                            return;
+                        }
 
-                AnimatorClipInfo[] animatorClipInfos =
-                    character
-                    .combatantAnimator
-                    .GetNextAnimatorClipInfo(0);
+                        AnimatorClipInfo[] animatorClipInfos =
+                            character
+                            .combatantAnimator
+                            .GetNextAnimatorClipInfo(0);
 
-                if (animatorClipInfos.None())
-                    return;
+                        if (animatorClipInfos.None())
+                            return;
 
-                string name = animatorClipInfos.ElementAt(0).clip.name;
+                        AnimationClip clip = animatorClipInfos.ElementAt(0).clip;
 
-                _.Animator.Play(name, 0, .8f);
+                        string name = clip.name;
+                        float time = 0.8f;
+                        // clip.events.First().time;
 
-                AnimatorStateInfo animatorStateInfo =
-                    character
-                    .combatantAnimator
-                    .GetNextAnimatorStateInfo(0);
+                        _.Animator.Play(name, 0, time);
 
-                MakeAfterimage(animatorStateInfo);
+                        MakeAfterimage(name, time);
 
-                // Vector3 swordTrailPosition =
-                //     _
-                //     .Animator
-                //     .GetComponent<SwordEdgePosition>()
-                //     .swordTransform
-                //     .position;
+                        // Vector3 swordTrailPosition =
+                        //     _
+                        //     .Animator
+                        //     .GetComponent<SwordEdgePosition>()
+                        //     .swordTransform
+                        //     .position;
 
-                // trail.AddPosition(swordTrailPosition);
+                        // trail.AddPosition(swordTrailPosition);
 
-                // trail.emitting = true;
+                        // trail.emitting = true;
+                    })
+                    .AddTo(this);
             })
             .AddTo(this);
     }
 
-    void MakeAfterimage(AnimatorStateInfo state)
+    void MakeAfterimage(string name, float endTime)
     {
         foreach (var (i, afterimage) in afterimages.Enumerate())
         {
             afterimage.gameObject.SetActive(true);
            
-            float time = i / (float)afterimages.Count;
+            float time = i / (float)afterimages.Count * endTime;
 
-            afterimage.Play(state.fullPathHash, 0, time);
+            afterimage.Play(name, 0, time);
 
             this.StartInvokeAfter(() => afterimage.gameObject.SetActive(false),
                                   time/ afterimageLifetimeDivisor);

@@ -9,8 +9,10 @@ public class Ally : AnimatorCombatant
 
     protected bool mobCanAttack;
 
-    protected void Awake()
+    protected new void Awake()
     {
+        base.Awake();
+
         SubscribeCanAttack();
         SubscribeToAttackTimerFull();
     }
@@ -19,7 +21,7 @@ public class Ally : AnimatorCombatant
     {
         attackTimer.ObserveFull()
             .WhereEqual(true)
-            .Subscribe(_ => combatantAnimator.SetTrigger(attackTriggerId))
+            .Subscribe(_ => combatantAnimator.SetTrigger(basicAttackTriggerId))
             .AddTo(this);
     }
 
