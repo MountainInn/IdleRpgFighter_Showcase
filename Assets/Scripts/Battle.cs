@@ -15,6 +15,7 @@ public class Battle : MonoBehaviour
 
     [Inject]
     public void Construct(DiContainer Container,
+                          Cheats cheats,
                           List<Ability> abilities)
     {
         abilities
@@ -22,8 +23,10 @@ public class Battle : MonoBehaviour
             {
                 var abilityButton = Container.Resolve<AbilityButton>();
                 a.SubscribeButton(character, abilityButton);
+                a.SubscribeToCheats(cheats);
             });
     }
+
     [Inject]
     public void SubscribeBlock(Block block, BlockVfx blockVfx, AttackBonusVfx attackBonusVfx)
     {

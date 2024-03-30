@@ -16,6 +16,21 @@ public abstract class Ability : Talent, ITickable
 
     protected IReadOnlyReactiveProperty<bool> isReadyToUse;
 
+    public void SubscribeToCheats(Cheats cheats)
+    {
+        cheats.noCooldown
+            .WhereEqual(true)
+            .Subscribe(_ =>
+            {
+                cooldown
+                    .ObserveFull()
+                    .WhereEqual(false)
+                    .TakeUntil(cheats.noCooldown.WhereEqual(false))
+                    .Subscribe(_ => cooldown.Refill())
+                    .AddTo(abilityButton);
+            })
+            .AddTo(abilityButton);
+    }
 
     abstract protected void Use();
     abstract protected void ConcreteSubscribe();
