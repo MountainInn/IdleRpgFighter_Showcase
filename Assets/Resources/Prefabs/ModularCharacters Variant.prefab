@@ -193,7 +193,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70b342d8ce5c2fd48b8fa3147d48d1d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Weight: 1
+  m_Weight: 0
   m_Effectors:
   - m_Transform: {fileID: 0}
     m_Style:
@@ -730,12 +730,7 @@ PrefabInstance:
       objectReference: {fileID: 9100000, guid: 845f9e4beb4cd9042b630c8d1dfb9d40, type: 2}
     - target: {fileID: 95241917264262668, guid: ddc4cd0622acc4847817cc15268b4a19, type: 3}
       propertyPath: m_WarningMessage
-      value: "\nBinding warning: Some generic clip(s) animate transforms that are
-        already bound by a Humanoid avatar. These transforms can only be changed
-        by Humanoid clips.\n\tTransform 'UpperLeg_L'\n\tTransform 'UpperLeg_R'\n\tTransform
-        'Ankle_L'\n\tTransform 'Ankle_R'\n\tTransform 'LowerLeg_L'\n\tTransform 'LowerLeg_R'\n\tTransform
-        'UpperLeg_L'\n\tTransform 'UpperLeg_R'\n\tTransform 'Ankle_L'\n\tTransform
-        'Ankle_R'\n\tand more ..."
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 137000019681457122, guid: ddc4cd0622acc4847817cc15268b4a19, type: 3}
       propertyPath: m_Materials.Array.data[0]
