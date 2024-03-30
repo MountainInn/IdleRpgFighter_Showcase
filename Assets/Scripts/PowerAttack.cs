@@ -11,19 +11,17 @@ public class PowerAttack : Ability_Attack
     [Serializable]
     struct Field
     {
-        public float damageMultiplier;
+        public float damage;
         public int price;
     }
 
-    float damageMultiplier;
+    float damage;
 
     protected override void Use()
     {
         lastCreatedArgs = character.CreateDamage();
-        lastCreatedArgs.damage *= damageMultiplier;
+        lastCreatedArgs.damage = damage;
         lastCreatedArgs.isPower = true;
-
-        cooldown.ResetToZero();
 
         character.PushAttack(this);
     }
@@ -35,7 +33,7 @@ public class PowerAttack : Ability_Attack
 
     protected override void OnLevelUp(int level, Price price)
     {
-        damageMultiplier = fields[level].damageMultiplier;
+        damage = fields[level].damage;
 
         price.cost.Value = fields[level].price;
     }
