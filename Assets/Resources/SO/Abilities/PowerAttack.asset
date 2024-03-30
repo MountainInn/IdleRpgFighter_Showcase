@@ -15,7 +15,7 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: f025e35f2893c4aaca2f83bdadd519e1, type: 3}
   _cooldown: 10
   energyCost: 10
-  powerAttackTrigger: 
+  attackAnimationTrigger: attackTrigger
   fields:
   - damageMultiplier: 5
     price: 1
