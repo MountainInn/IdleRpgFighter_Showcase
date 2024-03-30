@@ -17,7 +17,6 @@ static public class DiContainerExtension
             {
                 Type type = o.GetType();
 
-                Debug.Log($"Bind {type.Name}");
                 Container
                     .BindInterfacesAndSelfTo(type)
                     .FromNewScriptableObject(o)
