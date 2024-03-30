@@ -26,7 +26,7 @@ public class SimpleAttack : Ability
                 DrainEnergy();
                 cooldown.ResetToZero();
             })
-            .AddTo(character);
+            .AddTo(abilityButton);
     }
 
     public override IObservable<string> ObserveDescription()

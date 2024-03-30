@@ -42,7 +42,7 @@ public class Block : Ability
                     SubscribeParry(character);
                 }
             })
-            .AddTo(character);
+            .AddTo(abilityButton);
     }
 
     void ApplyCounterAttackBonus(DamageArgs hit)
@@ -71,7 +71,7 @@ public class Block : Ability
                 isHoldingBlock = false;
             })
             .Subscribe()
-            .AddTo(character);
+            .AddTo(abilityButton);
     }
 
     void SubscribeParry(Character character)
@@ -96,7 +96,7 @@ public class Block : Ability
                 blockVfx.HideParry();
             })
             .Subscribe()
-            .AddTo(character);
+            .AddTo(abilityButton);
     }
 
     void SubscribeCounterAttackBonus(Character character)
@@ -106,7 +106,7 @@ public class Block : Ability
             .DoOnSubscribe( ActivateBonus )
             .DoOnCompleted( DeactivateBonus )
             .Subscribe()
-            .AddTo(character);
+            .AddTo(abilityButton);
     }
 
     void ActivateBonus()
