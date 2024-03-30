@@ -16,7 +16,7 @@ MonoBehaviour:
   _cooldown: 1
   energyCost: 3
   fields:
-  - cooldown: 1
+  - cooldown: 0
     price: 0
   - cooldown: 0.95
     price: 0
