@@ -6,22 +6,26 @@ using System.Collections.Generic;
 [CreateAssetMenu(fileName = "PowerAttack", menuName = "SO/Abilities/PowerAttack")]
 public class PowerAttack : Ability_Attack
 {
-    [SerializeField] string powerAttackTrigger;
     [SerializeField] List<Field> fields;
 
     [Serializable]
     struct Field
     {
-        public float damage;
+        public float damageMultiplier;
         public int price;
     }
 
-    float damage;
+    float damageMultiplier;
 
     protected override void Use()
     {
-        character.Attack(powerAttackTrigger);
+        lastCreatedArgs = character.CreateDamage();
+        lastCreatedArgs.damage *= damageMultiplier;
+        lastCreatedArgs.isPower = true;
+
         cooldown.ResetToZero();
+
+        character.PushAttack(this);
     }
 
     public override IObservable<string> ObserveDescription()
@@ -31,7 +35,7 @@ public class PowerAttack : Ability_Attack
 
     protected override void OnLevelUp(int level, Price price)
     {
-        damage = fields[level].damage;
+        damageMultiplier = fields[level].damageMultiplier;
 
         price.cost.Value = fields[level].price;
     }

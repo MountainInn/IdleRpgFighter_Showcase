@@ -18,8 +18,11 @@ public class SimpleAttack : Ability_Attack
 
     protected override void Use()
     {
-        character.Attack();
+        lastCreatedArgs = character.CreateDamage();
+
         cooldown.ResetToZero();
+
+        character.PushAttack(this);
     }
 
     public override IObservable<string> ObserveDescription()

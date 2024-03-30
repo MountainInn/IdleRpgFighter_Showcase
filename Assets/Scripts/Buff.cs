@@ -10,7 +10,7 @@ public abstract class Buff
     public float duration;
     public float multiplier;
 
-    protected float activeBonus;
+    protected float activeBonus = 1f;
 
     abstract public void Subscribe(Combatant combatant);
 

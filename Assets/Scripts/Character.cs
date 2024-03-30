@@ -72,18 +72,6 @@ public class Character : AnimatorCombatant
         tickables.Add(tickable);
     }
 
-    bool isPlaying;
-    new void Start()
-    {
-        base.Start();
-
-        InitObserveStateMachine();
-
-        ObserveIsPlaying()
-            .Subscribe(isPlaying => this.isPlaying = isPlaying)
-            .AddTo(this);
-    }
-
     void Update()
     {
         foreach (var item in tickables)
@@ -97,25 +85,6 @@ public class Character : AnimatorCombatant
         this.target = target;
     }
 
-    public System.IObservable<bool> ObserveIsPlaying()
-    {
-        return
-            Observable
-            .CombineLatest(ObserveStateMachine.OnStateEnterAsObservable(),
-                           ObserveStateMachine.OnStateExitAsObservable(),
-                           (enter, exit) => enter.Equals(exit));
-    }
-
-    public void Attack(string attackTrigger = "")
-    {
-        if (!CanContinueBattle() || isPlaying)
-            return;
-
-        if (attackTrigger != "")
-            combatantAnimator.SetTrigger(attackTrigger);
-        else
-            combatantAnimator.SetTrigger(basicAttackTriggerId);
-    }
 
     public void MaybeHitWithPickaxe_OnAnimEvent()
     {

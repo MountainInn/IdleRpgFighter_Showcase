@@ -29,8 +29,10 @@ public class Mob : AnimatorCombatant
                           .AddTo(this));
     }
 
-    protected void Awake()
+    protected new void Awake()
     {
+        base.Awake();
+
         SubscribeToAttackTimerFull();
 
         postTakeDamage.AsObservable()

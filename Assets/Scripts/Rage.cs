@@ -3,6 +3,7 @@ using UnityEngine;
 using UniRx;
 using System.Collections.Generic;
 
+[CreateAssetMenu(fileName = "Rage", menuName = "SO/Abilities/Rage")]
 public class Rage : Ability
 {
     [SerializeField] List<Field> fields;
@@ -15,22 +16,26 @@ public class Rage : Ability
         public int price;
     }
 
-    float damageMultiplier;
-    float duration;
-    AttackBuff attackBuff;
+    AttackBuff attackBuff = new();
 
+
+    protected override void ConcreteSubscribe()
+    {
+        abilityButton
+            .OnClickAsObservable()
+            .Subscribe(_ =>
+            {
+                Use();
+                DrainEnergy();
+            })
+            .AddTo(abilityButton);
+
+        attackBuff.Subscribe(character);
+    }
 
     protected override void Use()
     {
         attackBuff.StartBuff(character.gameObject);
-    }
-
-    protected override void ConcreteSubscribe()
-    {
-        attackBuff = new () { duration = duration,
-                              multiplier = damageMultiplier };
-
-        attackBuff.Subscribe(character);
     }
 
     public override IObservable<string> ObserveDescription()
@@ -41,7 +46,8 @@ public class Rage : Ability
     protected override void OnLevelUp(int level, Price price)
     {
         price.cost.Value = fields[level].price;
-        damageMultiplier = fields[level].damageMultiplier;
-        duration = fields[level].duration;
+
+        attackBuff.multiplier = fields[level].damageMultiplier;
+        attackBuff.duration = fields[level].duration;
     }
 }

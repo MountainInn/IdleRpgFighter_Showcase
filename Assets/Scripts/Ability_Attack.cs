@@ -1,15 +1,20 @@
 using UniRx;
+using UnityEngine;
 
 abstract public class Ability_Attack : Ability
 {
+    [SerializeField] public string attackAnimationTrigger;
+   
+    public DamageArgs lastCreatedArgs;
+
     protected override void ConcreteSubscribe()
     {
         character
-            .ObserveStateMachine
-            .OnStateEnterAsObservable()
-            .Subscribe(enter =>
+            .preAttack
+            .AsObservable()
+            .Subscribe(args =>
             {
-                if (enter.StateInfo.IsTag("attack"))
+                if (args == lastCreatedArgs)
                     DrainEnergy();
             })
             .AddTo(abilityButton);

@@ -2911,14 +2911,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health:
-    maximum:
+    _current:
       value: 0
-    current:
+    _maximum:
       value: 0
   attackTimer:
-    maximum:
+    _current:
       value: 0
-    current:
+    _maximum:
       value: 0
   onDie:
     m_PersistentCalls:
@@ -2931,6 +2931,7 @@ MonoBehaviour:
       m_Calls: []
   dropList: {fileID: 0}
   Stats: {fileID: 0}
+  target: {fileID: 0}
   preAttack:
     m_PersistentCalls:
       m_Calls: []
@@ -2951,7 +2952,7 @@ MonoBehaviour:
   onAttackAnimEvent:
     m_PersistentCalls:
       m_Calls: []
-  ObserveStateMachine: {fileID: 0}
+  _ObserveStateMachine: {fileID: 7322797450304259237, guid: 845f9e4beb4cd9042b630c8d1dfb9d40, type: 2}
   startingMobStats: {fileID: 11400000, guid: b55b80b2174a3ff49a0ba403fbd00b4d, type: 2}
 --- !u!95 &6446987813379084924 stripped
 Animator:

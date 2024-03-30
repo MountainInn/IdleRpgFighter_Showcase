@@ -9,8 +9,10 @@ public class Ally : AnimatorCombatant
 
     protected bool mobCanAttack;
 
-    protected void Awake()
+    protected new void Awake()
     {
+        base.Awake();
+
         SubscribeCanAttack();
         SubscribeToAttackTimerFull();
     }

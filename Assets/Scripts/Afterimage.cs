@@ -47,9 +47,6 @@ public class Afterimage : MonoBehaviour
             })
             .ToList();
 
-        if (character.ObserveStateMachine == null)
-            character.InitObserveStateMachine();
-
         character.ObserveStateMachine
             .OnStateEnterAsObservable()
             .Subscribe(_ =>
