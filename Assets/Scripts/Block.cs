@@ -7,7 +7,7 @@ using System.Linq;
 using System.Collections.Generic;
 
 [CreateAssetMenu(fileName = "Block", menuName = "SO/Abilities/Block")]
-public partial class Block : Ability
+public class Block : Ability
 {
     [SerializeField] float parryTimeWindow;
     [Space]
@@ -31,8 +31,8 @@ public partial class Block : Ability
     AttackBuff attackBuff;
 
     float damageReductionFlat;
-    float fortificationMult = 1;
-    float energyDrainMult = 1;
+    public float fortificationMult = 1;
+    public float energyDrainMult = 1;
 
     public void Subscribe(BlockVfx blockVfx, AttackBonusVfx attackBonusVfx)
     {

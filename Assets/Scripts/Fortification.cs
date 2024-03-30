@@ -6,53 +6,50 @@ using Zenject;
 using System.Linq;
 using System.Collections.Generic;
 
-public partial class Block : Ability
+[CreateAssetMenu(fileName = "Fortification", menuName = "SO/Abilities/Fortification")]
+public class Fortification : Ability
 {
-    [CreateAssetMenu(fileName = "Fortification", menuName = "SO/Abilities/Fortification")]
-    public class Fortification : Ability
+    [SerializeField] List<Field> fields;
+
+    [Serializable]
+    struct Field
     {
-        [SerializeField] List<Field> fields;
+        public float multiplier;
+        public float duration;
+        public int price;
+    }
 
-        [Serializable]
-        struct Field
-        {
-            public float multiplier;
-            public float duration;
-            public int price;
-        }
+    FortificationBuff buff = new();
 
-        FortificationBuff buff = new();
+    [Inject]
+    public void Construct(Block block)
+    {
+        buff.block = block;
+    }
 
-        [Inject]
-        public void Construct(Block block)
-        {
-            buff.block = block;
-        }
+    protected override void ConcreteSubscribe()
+    {
+        base.ConcreteSubscribe();
 
-        protected override void ConcreteSubscribe()
-        {
-            base.ConcreteSubscribe();
+        buff.Subscribe(character);
+    }
 
-            buff.Subscribe(character);
-        }
+    protected override void Use()
+    {
+        buff.StartBuff(abilityButton.gameObject);
+    }
 
-        protected override void Use()
-        {
-            buff.StartBuff(abilityButton.gameObject);
-        }
+    public override IObservable<string> ObserveDescription()
+    {
+        return Observable.Return("Fortification");
+    }
 
-        public override IObservable<string> ObserveDescription()
-        {
-            return Observable.Return("Fortification");
-        }
+    protected override void OnLevelUp(int level, Price price)
+    {
+        price.cost.Value = fields[level].price;
 
-        protected override void OnLevelUp(int level, Price price)
-        {
-            price.cost.Value = fields[level].price;
-
-            buff.multiplier = fields[level].multiplier;
-            buff.duration = fields[level].duration;
-        }
+        buff.multiplier = fields[level].multiplier;
+        buff.duration = fields[level].duration;
     }
 
     public class FortificationBuff : Buff
