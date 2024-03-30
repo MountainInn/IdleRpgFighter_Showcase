@@ -22,8 +22,9 @@ public class PowerAttack : Ability_Attack
         lastCreatedArgs = character.CreateDamage();
         lastCreatedArgs.damage = damage;
         lastCreatedArgs.isPower = true;
+        lastCreatedArgs.animationTrigger = attackAnimationTrigger;
 
-        character.PushAttack(this);
+        character.PushAttack(lastCreatedArgs);
     }
 
     public override IObservable<string> ObserveDescription()

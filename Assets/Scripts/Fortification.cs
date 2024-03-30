@@ -56,7 +56,7 @@ public class Fortification : Ability
     {
         public Block block;
 
-        public override void Subscribe(Combatant combatant)
+        public override void Subscribe(AnimatorCombatant combatant)
         {
         }
 

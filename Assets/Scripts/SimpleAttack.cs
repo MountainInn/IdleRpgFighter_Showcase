@@ -19,10 +19,9 @@ public class SimpleAttack : Ability_Attack
     protected override void Use()
     {
         lastCreatedArgs = character.CreateDamage();
+        lastCreatedArgs.animationTrigger = attackAnimationTrigger;
 
-        cooldown.ResetToZero();
-
-        character.PushAttack(this);
+        character.PushAttack(lastCreatedArgs);
     }
 
     public override IObservable<string> ObserveDescription()

@@ -12,6 +12,7 @@ public abstract class AnimatorCombatant : Combatant
     [SerializeField] protected string attackTriggerName = "attackTrigger";
     [SerializeField] public UnityEvent afterDeathAnimation;
     [SerializeField] public UnityEvent onAttackAnimEvent;
+    [SerializeField] public UnityEvent<DamageArgs> onAttackPushed;
 
     [HideInInspector] public ObservableStateMachineTrigger ObserveStateMachine
     {
@@ -68,20 +69,22 @@ public abstract class AnimatorCombatant : Combatant
     }
 
 
-    Ability_Attack lastAttack;
+    DamageArgs lastAttack;
 
-    public void PushAttack(Ability_Attack attack)
+    public void PushAttack(DamageArgs attack)
     {
         if (!CanContinueBattle() || isPlaying)
             return;
 
-        combatantAnimator.SetTrigger(attack.attackAnimationTrigger);
+        onAttackPushed?.Invoke(attack);
+
+        combatantAnimator.SetTrigger(attack.animationTrigger);
         lastAttack = attack;
     }
 
     public void InflictDamage_OnAnimEvent()
     {
-        InflictDamage(lastAttack?.lastCreatedArgs ?? CreateDamage());
+        InflictDamage(lastAttack ?? CreateDamage());
 
         onAttackAnimEvent?.Invoke();
     }

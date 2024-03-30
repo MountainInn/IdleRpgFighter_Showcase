@@ -12,7 +12,7 @@ public abstract class Buff
 
     protected float activeBonus = 1f;
 
-    abstract public void Subscribe(Combatant combatant);
+    abstract public void Subscribe(AnimatorCombatant combatant);
 
     public void StartBuff(GameObject holder)
     {

@@ -5,4 +5,6 @@ public class DamageArgs
 
     public bool isCrit;
     public bool isPower;
+
+    public string animationTrigger;
 }
