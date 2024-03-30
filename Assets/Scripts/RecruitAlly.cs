@@ -8,24 +8,24 @@ public class RecruitAlly : Talent
 {
     [SerializeField] MobStatsSO allyStats;
 
-    [Inject] Ally.Pool allyPool;
-    [Inject] Gang gang;
-    [Inject]
-    public void Construct()
-    {
+    // [Inject] Ally.Pool allyPool;
+    // [Inject] Gang gang;
+    // [Inject]
+    // public void Construct()
+    // {
 
-    }
+    // }
 
     protected override void OnLevelUp(int level, Price price)
     {
-        if (level == 0)
-            return;
+        // if (level == 0)
+        //     return;
 
-        var newAlly = allyPool.Spawn();
+        // var newAlly = allyPool.Spawn();
 
-        allyStats.Apply(newAlly);
+        // allyStats.Apply(newAlly);
 
-        gang.Add(newAlly);
+        // gang.Add(newAlly);
     }
 
     public override IObservable<string> ObserveDescription()

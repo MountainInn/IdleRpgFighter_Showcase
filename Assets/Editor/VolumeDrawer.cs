@@ -18,13 +18,13 @@ public class VolumeDrawer : PropertyDrawer
         EditorGUILayout.BeginHorizontal();
         {
             EditorGUILayout.LabelField(property.name);
-            EditorGUILayout.PropertyField(property.FindPropertyRelative("current"),
+            EditorGUILayout.PropertyField(property.FindPropertyRelative("_current"),
                                           new GUIContent(""),
                                           width2);
 
             EditorGUILayout.LabelField("/", width);
 
-            EditorGUILayout.PropertyField(property.FindPropertyRelative("maximum"),
+            EditorGUILayout.PropertyField(property.FindPropertyRelative("_maximum"),
                                           new GUIContent(""),
                                           width2);
         }

@@ -4,8 +4,14 @@ using Zenject;
 
 public class TalentUser : MonoBehaviour
 {
-    [Inject] public List<Talent> talents;
-    [Inject] public List<Ability> abilities;
+    public List<Talent> talents;
+    public List<Ability> abilities;
 
+    [Inject]
+    public void Construct(List<Talent> talents, List<Ability> abilities)
+    {
+        this.talents = talents;
+        this.abilities = abilities;
+    }
     public bool alreadyInjected;
 }

@@ -19,8 +19,14 @@ public class Block : Ability
     float activeBonus = 1f;
     bool isHoldingBlock;
 
-    [Inject] BlockVfx blockVfx;
-    [Inject] AttackBonusVfx attackBonusVfx;
+    BlockVfx blockVfx;
+    AttackBonusVfx attackBonusVfx;
+
+    public void Subscribe(BlockVfx blockVfx, AttackBonusVfx attackBonusVfx)
+    {
+        this.blockVfx = blockVfx;
+        this.attackBonusVfx = attackBonusVfx;
+    }
 
     protected override void ConcreteSubscribe()
     {

@@ -23,7 +23,8 @@ public abstract class Talent : ScriptableObject
                                 (val) => buyableLevel.ware.SetLevel(val));
     }
 
-    [Inject] protected void InitializeBuyableLevel(Vault vault)
+    [Inject]
+    protected void InitializeBuyableLevel(Vault vault)
     {
         Talent_SubInitialize();
 
