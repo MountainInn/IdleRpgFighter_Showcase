@@ -14,6 +14,8 @@ public abstract class Ability : Talent, ITickable
 
     protected Character character;
 
+    protected IReadOnlyReactiveProperty<bool> isReadyToUse;
+
     public void SubscribeButton(Character character,
                                 AbilityButton abilityButton)
     {
@@ -22,10 +24,14 @@ public abstract class Ability : Talent, ITickable
 
         abilityButton.Connect(this);
 
-        Observable
+        isReadyToUse =
+            Observable
             .CombineLatest(cooldown.ObserveFull(),
                            ObserveHaveEnoughEnergy(),
                            (isReady, isEnough) => isReady && isEnough)
+            .ToReactiveProperty();
+
+        isReadyToUse
             .SubscribeToInteractable(abilityButton)
             .AddTo(abilityButton);
 

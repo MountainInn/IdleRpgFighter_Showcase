@@ -36,8 +36,11 @@ public class Block : Ability
             .OnPointerDownAsObservable()
             .Subscribe(_ =>
             {
-                SubscribeBlock(character);
-                SubscribeParry(character);
+                if (isReadyToUse.Value)
+                {
+                    SubscribeBlock(character);
+                    SubscribeParry(character);
+                }
             })
             .AddTo(character);
     }
