@@ -17,9 +17,9 @@ MonoBehaviour:
   energyCost: 10
   attackAnimationTrigger: attackTrigger
   fields:
-  - damageMultiplier: 5
+  - damage: 30
     price: 1
-  - damageMultiplier: 5
+  - damage: 30
     price: 1
-  - damageMultiplier: 5
+  - damage: 30
     price: 5
