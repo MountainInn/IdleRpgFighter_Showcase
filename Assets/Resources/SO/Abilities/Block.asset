@@ -16,7 +16,9 @@ MonoBehaviour:
   _cooldown: 0
   energyCost: 5
   parryTimeWindow: 0.5
-  damageReductionMultiplier: 0.5
   canCounterAttack: 1
   counterAttackDamageBonus: 1.5
   bonusDuration: 6
+  fields:
+  - damageReductionFlat: 6
+    price: 1

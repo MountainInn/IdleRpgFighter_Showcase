@@ -83,6 +83,11 @@ public abstract class Ability : Talent, ITickable
             .Select(tuple => (tuple.current >= energyCost * timeDelta));
     }
 
+    protected void DrainEnergy(float energyCost, float deltaTime = 1)
+    {
+        character.energy.Subtract(energyCost * deltaTime);
+    }
+
     protected void DrainEnergy(float deltaTime = 1)
     {
         character.energy.Subtract(energyCost * deltaTime);

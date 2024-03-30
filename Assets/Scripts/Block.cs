@@ -4,23 +4,35 @@ using UniRx;
 using UniRx.Triggers;
 using Zenject;
 using System.Linq;
+using System.Collections.Generic;
 
 [CreateAssetMenu(fileName = "Block", menuName = "SO/Abilities/Block")]
-public class Block : Ability
+public partial class Block : Ability
 {
     [SerializeField] float parryTimeWindow;
-    [SerializeField] float damageReductionMultiplier;
     [Space]
     [SerializeField] bool canCounterAttack;
     [Space]
     [SerializeField] float counterAttackDamageBonus;
     [SerializeField] float bonusDuration;
+    [SerializeField] List<Field> fields;
+
+    [Serializable]
+    struct Field
+    {
+        public float damageReductionFlat;
+        public int price;
+    }
 
     bool isHoldingBlock;
 
     BlockVfx blockVfx;
     AttackBonusVfx attackBonusVfx;
     AttackBuff attackBuff;
+
+    float damageReductionFlat;
+    float fortificationMult = 1;
+    float energyDrainMult = 1;
 
     public void Subscribe(BlockVfx blockVfx, AttackBonusVfx attackBonusVfx)
     {
@@ -65,7 +77,9 @@ public class Block : Ability
             })
             .Do(hit =>
             {
-                hit.damage *= damageReductionMultiplier;
+                float blockValue = damageReductionFlat * fortificationMult;
+
+                hit.damage = Mathf.Max(0, hit.damage - blockValue);
             })
             .DoOnCompleted(() =>
             {
@@ -106,7 +120,8 @@ public class Block : Ability
         base.Tick();
 
         if (isHoldingBlock)
-            DrainEnergy(Time.deltaTime);
+            DrainEnergy(energyCost * energyDrainMult,
+                        Time.deltaTime);
     }
 
     public override IObservable<string> ObserveDescription()
@@ -117,5 +132,8 @@ public class Block : Ability
 
     protected override void OnLevelUp(int level, Price price)
     {
+        price.cost.Value = fields[level].price;
+
+        damageReductionFlat = fields[level].damageReductionFlat;
     }
 }
