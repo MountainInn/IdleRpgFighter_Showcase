@@ -10,9 +10,20 @@ public abstract class AnimatorCombatant : Combatant
     [SerializeField] public UnityEvent afterDeathAnimation;
     [SerializeField] public UnityEvent onAttackAnimEvent;
 
-    [HideInInspector] public ObservableStateMachineTrigger ObserveStateMachine;
+    [HideInInspector] public ObservableStateMachineTrigger ObserveStateMachine
+    {
+        get {
+            if (_ObserveStateMachine == null)
+                InitObserveStateMachine();
 
-    protected int attackTriggerId;
+            return _ObserveStateMachine;
+        }
+
+        protected set => _ObserveStateMachine = value;
+    }
+    ObservableStateMachineTrigger _ObserveStateMachine;
+
+    protected int basicAttackTriggerId;
 
     [Inject]
     public void Construct()
@@ -32,7 +43,7 @@ public abstract class AnimatorCombatant : Combatant
 
     protected void Start()
     {
-        attackTriggerId = Animator.StringToHash(attackTriggerName);
+        basicAttackTriggerId = Animator.StringToHash(attackTriggerName);
 
         onDie.AddListener(() => combatantAnimator.SetBool("death", true));
         onRespawn.AddListener(() => combatantAnimator.SetBool("death", false));

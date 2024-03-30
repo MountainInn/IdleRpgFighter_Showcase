@@ -16,11 +16,11 @@ public class Block : Ability
     [SerializeField] float counterAttackDamageBonus;
     [SerializeField] float bonusDuration;
 
-    float activeBonus = 1f;
     bool isHoldingBlock;
 
     BlockVfx blockVfx;
     AttackBonusVfx attackBonusVfx;
+    AttackBuff attackBuff;
 
     public void Subscribe(BlockVfx blockVfx, AttackBonusVfx attackBonusVfx)
     {
@@ -30,7 +30,10 @@ public class Block : Ability
 
     protected override void ConcreteSubscribe()
     {
-        character.preAttack.AddListener( ApplyCounterAttackBonus );
+        attackBuff = new(){ duration = bonusDuration,
+                            multiplier = counterAttackDamageBonus };
+
+        attackBuff.Subscribe(character);
 
         abilityButton
             .OnPointerDownAsObservable()
@@ -38,16 +41,16 @@ public class Block : Ability
             {
                 if (isReadyToUse.Value)
                 {
-                    SubscribeBlock(character);
-                    SubscribeParry(character);
+                    Use();
                 }
             })
             .AddTo(abilityButton);
     }
 
-    void ApplyCounterAttackBonus(DamageArgs hit)
+    protected override void Use()
     {
-        hit.damage *= activeBonus;
+        SubscribeBlock(character);
+        SubscribeParry(character);
     }
 
     void SubscribeBlock(Character character)
@@ -67,7 +70,6 @@ public class Block : Ability
             .DoOnCompleted(() =>
             {
                 blockVfx.HideBlock();
-                cooldown.ResetToZero();
                 isHoldingBlock = false;
             })
             .Subscribe()
@@ -88,7 +90,7 @@ public class Block : Ability
                 if (hit != null && canCounterAttack)
                 {
                     blockVfx.ShowCounterAttack();
-                    SubscribeCounterAttackBonus(character);
+                    attackBuff.StartBuff(character.gameObject);
                 }
             })
             .DoOnCompleted(() =>
@@ -97,27 +99,6 @@ public class Block : Ability
             })
             .Subscribe()
             .AddTo(abilityButton);
-    }
-
-    void SubscribeCounterAttackBonus(Character character)
-    {
-        Observable
-            .Timer(TimeSpan.FromSeconds(bonusDuration))
-            .DoOnSubscribe( ActivateBonus )
-            .DoOnCompleted( DeactivateBonus )
-            .Subscribe()
-            .AddTo(abilityButton);
-    }
-
-    void ActivateBonus()
-    {
-        activeBonus = counterAttackDamageBonus;
-        attackBonusVfx.ShowBonus();
-    }
-    void DeactivateBonus()
-    {
-        activeBonus = 1f;
-        attackBonusVfx.HideBonus();
     }
 
     public override void Tick()

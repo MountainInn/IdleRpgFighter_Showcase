@@ -16,6 +16,11 @@ public abstract class Ability : Talent, ITickable
 
     protected IReadOnlyReactiveProperty<bool> isReadyToUse;
 
+
+    abstract protected void Use();
+    abstract protected void ConcreteSubscribe();
+
+
     public void SubscribeButton(Character character,
                                 AbilityButton abilityButton)
     {
@@ -42,8 +47,6 @@ public abstract class Ability : Talent, ITickable
     {
         cooldown = new(_cooldown);
     }
-
-    abstract protected void ConcreteSubscribe();
 
     public IObservable<bool> ObserveHaveEnoughEnergy(float timeDelta = 1)
     {

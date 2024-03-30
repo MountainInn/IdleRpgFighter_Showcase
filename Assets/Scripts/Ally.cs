@@ -19,7 +19,7 @@ public class Ally : AnimatorCombatant
     {
         attackTimer.ObserveFull()
             .WhereEqual(true)
-            .Subscribe(_ => combatantAnimator.SetTrigger(attackTriggerId))
+            .Subscribe(_ => combatantAnimator.SetTrigger(basicAttackTriggerId))
             .AddTo(this);
     }
 

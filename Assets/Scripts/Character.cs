@@ -106,12 +106,15 @@ public class Character : AnimatorCombatant
                            (enter, exit) => enter.Equals(exit));
     }
 
-    public void Attack()
+    public void Attack(string attackTrigger = "")
     {
         if (!CanContinueBattle() || isPlaying)
             return;
 
-        combatantAnimator.SetTrigger(attackTriggerId);
+        if (attackTrigger != "")
+            combatantAnimator.SetTrigger(attackTrigger);
+        else
+            combatantAnimator.SetTrigger(basicAttackTriggerId);
     }
 
     public void MaybeHitWithPickaxe_OnAnimEvent()
