@@ -14,24 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   queueSegments:
   - mobStats:
-    - {fileID: 11400000, guid: c2b15d5610123ad4fbfe5817d631104f, type: 2}
-    - {fileID: 11400000, guid: 799f275aea784ad4e8ef9869e07772a4, type: 2}
-    - {fileID: 11400000, guid: b55b80b2174a3ff49a0ba403fbd00b4d, type: 2}
+    - {fileID: 11400000, guid: a858f586045235a49884f6c95785e230, type: 2}
+    segmentLength: 3
+    powerMultiplier: 1
+    dropList: {fileID: 0}
+  - mobStats:
+    - {fileID: 11400000, guid: 12769762912fb2946aacd9bdcd8fe475, type: 2}
     segmentLength: 2
     powerMultiplier: 1
     dropList: {fileID: 0}
   - mobStats:
-    - {fileID: 11400000, guid: c2b15d5610123ad4fbfe5817d631104f, type: 2}
-    - {fileID: 11400000, guid: 799f275aea784ad4e8ef9869e07772a4, type: 2}
-    - {fileID: 11400000, guid: b55b80b2174a3ff49a0ba403fbd00b4d, type: 2}
-    segmentLength: 10
-    powerMultiplier: 1
-    dropList: {fileID: 0}
-  - mobStats:
-    - {fileID: 11400000, guid: c2b15d5610123ad4fbfe5817d631104f, type: 2}
-    - {fileID: 11400000, guid: 799f275aea784ad4e8ef9869e07772a4, type: 2}
-    - {fileID: 11400000, guid: b55b80b2174a3ff49a0ba403fbd00b4d, type: 2}
-    segmentLength: 10
+    - {fileID: 11400000, guid: 18486c6629afe2445a3a4bdb011be9a6, type: 2}
+    segmentLength: 1
     powerMultiplier: 1
     dropList: {fileID: 0}
   powerMultiplier: 1
