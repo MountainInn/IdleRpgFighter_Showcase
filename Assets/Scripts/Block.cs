@@ -2,7 +2,6 @@ using System;
 using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
-using Zenject;
 using System.Linq;
 using System.Collections.Generic;
 
@@ -13,8 +12,6 @@ public class Block : Ability
     [Space]
     [SerializeField] bool canCounterAttack;
     [Space]
-    [SerializeField] float counterAttackDamageBonus;
-    [SerializeField] float bonusDuration;
     [SerializeField] List<Field> fields;
 
     [Serializable]
@@ -28,7 +25,6 @@ public class Block : Ability
 
     BlockVfx blockVfx;
     AttackBonusVfx attackBonusVfx;
-    AttackBuff attackBuff;
 
     float damageReductionFlat;
     public float fortificationMult = 1;
@@ -42,11 +38,6 @@ public class Block : Ability
 
     protected override void ConcreteSubscribe()
     {
-        attackBuff = new(){ duration = bonusDuration,
-                            multiplier = counterAttackDamageBonus };
-
-        attackBuff.Subscribe(character);
-
         abilityButton
             .OnPointerDownAsObservable()
             .Subscribe(_ =>
@@ -104,7 +95,6 @@ public class Block : Ability
                 if (hit != null && canCounterAttack)
                 {
                     blockVfx.ShowCounterAttack();
-                    attackBuff.StartBuff(character.gameObject);
                 }
             })
             .DoOnCompleted(() =>

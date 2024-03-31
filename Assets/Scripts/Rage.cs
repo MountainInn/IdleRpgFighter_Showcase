@@ -16,19 +16,21 @@ public class Rage : Ability
         public int price;
     }
 
-    AttackBuff attackBuff = new();
-
+    Buff attackBuff = new();
 
     protected override void ConcreteSubscribe()
     {
         base.ConcreteSubscribe();
 
-        attackBuff.Subscribe(character);
+        attackBuff
+            .Subscribe(character.preAttack.AsObservable(),
+                       (args, mult) => args.damage *= mult)
+            .AddTo(abilityButton);
     }
 
     protected override void Use()
     {
-        attackBuff.StartBuff(character.gameObject);
+        attackBuff.StartBuff(character);
     }
 
     public override IObservable<string> ObserveDescription()

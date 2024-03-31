@@ -31,29 +31,15 @@ public class Character : AnimatorCombatant
     public void SubscribeToCheats(Cheats cheats)
     {
         cheats.oneShotMob
-            .WhereEqual(true)
-            .Subscribe(_ =>
-            {
-                preAttack
-                    .AsObservable()
-                    .TakeUntil(cheats.oneShotMob.WhereEqual(false))
-                    .Subscribe(args =>
-                               args.damage = args.defender.health.maximum.Value)
-                    .AddTo(this);
-            })
+            .SubToggle(preAttack.AsObservable(),
+                            args =>
+                            args.damage = args.defender.health.maximum.Value)
             .AddTo(this);
 
         cheats.oneShotCharacter
-            .WhereEqual(true)
-            .Subscribe(toggle =>
-            {
-                preTakeDamage
-                    .AsObservable()
-                    .TakeUntil(cheats.oneShotCharacter.WhereEqual(false))
-                    .Subscribe(args =>
-                               args.damage = args.defender.health.maximum.Value)
-                    .AddTo(this);
-            })
+            .SubToggle(preTakeDamage.AsObservable(),
+                            args =>
+                            args.damage = args.defender.health.maximum.Value)
             .AddTo(this);
 
         cheats.godMode

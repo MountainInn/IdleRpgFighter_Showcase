@@ -19,37 +19,24 @@ public class LightSpeedMode : Ability
         public int price;
     }
 
-    float duration;
+    public BoolReactiveProperty enabled => buff.enabled;
 
-    [HideInInspector] public BoolReactiveProperty enabled = new();
-   
+    Buff buff = new();
+
     protected override void ConcreteSubscribe()
     {
         base.ConcreteSubscribe();
 
-        enabled
-            .WhereEqual(true)
-            .Subscribe(_ =>
-            {
-                character
-                    .onAttackPushed
-                    .AsObservable()
-                    .TakeUntil( enabled.WhereEqual(false) )
-                    .Subscribe(args =>
-                               args.animationTrigger = noTimeAttack_AnimationTrigger)
-                    .AddTo(abilityButton);
-            })
+        buff
+            .Subscribe(character.onAttackPushed.AsObservable(),
+                       (args, _mult) =>
+                       args.animationTrigger = noTimeAttack_AnimationTrigger)
             .AddTo(abilityButton);
     }
 
     protected override void Use()
     {
-        Observable
-            .Timer(TimeSpan.FromSeconds(duration))
-            .DoOnSubscribe(() => enabled.Value = true)
-            .DoOnCancel(() => enabled.Value = false)
-            .Subscribe()
-            .AddTo(abilityButton);
+        buff.StartBuff(abilityButton);
     }
 
     public override IObservable<string> ObserveDescription()
@@ -61,7 +48,7 @@ public class LightSpeedMode : Ability
     {
         price.cost.Value = fields[level].price;
 
-        duration = fields[level].duration;
+        buff.duration = fields[level].duration;
     }
 }
 

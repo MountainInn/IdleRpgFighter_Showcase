@@ -19,24 +19,34 @@ public class Fortification : Ability
         public int price;
     }
 
-    FortificationBuff buff = new();
+    Buff buff = new();
 
-    [Inject]
-    public void Construct(Block block)
-    {
-        buff.block = block;
-    }
+    [Inject] Block block;
 
     protected override void ConcreteSubscribe()
     {
         base.ConcreteSubscribe();
 
-        buff.Subscribe(character);
+        buff
+            .Subscribe(toggle =>
+            {
+                if (toggle)
+                {
+                    block.fortificationMult = buff.multiplier;
+                    block.energyDrainMult = 0;
+                }
+                else
+                {
+                    block.fortificationMult = 1;
+                    block.energyDrainMult = 1;
+                }
+            })
+            .AddTo(abilityButton);
     }
 
     protected override void Use()
     {
-        buff.StartBuff(abilityButton.gameObject);
+        buff.StartBuff(abilityButton);
     }
 
     public override IObservable<string> ObserveDescription()
@@ -50,25 +60,5 @@ public class Fortification : Ability
 
         buff.multiplier = fields[level].multiplier;
         buff.duration = fields[level].duration;
-    }
-
-    public class FortificationBuff : Buff
-    {
-        public Block block;
-
-        public override void Subscribe(AnimatorCombatant combatant)
-        {
-        }
-
-        protected override void ActivateBonus()
-        {
-            block.fortificationMult = multiplier;
-            block.energyDrainMult = 0;
-        }
-        protected override void DeactivateBonus()
-        {
-            block.fortificationMult = 1;
-            block.energyDrainMult = 1;
-        }
     }
 }
