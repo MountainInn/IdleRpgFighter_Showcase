@@ -16,6 +16,11 @@ public class CombatantTemplateEditor : Editor
     {
         template ??= (CombatantTemplate)target;
 
+        if (template.HasNoSavedData)
+        {
+            InitializeTemplate();
+        }
+
         baseStyle =
             new GUIStyle()
             {
@@ -43,15 +48,10 @@ public class CombatantTemplateEditor : Editor
 
         if (GUILayout.Button("Reinitialize"))
         {
-            template.toggles =
-                TemplateEditorData.instance.parts
-                .SelectMany(kv =>
-                {
-                    return kv.Value.list;
-                })
-                .ToDictionary(part => part.name,
-                              part => false);
+            InitializeTemplate();
         }
+
+        serializedObject.Update();
        
         foreach (var (parent, parts) in TemplateEditorData.instance.parts)
         {
@@ -102,6 +102,19 @@ public class CombatantTemplateEditor : Editor
 
     }
 
+    private void InitializeTemplate()
+    {
+        template.toggles =
+            TemplateEditorData.instance.parts
+            .SelectMany(kv =>
+            {
+                return kv.Value.list;
+            })
+            .ToDictionary(part => part.name,
+                          part => false);
+
+        serializedObject.ApplyModifiedProperties();
+    }
 
     private void InitializeFoldouts()
     {
