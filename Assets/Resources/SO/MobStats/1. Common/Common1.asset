@@ -16,5 +16,5 @@ MonoBehaviour:
   attackDamage: 2
   attackTimer: 4
   template: {fileID: 0}
-  dropList: {fileID: 0}
+  dropList: {fileID: 11400000, guid: e23400b5d934108419e44342a2bbd564, type: 2}
   icon: {fileID: 21300000, guid: 79686f8b621ab4aad86cc7ecd9eb818a, type: 3}
