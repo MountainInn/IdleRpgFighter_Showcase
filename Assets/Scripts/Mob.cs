@@ -15,26 +15,30 @@ public class Mob : AnimatorCombatant
     [Inject]
     public void Construct(Cheats cheats)
     {
-        UniTask
-            .WaitWhile(() => Stats is null)
-            .ContinueWith(() =>
+        cheats.mobOneSecondAttackTimer
+            .SubToggle(onStatsApplied.AsObservable(),
+                       _ => attackTimer.Resize(1))
+            .AddTo(this);
+
+        cheats.trainingDummy
+            .SubToggle(onStatsApplied.AsObservable(),
+                       _ => health.ResizeAndRefill(int.MaxValue))
+            .AddTo(this);
+
+        onStatsApplied
+            .AsObservable()
+            .Take(1)
+            .Subscribe(_ =>
             {
                 cheats.mobOneSecondAttackTimer
-                    .Subscribe(toggle =>
-                    {
-                        if (toggle)
-                            attackTimer.Resize(1);
-                        else
-                            attackTimer.Resize(Stats.attackTimer);
-                    })
+                    .Subscribe(toggle => attackTimer.Resize(toggle ? 1 : Stats.attackTimer))
                     .AddTo(this);
 
                 cheats.trainingDummy
-                    .SubToggle((toggle) => onRespawn.Invoke(),
-                               onRespawn.AsObservable(),
-                               _ => health.ResizeAndRefill(int.MaxValue))
+                    .Subscribe(toggle => health.ResizeAndRefill(toggle ? int.MaxValue : Stats.health))
                     .AddTo(this);
-            });
+            })
+            .AddTo(this);
     }
 
     protected new void Awake()
