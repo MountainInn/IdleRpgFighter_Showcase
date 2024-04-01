@@ -10,6 +10,8 @@ public abstract class AnimatorCombatant : Combatant
 {
     [SerializeField] public Animator combatantAnimator;
     [SerializeField] protected string attackTriggerName = "attackTrigger";
+    [SerializeField] protected string getHitTriggerName = "get damage Trigger";
+    [Space]
     [SerializeField] public UnityEvent afterDeathAnimation;
     [SerializeField] public UnityEvent onAttackAnimEvent;
     [SerializeField] public UnityEvent<DamageArgs> onAttackPushed;
@@ -55,6 +57,11 @@ public abstract class AnimatorCombatant : Combatant
 
         onDie.AddListener(() => combatantAnimator.SetBool("death", true));
         onRespawn.AddListener(() => combatantAnimator.SetBool("death", false));
+
+        postTakeDamage
+            .AsObservable()
+            .Subscribe(_ => combatantAnimator.SetTrigger(getHitTriggerName))
+            .AddTo(this);
     }
 
     public void SetAnimatorController(RuntimeAnimatorController controller)
