@@ -38,21 +38,21 @@ public class LootManager : MonoBehaviour
 
     async UniTask Drops(Combatant combatant)
     {
-        if (combatant.dropList != null)
+        if (combatant.dropList == null)
+            return;
+
+        foreach (var entry in combatant.dropList.entries)
         {
-            foreach (var entry in combatant.dropList.entries)
+            if (UnityEngine.Random.value < entry.chance)
             {
-                if (UnityEngine.Random.value < entry.chance)
+                Price currency = entry.drop.currency;
+
+                if (currency != null)
                 {
-                    Price currency = entry.drop.currency;
-
-                    if (currency != null)
-                    {
-                        DropGold(currency.cost.Value);
-                    }
-
-                    await UniTask.WaitForSeconds(gameSettings.intervalBetweenDrops);
+                    DropGold(currency.cost.Value);
                 }
+
+                await UniTask.WaitForSeconds(gameSettings.intervalBetweenDrops);
             }
         }
     }

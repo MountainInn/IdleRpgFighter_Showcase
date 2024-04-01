@@ -5,7 +5,7 @@ using System;
 [CreateAssetMenu(fileName = "DropList", menuName = "SO/DropList")]
 public class DropList : ScriptableObject
 {
-    [SerializeField] public List<Entry> entries;
+    [SerializeField] public List<Entry> entries = new();
 
     [Serializable]
     public class Entry
