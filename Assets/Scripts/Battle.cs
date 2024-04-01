@@ -37,13 +37,7 @@ public class Battle : MonoBehaviour
     public void SubscribeWeakPoints(WeakPoints weakPoints,
                                     WeakPointView.Pool weakPointViewPool)
     {
-        Observable
-            .Interval(weakPoints.rollInterval)
-            .Subscribe(_ =>
-            {
-                weakPoints.Roll(canvas, weakPointViewPool);
-            })
-            .AddTo(canvas);
+        weakPoints.SubscribeSpawnOnTimer(canvas, weakPointViewPool);
 
         weakPointViewPool.onWeakPointClicked = () =>
         {

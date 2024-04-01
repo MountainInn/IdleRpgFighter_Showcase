@@ -10,7 +10,6 @@ using Cysharp.Threading.Tasks;
 [CreateAssetMenu(fileName = "WeakPoints", menuName = "SO/Talents/WeakPoints")]
 public class WeakPoints : Talent
 {
-    [SerializeField] float timer = 5;
     [SerializeField] float lifespan = 2;
     [SerializeField] List<Field> fields;
 
@@ -22,7 +21,18 @@ public class WeakPoints : Talent
         public int cost;
     }
 
-    public TimeSpan rollInterval => TimeSpan.FromSeconds(timer);
+    [Inject] GameSettings gameSettings;
+
+    IDisposable timerSubscription;
+
+    public void SubscribeSpawnOnTimer(Canvas canvas, WeakPointView.Pool viewPool)
+    {
+        gameSettings
+            .SubscribeToTimer(timerSubscription,
+                              canvas,
+                              () => Roll(canvas, viewPool));
+    }
+
     public float chanceToAppear {get; protected set;}
     public float damageMult {get; protected set;}
 
