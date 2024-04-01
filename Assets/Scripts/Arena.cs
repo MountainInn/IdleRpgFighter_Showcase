@@ -117,10 +117,12 @@ public class Arena : MonoBehaviour
         mobRoot.localRotation = Quaternion.identity;
         onMobMovedToRespawnPosition?.Invoke();
 
-        mob.combatantAnimator.SetTrigger("respawn");
+        mob.combatantAnimator.SetBool("death", false);
 
         mobRoot
             .DOLocalMove(Vector3.zero, returnDuration)
             .OnKill( onMobReset.Invoke );
+
+        mob.combatantAnimator.SetTrigger("respawn");
     }
 }
