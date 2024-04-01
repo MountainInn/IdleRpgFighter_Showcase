@@ -1223,7 +1223,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healthBar: {fileID: 1119500681851373414}
-  attackTimerBar: {fileID: 8943351916444558342}
+  attackTimerBar: {fileID: 0}
+  energyBar: {fileID: 8943351916444558342}
 --- !u!114 &3409015238235179774
 MonoBehaviour:
   m_ObjectHideFlags: 0

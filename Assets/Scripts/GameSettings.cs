@@ -1,6 +1,7 @@
 using UnityEngine;
 using UniRx;
 using System;
+using UniRx.Diagnostics;
 
 [CreateAssetMenu(fileName = "GameSettings", menuName = "SO/GameSettings")]
 public class GameSettings : ScriptableObject
@@ -15,9 +16,10 @@ public class GameSettings : ScriptableObject
     [Header("Other")]
     public FloatReactiveProperty globalTimeInterval;
 
-    public void SubscribeToTimer(IDisposable timerSubscription,
-                                 Component holder,
-                                 Action onTimer)
+    public void SubscribeToTimer<T>(IDisposable timerSubscription,
+                                    Component holder,
+                                    IObservable<T> takeUntilStream,
+                                    Action onTimer)
     {
         globalTimeInterval
             .Subscribe(t =>
@@ -27,10 +29,29 @@ public class GameSettings : ScriptableObject
                 timerSubscription =
                     Observable
                     .Interval(TimeSpan.FromSeconds(t))
+                    .TakeUntil(takeUntilStream)
                     .Subscribe(_ => onTimer.Invoke())
                     .AddTo(holder);
             })
             .AddTo(holder);
     }
+
+        public void SubscribeToTimer(IDisposable timerSubscription,
+                                     Component holder,
+                                     Action onTimer)
+        {
+            globalTimeInterval
+                .Subscribe(t =>
+                {
+                    timerSubscription?.Dispose();
+
+                    timerSubscription =
+                        Observable
+                        .Interval(TimeSpan.FromSeconds(t))
+                        .Subscribe(_ => onTimer.Invoke())
+                        .AddTo(holder);
+                })
+                .AddTo(holder);
+        }
 
 }

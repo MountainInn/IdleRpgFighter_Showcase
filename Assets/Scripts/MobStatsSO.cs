@@ -7,6 +7,13 @@ public class MobStatsSO : ScriptableObject
     [SerializeField] public float attackDamage;
     [SerializeField] public float attackTimer;
     [Space]
+    [SerializeField] [Range(0,1)] public float enrageChance;
+    [SerializeField] [Range(0,1)] public float relaxChance;
+    [Space]
+    [SerializeField] public float energyMax;
+    [SerializeField] public float energyRegen;
+    [SerializeField] public float energyDrainPerAttack;
+    [Space]
     [SerializeField] public CombatantTemplate template;
     [Space]
     [SerializeField] public DropList dropList;
@@ -28,6 +35,15 @@ public class MobStatsSO : ScriptableObject
     public void Apply(Mob mob)
     {
         this . ToStats() . Apply(mob);
+
+        mob.enrageChance = enrageChance;
+        mob.relaxChance = relaxChance;
+
+        mob.energy.ResetToZero();
+        mob.energy.Resize(energyMax);
+
+        mob.energyDrainPerAttack = energyDrainPerAttack;
+        mob.energyRegen = energyRegen;
 
         mob.dropList = this.dropList;
 

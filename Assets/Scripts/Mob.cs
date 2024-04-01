@@ -4,16 +4,24 @@ using UniRx;
 using System;
 using UnityEngine.Events;
 using Cysharp.Threading.Tasks;
+using UniRx.Diagnostics;
 
 public class Mob : AnimatorCombatant
 {
     [SerializeField] public MobStatsSO startingMobStats;
-
+    [SerializeField] public float enrageChance;
+    [SerializeField] public float relaxChance;
+    [SerializeField] public float energyDrainPerAttack;
+    [SerializeField] public float energyRegen;
+   
     protected bool mobCanAttack;
 
+    public BoolReactiveProperty isEnraged {get; protected set;} = new();
+
     [Inject] FloatingTextSpawner takeDamagFloatingTextSpawner;
+    [Inject] GameSettings gameSettings;
     [Inject]
-    public void Construct(Cheats cheats)
+    public void SubscribeToCheats(Cheats cheats)
     {
         cheats.mobOneSecondAttackTimer
             .SubToggle(onStatsApplied.AsObservable(),
@@ -41,13 +49,57 @@ public class Mob : AnimatorCombatant
             .AddTo(this);
     }
 
+    IDisposable timerSubscription;
+
+    [Inject]
+    public void SubscribeEnrage()
+    {
+        onRespawn
+            .AsObservable()
+            .Subscribe(_ =>
+            {
+                gameSettings
+                    .SubscribeToTimer(timerSubscription, this, onDie.AsObservable(),
+                                      () =>
+                                      {
+                                          if (energy.current.Value >= energyDrainPerAttack &&
+                                              !isEnraged.Value)
+                                          {
+                                              isEnraged.Value = (UnityEngine.Random.value <= enrageChance);
+                                          }
+                                      });
+            })
+            .AddTo(this);
+
+        postAttack
+            .AsObservable()
+            .Subscribe(_ =>
+            {
+                if (isEnraged.Value)
+                {
+                    bool relaxRoll = (UnityEngine.Random.value <= relaxChance);
+                    bool notEnoughtEnergy = (energy.maximum.Value < energyDrainPerAttack);
+
+                    energy.Subtract(energyDrainPerAttack);
+
+                    if (relaxRoll || notEnoughtEnergy)
+                        isEnraged.Value = false;
+                }
+
+                if (isEnraged.Value)
+                    attackTimer.Refill();
+            })
+            .AddTo(this);
+    }
+
     protected new void Awake()
     {
         base.Awake();
 
         SubscribeToAttackTimerFull();
 
-        postTakeDamage.AsObservable()
+        postTakeDamage
+            .AsObservable()
             .Subscribe(args =>
             {
                 takeDamagFloatingTextSpawner?.FloatDamage(args);
@@ -109,7 +161,10 @@ public class Mob : AnimatorCombatant
 
     public void Update()
     {
-        if (mobCanAttack && CanContinueBattle())
+        if (mobCanAttack && CanContinueBattle() && isEnraged.Value)
             AttackTimerTick(Time.deltaTime);
+
+        if (!energy.IsFull)
+            energy.Add(Time.deltaTime * energyRegen);
     }
 }

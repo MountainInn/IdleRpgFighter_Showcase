@@ -10,8 +10,6 @@ using System;
 public class Character : AnimatorCombatant
 {
     [SerializeField] CharacterStatsSO characterStatsSO;
-    [SerializeField] public Volume energy;
-
     [HideInInspector] public PickaxeInput pickaxeInput;
 
     List<ITickable> tickables = new();

@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using UniRx;
 using UnityEngine;
 using UnityEngine.Events;
 using Zenject;
@@ -7,6 +9,7 @@ using Zenject;
 abstract public class Combatant : MonoBehaviour
 {
     [SerializeField] public Volume health;
+    [SerializeField] public Volume energy;
     [SerializeField] public Volume attackTimer = new();
     [Space]
     [SerializeField] public UnityEvent onDie;
@@ -26,6 +29,17 @@ abstract public class Combatant : MonoBehaviour
         preTakeDamage,
         postTakeDamage,
         postAttack;
+
+    public BoolReactiveProperty reactiveIsAlive {get; protected set;} = new();
+
+    void Awake()
+    {
+        health
+            .ObserveEmpty()
+            .Select(b => !b)
+            .Subscribe(b => reactiveIsAlive.Value = b)
+            .AddTo(this);
+    }
 
     protected void OnEnable()
     {
