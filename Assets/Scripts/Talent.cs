@@ -11,6 +11,11 @@ public abstract class Talent : ScriptableObject
 
     protected abstract void OnLevelUp(int level, Price price);
 
+    protected void CostUp(int level, Price price)
+    {
+        CostUp(level, price);
+    }
+
     public abstract IObservable<string> ObserveDescription();
 
     [Inject]

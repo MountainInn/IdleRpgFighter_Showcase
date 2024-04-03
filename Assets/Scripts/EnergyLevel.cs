@@ -36,7 +36,7 @@ public class EnergyLevel : Talent, ITickable
 
     protected override void OnLevelUp(int level, Price price)
     {
-        price.cost.Value = fields[level].price;
+        CostUp(level, price);
         character.energy.ResizeAndRefill(fields[level].maximum);
     }
 

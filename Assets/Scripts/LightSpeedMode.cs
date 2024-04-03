@@ -46,7 +46,7 @@ public class LightSpeedMode : Ability
 
     protected override void OnLevelUp(int level, Price price)
     {
-        price.cost.Value = fields[level].price;
+        CostUp(level, price);
 
         buff.duration = fields[level].duration;
     }

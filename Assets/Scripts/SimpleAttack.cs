@@ -33,6 +33,6 @@ public class SimpleAttack : Ability_Attack
     {
         cooldown.Resize(fields[level].cooldown);
 
-        price.cost.Value = fields[level].price;
+        CostUp(level, price);
     }
 }

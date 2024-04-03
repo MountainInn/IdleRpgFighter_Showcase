@@ -122,7 +122,7 @@ public class Block : Ability
 
     protected override void OnLevelUp(int level, Price price)
     {
-        price.cost.Value = fields[level].price;
+        CostUp(level, price);
 
         damageReductionFlat = fields[level].damageReductionFlat;
     }

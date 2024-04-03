@@ -36,6 +36,6 @@ public class PowerAttack : Ability_Attack
     {
         damage = fields[level].damage;
 
-        price.cost.Value = fields[level].price;
+        CostUp(level, price);
     }
 }

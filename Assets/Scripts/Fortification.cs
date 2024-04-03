@@ -56,7 +56,7 @@ public class Fortification : Ability
 
     protected override void OnLevelUp(int level, Price price)
     {
-        price.cost.Value = fields[level].price;
+        CostUp(level, price);
 
         buff.multiplier = fields[level].multiplier;
         buff.duration = fields[level].duration;

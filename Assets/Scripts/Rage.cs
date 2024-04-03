@@ -40,7 +40,7 @@ public class Rage : Ability
 
     protected override void OnLevelUp(int level, Price price)
     {
-        price.cost.Value = fields[level].price;
+        CostUp(level, price);
 
         attackBuff.multiplier = fields[level].damageMultiplier;
         attackBuff.duration = fields[level].duration;
