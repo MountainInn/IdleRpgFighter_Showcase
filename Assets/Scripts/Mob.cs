@@ -62,8 +62,9 @@ public class Mob : AnimatorCombatant
                     .SubscribeToTimer(timerSubscription, this, onDie.AsObservable(),
                                       () =>
                                       {
-                                          if (energy.current.Value >= energyDrainPerAttack &&
-                                              !isEnraged.Value)
+                                          if (energy.current.Value >= energyDrainPerAttack && !isEnraged.Value
+                                              || energy.IsFull)
+
                                           {
                                               isEnraged.Value = (UnityEngine.Random.value <= enrageChance);
                                           }
