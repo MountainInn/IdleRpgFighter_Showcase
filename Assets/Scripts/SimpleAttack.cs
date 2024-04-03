@@ -7,14 +7,7 @@ using System.Collections.Generic;
 [CreateAssetMenu(fileName = "SimpleAttack", menuName = "SO/Abilities/SimpleAttack")]
 public class SimpleAttack : Ability_Attack
 {
-    [SerializeField] List<Field> fields;
-
-    [Serializable]
-    struct Field
-    {
-        public float cooldown;
-        public int price;
-    }
+    [SerializeField] [HideInInspector] List<Field> cooldowns;
 
     protected override void Use()
     {
@@ -31,7 +24,7 @@ public class SimpleAttack : Ability_Attack
 
     protected override void OnLevelUp(int level, Price price)
     {
-        cooldown.Resize(fields[level].cooldown);
+        cooldown.Resize(cooldowns[level]);
 
         CostUp(level, price);
     }

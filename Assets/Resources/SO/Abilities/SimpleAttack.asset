@@ -13,11 +13,17 @@ MonoBehaviour:
   m_Name: SimpleAttack
   m_EditorClassIdentifier: 
   sprite: {fileID: 21300000, guid: 3eea92b60b81945068925f98ef44b940, type: 3}
+  maxLevel: 4
+  cost:
+  - intValue: 0
+  - intValue: 0
+  - intValue: 0
+  - intValue: 0
   _cooldown: 1
   energyCost: 3
   attackAnimationTrigger: attackTrigger
-  fields:
-  - cooldown: 0
-    price: 0
-  - cooldown: 0.95
-    price: 0
+  cooldowns:
+  - intValue: 0
+  - intValue: 0
+  - intValue: 0
+  - intValue: 0

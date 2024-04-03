@@ -12,14 +12,7 @@ public class Block : Ability
     [Space]
     [SerializeField] bool canCounterAttack;
     [Space]
-    [SerializeField] List<Field> fields;
-
-    [Serializable]
-    struct Field
-    {
-        public float damageReductionFlat;
-        public int price;
-    }
+    [SerializeField] [HideInInspector] List<Field> damageReductions;
 
     bool isHoldingBlock;
 
@@ -124,6 +117,6 @@ public class Block : Ability
     {
         CostUp(level, price);
 
-        damageReductionFlat = fields[level].damageReductionFlat;
+        damageReductionFlat = damageReductions[level];
     }
 }

@@ -13,12 +13,18 @@ MonoBehaviour:
   m_Name: LightSpeedMode
   m_EditorClassIdentifier: 
   sprite: {fileID: 0}
+  maxLevel: 4
+  cost:
+  - intValue: 0
+  - intValue: 0
+  - intValue: 0
+  - intValue: 0
   _cooldown: 10
   energyCost: 0
   noTimeAttack_AnimationTag: notimeTag
   noTimeAttack_AnimationTrigger: notime
-  fields:
-  - duration: 10000
-    price: 0
-  enabled:
-    value: 0
+  durations:
+  - intValue: 0
+  - intValue: 0
+  - intValue: 0
+  - intValue: 0

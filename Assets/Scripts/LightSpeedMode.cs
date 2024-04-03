@@ -10,14 +10,8 @@ public class LightSpeedMode : Ability
     [SerializeField] public string noTimeAttack_AnimationTag = "no-time-attack-tag";
     [SerializeField] public string noTimeAttack_AnimationTrigger = "no-time-attack";
 
-    [SerializeField] List<Field> fields;
+    [SerializeField] [HideInInspector] List<Field> durations;
 
-    [Serializable]
-    struct Field
-    {
-        public float duration;
-        public int price;
-    }
 
     public BoolReactiveProperty enabled => buff.enabled;
 
@@ -48,7 +42,7 @@ public class LightSpeedMode : Ability
     {
         CostUp(level, price);
 
-        buff.duration = fields[level].duration;
+        buff.duration = durations[level];
     }
 }
 

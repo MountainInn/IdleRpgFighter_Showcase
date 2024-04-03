@@ -11,15 +11,8 @@ using Cysharp.Threading.Tasks;
 public class WeakPoints : Talent
 {
     [SerializeField] float lifespan = 2;
-    [SerializeField] List<Field> fields;
-
-    [Serializable]
-    public struct Field
-    {
-        public float chanceToAppearAfterClick;
-        public float damageMult;
-        public int cost;
-    }
+    [SerializeField] [HideInInspector] List<Field> chanceToAppearFields;
+    [SerializeField] [HideInInspector] List<Field> damageMultFields;
 
     [Inject] GameSettings gameSettings;
 
@@ -89,10 +82,10 @@ public class WeakPoints : Talent
 
     protected override void OnLevelUp(int level, Price price)
     {
-        price.cost.Value = fields[level].cost;
+        CostUp(level, price);
 
-        chanceToAppear = fields[level].chanceToAppearAfterClick;
-        damageMult = fields[level].damageMult;
+        chanceToAppear = chanceToAppearFields[level];
+        damageMult = damageMultFields[level];
     }
 
     public override IObservable<string> ObserveDescription()

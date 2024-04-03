@@ -13,13 +13,19 @@ MonoBehaviour:
   m_Name: EnergyLevel
   m_EditorClassIdentifier: 
   sprite: {fileID: 21300000, guid: 7bda55fd0c41c4510bd7835d8f0ddf7a, type: 3}
-  fields:
-  - maximum: 30
-    regenPerSecond: 3
-    price: 1
-  - maximum: 35
-    regenPerSecond: 4
-    price: 2
-  - maximum: 40
-    regenPerSecond: 5
-    price: 3
+  maxLevel: 4
+  cost:
+  - intValue: 0
+  - intValue: 0
+  - intValue: 0
+  - intValue: 0
+  maximumEnergy:
+  - intValue: 100
+  - intValue: 100
+  - intValue: 100
+  - intValue: 100
+  regenPerSecond:
+  - intValue: 10
+  - intValue: 10
+  - intValue: 10
+  - intValue: 10

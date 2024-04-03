@@ -9,15 +9,8 @@ using System.Collections.Generic;
 [CreateAssetMenu(fileName = "Fortification", menuName = "SO/Abilities/Fortification")]
 public class Fortification : Ability
 {
-    [SerializeField] List<Field> fields;
-
-    [Serializable]
-    struct Field
-    {
-        public float multiplier;
-        public float duration;
-        public int price;
-    }
+    [SerializeField] [HideInInspector] List<Field> blockMultipliers;
+    [SerializeField] [HideInInspector] List<Field> durations;
 
     Buff buff = new();
 
@@ -58,7 +51,7 @@ public class Fortification : Ability
     {
         CostUp(level, price);
 
-        buff.multiplier = fields[level].multiplier;
-        buff.duration = fields[level].duration;
+        buff.multiplier = blockMultipliers[level];
+        buff.duration = durations[level];
     }
 }

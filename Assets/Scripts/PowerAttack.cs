@@ -6,14 +6,7 @@ using System.Collections.Generic;
 [CreateAssetMenu(fileName = "PowerAttack", menuName = "SO/Abilities/PowerAttack")]
 public class PowerAttack : Ability_Attack
 {
-    [SerializeField] List<Field> fields;
-
-    [Serializable]
-    struct Field
-    {
-        public float damage;
-        public int price;
-    }
+    [SerializeField] [HideInInspector] List<Field> damages;
 
     float damage;
 
@@ -34,7 +27,7 @@ public class PowerAttack : Ability_Attack
 
     protected override void OnLevelUp(int level, Price price)
     {
-        damage = fields[level].damage;
+        damage = damages[level];
 
         CostUp(level, price);
     }

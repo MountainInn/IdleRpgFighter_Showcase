@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using Zenject;
-using System.Linq;
 
-[CreateAssetMenu(fileName = "AttackLevel", menuName = "SO/Talents/AttackLevel")]
-public class AttackLevel : Stat
+[CreateAssetMenu(fileName = "MiningPower", menuName = "SO/Talents/MiningPower")]
+public class MiningPower : Stat
 {
-    [SerializeField] [HideInInspector] List<Field> attackPower = new();
+    [SerializeField] [HideInInspector] List<Field> miningPowers;
 
     [Inject] Character character;
 
@@ -18,13 +17,13 @@ public class AttackLevel : Stat
             this.buyableLevel.ware.level
             .Select(l =>
                     GetFieldDescriptions(l,
-                                         ("Attack Power", attackPower)
+                                         ("Mining Power", miningPowers)
                     ));
     }
 
     protected override void OnLevelUp(int level, Price price)
     {
         CostUp(level, price);
-        character.Stats.attackDamage = attackPower[level];
+        character.Stats.attackDamage = miningPowers[level];
     }
 }

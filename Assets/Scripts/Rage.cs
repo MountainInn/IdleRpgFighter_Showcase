@@ -6,15 +6,8 @@ using System.Collections.Generic;
 [CreateAssetMenu(fileName = "Rage", menuName = "SO/Abilities/Rage")]
 public class Rage : Ability
 {
-    [SerializeField] List<Field> fields;
-
-    [Serializable]
-    struct Field
-    {
-        public float damageMultiplier;
-        public float duration;
-        public int price;
-    }
+    [SerializeField] [HideInInspector] List<Field> damageMultipliers;
+    [SerializeField] [HideInInspector] List<Field> durations;
 
     Buff attackBuff = new();
 
@@ -42,7 +35,7 @@ public class Rage : Ability
     {
         CostUp(level, price);
 
-        attackBuff.multiplier = fields[level].damageMultiplier;
-        attackBuff.duration = fields[level].duration;
+        attackBuff.multiplier = damageMultipliers[level];
+        attackBuff.duration = durations[level];
     }
 }
