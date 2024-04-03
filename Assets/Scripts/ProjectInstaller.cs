@@ -46,7 +46,6 @@ public class ProjectInstaller : MonoInstaller
             .Bind(
                 typeof(Vault),
                 typeof(LootManager),
-                typeof(Gang),
                 typeof(DPSMeter),
                 typeof(LevelSwitcher),
                 typeof(MobView),

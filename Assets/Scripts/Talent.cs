@@ -11,6 +11,7 @@ public abstract class Talent : ScriptableObject
 
     [HideInInspector] public Buyable<Level> buyableLevel;
 
+    public int Level => buyableLevel.ware.level.Value;
 
     protected abstract void OnLevelUp(int level, Price price);
 

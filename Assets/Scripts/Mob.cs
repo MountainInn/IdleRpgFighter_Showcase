@@ -154,11 +154,6 @@ public class Mob : AnimatorCombatant
         lootManager.Subscribe(this, nominalParticles);
     }
 
-    [Inject] void SubscribeToGang(Gang gang)
-    {
-        gang.Initialize(this, (Character)target);
-    }
-
     public void Update()
     {
         if (mobCanAttack && CanContinueBattle() && isEnraged.Value)

@@ -1,39 +1,40 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
+using UniRx;
+using System.Linq;
+using System;
 
 public class Gang : MonoBehaviour
 {
-    [SerializeField] int maxAllies;
-    [SerializeField] float angleIncrement = 20;
-
     List<Ally> allies = new();
 
-    float angle;
-
-    Vector3 mobPosition;
-    Vector3 fromMobToChar = Vector3.left;
-
-    public void Initialize(Mob mob, Character character)
+    [Inject] RecruitAlly recruitAlly;
+    [Inject] Ally.Pool allyPool;
+    [Inject]
+    public void Construct(AllySpawnPoint allySpawnPoint)
     {
-        mobPosition = mob.transform.position;
-        fromMobToChar = (character.transform.position - mobPosition);
+        recruitAlly
+            .ObserveAllies()
+            .Subscribe(allyStats =>
+            {
+                Ally ally = allyPool.Spawn();
+
+                allyStats.Apply(ally);
+
+                allySpawnPoint.ApplyPosition(ally.transform);
+
+                allies.Add(ally);
+            })
+            .AddTo(this);
     }
 
-    public void Add(Ally ally)
+    void OnDisable()
     {
-        if (allies.Count % 2 == 0)
-            angle += angleIncrement * Mathf.Sign(angle);
-        else
-            angle *= -1;
-
-        Vector3 allyPosition =
-            mobPosition +
-            Quaternion.Euler(0, angle, 0) * fromMobToChar;
-
-        ally.transform.position = allyPosition;
-        ally.transform.rotation = Quaternion.LookRotation(mobPosition - allyPosition);
-
-        allies.Add(ally);
+        foreach (var item in allies)
+        {
+            if (item)
+                allyPool.Despawn(item);
+        }
     }
 }

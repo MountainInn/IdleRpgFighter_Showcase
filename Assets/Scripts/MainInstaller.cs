@@ -24,6 +24,8 @@ public class MainInstaller : BaseInstaller
                 typeof(Mob),
                 typeof(Arena),
                 typeof(Battle),
+                typeof(Gang),
+                typeof(AllySpawnPoint),
                 typeof(AttackInput)
             )
             .FromComponentInHierarchy()
