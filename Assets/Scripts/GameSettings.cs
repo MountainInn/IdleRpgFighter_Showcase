@@ -12,7 +12,7 @@ public class GameSettings : ScriptableObject
     [Header("Save System")]
     public double autoSaveInterval;
     [Header("Gulag")]
-    public float gulagDuration;
+    public FloatReactiveProperty gulagDuration;
     [Header("Other")]
     public FloatReactiveProperty globalTimeInterval;
 

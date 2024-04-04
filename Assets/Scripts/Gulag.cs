@@ -1,6 +1,7 @@
 using UnityEngine;
 using Zenject;
 using UniRx;
+using System;
 
 public class Gulag : MonoBehaviour
 {
@@ -8,13 +9,18 @@ public class Gulag : MonoBehaviour
     [Inject] MobView rockView;
     [Inject] GameSettings gameSettings;
     [Inject] Cheats cheats;
+    [Inject]
+    public void Construct()
+    {
+        gameSettings.gulagDuration
+            .Subscribe(duration => timer.ResizeAndRefill(duration))
+            .AddTo(this);
+    }
 
-    Volume timer;
+    Volume timer = new();
 
     void Start()
     {
-        timer = new(gameSettings.gulagDuration);
-
         rockView.SubscribeGulagTimer(this, timer);
 
         timer
