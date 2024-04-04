@@ -5,12 +5,15 @@ using UniRx;
 using Zenject;
 using System.Linq;
 
-[CreateAssetMenu(fileName = "AttackLevel", menuName = "SO/Talents/AttackLevel")]
-public class AttackLevel : Stat
+[CreateAssetMenu(fileName = "AttackPower", menuName = "SO/Stats/AttackPower")]
+public class AttackPower : Stat
 {
     [SerializeField] [HideInInspector] List<Field> attackPower = new();
 
+    [Inject] GlobalPower globalPower;
     [Inject] Character character;
+
+    public override int CurrentValue => attackPower[Level];
 
     public override IObservable<string> ObserveDescription()
     {
@@ -25,6 +28,6 @@ public class AttackLevel : Stat
     protected override void OnLevelUp(int level, Price price)
     {
         CostUp(level, price);
-        character.Stats.attackDamage = attackPower[level];
+        character.Stats.attackDamage = CurrentValue * globalPower.CurrentValue;
     }
 }

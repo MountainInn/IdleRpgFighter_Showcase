@@ -9,23 +9,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da4a4bd09e943784ba13d7a411fdf4d2, type: 3}
-  m_Name: EnergyLevel
+  m_Script: {fileID: 11500000, guid: 24411621cf05cb5469c260fd1544d14a, type: 3}
+  m_Name: MiningPower
   m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: 7bda55fd0c41c4510bd7835d8f0ddf7a, type: 3}
-  maxLevel: 4
+  sprite: {fileID: 0}
+  maxLevel: 5
   cost:
   - intValue: 0
   - intValue: 0
   - intValue: 0
   - intValue: 0
-  maximumEnergy:
-  - intValue: 100
-  - intValue: 100
-  - intValue: 100
-  - intValue: 100
-  regenPerSecond:
-  - intValue: 10
-  - intValue: 10
-  - intValue: 10
-  - intValue: 10
+  - intValue: 0
+  miningPowers:
+  - intValue: 1
+  - intValue: 2
+  - intValue: 3
+  - intValue: 4
+  - intValue: 5

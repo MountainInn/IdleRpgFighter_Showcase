@@ -7,7 +7,6 @@ using Zenject;
 
 public class PickaxeInput : MonoBehaviour, IDisposable
 {
-    [SerializeField] float baseDamage = 30;
     [SerializeField] float damageOnFullCharge = 100;
     [Space]
     [SerializeField] float maxCharge = 100;
@@ -21,6 +20,7 @@ public class PickaxeInput : MonoBehaviour, IDisposable
     Volume charge;
     ReadOnlyReactiveProperty<bool> isInIdleState;
 
+    [Inject] MiningPower miningPower;
     [Inject] Character character;
     [Inject]
     public void Construct(CharacterController charController,
@@ -53,7 +53,7 @@ public class PickaxeInput : MonoBehaviour, IDisposable
                     .DoOnCompleted(() =>
                     {
                         strikeDamage.Value =
-                            baseDamage + damageOnFullCharge * charge.Ratio;
+                            miningPower.CurrentValue + damageOnFullCharge * charge.Ratio;
 
                         character
                             .combatantAnimator

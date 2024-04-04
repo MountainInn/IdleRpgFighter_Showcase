@@ -6,10 +6,13 @@ using Zenject;
 
 static public class DiContainerExtension
 {
-    public static void BindSOs<T>(this DiContainer Container, string path)
+    public static void BindSOs<T>(this DiContainer Container, params string[] paths)
         where T : ScriptableObject
     {
-        var objects = Resources.LoadAll<T>(path);
+        var objects =
+            paths
+            .SelectMany(Resources.LoadAll<T>)
+            .ToList();
 
         var boundTypes =
             objects

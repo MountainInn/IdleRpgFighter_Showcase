@@ -43,6 +43,8 @@ public abstract class Talent : ScriptableObject
         buyableLevel = new Buyable<Level>(level,
                                           level => level.Up(),
                                           price);
+
+        level.SetLevel(0);
     }
 
     protected virtual void Talent_SubInitialize()

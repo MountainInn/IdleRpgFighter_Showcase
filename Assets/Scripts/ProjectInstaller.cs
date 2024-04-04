@@ -55,7 +55,9 @@ public class ProjectInstaller : MonoInstaller
             .FromComponentsInHierarchy()
             .AsSingle();
 
-        Container.BindSOs<Talent>("SO/Talents/");
+        Container.BindSOs<Talent>("SO/Talents/",
+                                  "SO/Upgrades/Stats/");
+
         Container.BindSOs<Ability>("SO/Abilities/");
 
         Container .Bind<DPSMeterView>() .FromInstance(dpsMeterView);

@@ -4,6 +4,8 @@ using System.Linq;
 
 public abstract class Stat : Talent
 {
+    public abstract int CurrentValue {get;}
+
     protected string GetFieldDescriptions(int level, params (string fieldName, List<Field> fieldValues)[] fields)
     {
         return

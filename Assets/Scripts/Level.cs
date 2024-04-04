@@ -13,8 +13,6 @@ public class Level
         statCalculations = new List<Action<int>>(){
             statsCalculation
         };
-
-        SetLevel(0);
     }
 
     public void AddCalculation(params Action<int>[] statCalculations)

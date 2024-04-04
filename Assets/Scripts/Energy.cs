@@ -4,8 +4,8 @@ using UnityEngine;
 using UniRx;
 using Zenject;
 
-[CreateAssetMenu(fileName = "EnergyLevel", menuName = "SO/Talents/EnergyLevel")]
-public class EnergyLevel : Stat, ITickable
+[CreateAssetMenu(fileName = "Energy", menuName = "SO/Talents/Energy")]
+public class Energy : Stat, ITickable
 {
     [SerializeField] [HideInInspector] List<Field> maximumEnergy;
     [SerializeField] [HideInInspector] List<Field> regenPerSecond;
@@ -16,6 +16,8 @@ public class EnergyLevel : Stat, ITickable
     {
         character.AddTickable(this);
     }
+
+    public override int CurrentValue => maximumEnergy[Level];
 
     public override IObservable<string> ObserveDescription()
     {
@@ -31,7 +33,7 @@ public class EnergyLevel : Stat, ITickable
     protected override void OnLevelUp(int level, Price price)
     {
         CostUp(level, price);
-        character.energy.ResizeAndRefill(maximumEnergy[level]);
+        character.energy.ResizeAndRefill(CurrentValue);
     }
 
     public void Tick()
