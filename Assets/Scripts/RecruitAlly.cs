@@ -10,6 +10,13 @@ public class RecruitAlly : Talent
 {
     [SerializeField] public List<MobStatsSO> allyStats;
 
+    [Inject] Cheats cheats;
+    [Inject]
+    public void Construct()
+    {
+        buyableLevel.ware.SetLevel(cheats.startingRecruitAllyLevel.Value);
+    }
+
     public IObservable<MobStatsSO> ObserveAllies()
     {
         return

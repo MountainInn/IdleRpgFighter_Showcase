@@ -11,5 +11,6 @@ public class Cheats : ScriptableObject
     public BoolReactiveProperty infinitMoney;
     public BoolReactiveProperty everlastingGulag;
     public BoolReactiveProperty noCooldown;
-
+    [Space]
+    public IntReactiveProperty startingRecruitAllyLevel;
 }
