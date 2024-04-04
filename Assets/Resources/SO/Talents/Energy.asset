@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dab5c3c326e909849b1c2c7e55ad9b4c, type: 3}
+  m_Name: Energy
+  m_EditorClassIdentifier: 
+  sprite: {fileID: 0}
+  maxLevel: 5
+  cost:
+  - intValue: 0
+  - intValue: 0
+  - intValue: 0
+  - intValue: 0
+  - intValue: 0
+  maximumEnergy:
+  - intValue: 100
+  - intValue: 100
+  - intValue: 100
+  - intValue: 100
+  - intValue: 100
+  regenPerSecond:
+  - intValue: 20
+  - intValue: 20
+  - intValue: 20
+  - intValue: 20
+  - intValue: 20
