@@ -13,12 +13,20 @@ MonoBehaviour:
   m_Name: Block
   m_EditorClassIdentifier: 
   sprite: {fileID: 21300000, guid: dcc6431eaf1034e5790811cfe17e6f58, type: 3}
+  maxLevel: 4
+  cost:
+  - intValue: 0
+  - intValue: 0
+  - intValue: 0
+  - intValue: 0
   _cooldown: 0
   energyCost: 5
   parryTimeWindow: 0.5
   canCounterAttack: 1
-  counterAttackDamageBonus: 1.5
-  bonusDuration: 6
-  fields:
-  - damageReductionFlat: 6
-    price: 1
+  damageReductions:
+  - intValue: 0
+  - intValue: 0
+  - intValue: 0
+  - intValue: 0
+  fortificationMult: 1
+  energyDrainMult: 1

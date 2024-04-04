@@ -13,15 +13,21 @@ MonoBehaviour:
   m_Name: Rage
   m_EditorClassIdentifier: 
   sprite: {fileID: 21300000, guid: 4082bad18a6ec4274a18aee22853db11, type: 3}
+  maxLevel: 4
+  cost:
+  - intValue: 0
+  - intValue: 0
+  - intValue: 0
+  - intValue: 0
   _cooldown: 5
   energyCost: 5
-  fields:
-  - damageMultiplier: 3
-    duration: 5
-    price: 1
-  - damageMultiplier: 3
-    duration: 5
-    price: 1
-  - damageMultiplier: 3
-    duration: 5
-    price: 1
+  damageMultipliers:
+  - intValue: 0
+  - intValue: 0
+  - intValue: 0
+  - intValue: 0
+  durations:
+  - intValue: 0
+  - intValue: 0
+  - intValue: 0
+  - intValue: 0

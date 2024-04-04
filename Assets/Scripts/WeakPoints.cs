@@ -10,19 +10,22 @@ using Cysharp.Threading.Tasks;
 [CreateAssetMenu(fileName = "WeakPoints", menuName = "SO/Talents/WeakPoints")]
 public class WeakPoints : Talent
 {
-    [SerializeField] float timer = 5;
     [SerializeField] float lifespan = 2;
-    [SerializeField] List<Field> fields;
+    [SerializeField] [HideInInspector] List<Field> chanceToAppearFields;
+    [SerializeField] [HideInInspector] List<Field> damageMultFields;
 
-    [Serializable]
-    public struct Field
+    [Inject] GameSettings gameSettings;
+
+    IDisposable timerSubscription;
+
+    public void SubscribeSpawnOnTimer(Canvas canvas, WeakPointView.Pool viewPool)
     {
-        public float chanceToAppearAfterClick;
-        public float damageMult;
-        public int cost;
+        gameSettings
+            .SubscribeToTimer(timerSubscription,
+                              canvas,
+                              () => Roll(canvas, viewPool));
     }
 
-    public TimeSpan rollInterval => TimeSpan.FromSeconds(timer);
     public float chanceToAppear {get; protected set;}
     public float damageMult {get; protected set;}
 
@@ -79,10 +82,10 @@ public class WeakPoints : Talent
 
     protected override void OnLevelUp(int level, Price price)
     {
-        price.cost.Value = fields[level].cost;
+        CostUp(level, price);
 
-        chanceToAppear = fields[level].chanceToAppearAfterClick;
-        damageMult = fields[level].damageMult;
+        chanceToAppear = chanceToAppearFields[level];
+        damageMult = damageMultFields[level];
     }
 
     public override IObservable<string> ObserveDescription()

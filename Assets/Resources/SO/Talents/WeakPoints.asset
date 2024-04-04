@@ -13,12 +13,20 @@ MonoBehaviour:
   m_Name: WeakPoints
   m_EditorClassIdentifier: 
   sprite: {fileID: 21300000, guid: 8a7bbcc6d60694f1880ad1618120ec55, type: 3}
-  timer: 10
+  maxLevel: 4
+  cost:
+  - intValue: 0
+  - intValue: 0
+  - intValue: 0
+  - intValue: 0
   lifespan: 2
-  fields:
-  - chanceToAppearAfterClick: 1
-    damageMult: 2
-    cost: 0
-  - chanceToAppearAfterClick: 1
-    damageMult: 3
-    cost: 1
+  chanceToAppearFields:
+  - intValue: 0
+  - intValue: 0
+  - intValue: 0
+  - intValue: 0
+  damageMultFields:
+  - intValue: 0
+  - intValue: 0
+  - intValue: 0
+  - intValue: 0

@@ -15,5 +15,7 @@ public class StatsSO : ScriptableObject
         combatant.health.ResizeAndRefill(health);
         combatant.attackTimer.ResetToZero();
         combatant.attackTimer.Resize(attackTimer);
+
+        combatant.onStatsApplied?.Invoke();
     }
 }

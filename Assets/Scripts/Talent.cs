@@ -1,15 +1,24 @@
 using UnityEngine;
 using System;
 using Zenject;
+using System.Collections.Generic;
 
 public abstract class Talent : ScriptableObject
 {
     [SerializeField] public Sprite sprite;
+    [SerializeField] [HideInInspector] protected int maxLevel;
+    [SerializeField] [HideInInspector] protected List<Field> cost = new();
 
     [HideInInspector] public Buyable<Level> buyableLevel;
 
+    public int Level => buyableLevel.ware.level.Value;
 
     protected abstract void OnLevelUp(int level, Price price);
+
+    protected void CostUp(int level, Price price)
+    {
+        price.cost.Value = cost[level];
+    }
 
     public abstract IObservable<string> ObserveDescription();
 
@@ -44,5 +53,16 @@ public abstract class Talent : ScriptableObject
     [Inject] protected void ConnectToView(TalentView talentView)
     {
         talentView.ConnectBase(this);
+    }
+
+    [Serializable]
+    protected struct Field
+    {
+        public int intValue;
+
+        static public implicit operator int(Field field)
+        {
+            return field.intValue;
+        }
     }
 }

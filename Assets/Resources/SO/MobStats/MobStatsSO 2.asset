@@ -15,6 +15,11 @@ MonoBehaviour:
   health: 33
   attackDamage: 1
   attackTimer: 3
+  enrageChance: 0.323
+  relaxChance: 0.309
+  energyMax: 100
+  energyRegen: 10
+  energyDrainPerAttack: 20
   template: {fileID: 11400000, guid: bb0c73705eb399b43840c9f697d04129, type: 2}
   dropList: {fileID: 11400000, guid: bd07a9960762d634b85a0a4e70016cb4, type: 2}
   icon: {fileID: 21300000, guid: 924137e879af0494c8bbf35c8e88392c, type: 3}

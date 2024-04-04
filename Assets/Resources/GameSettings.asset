@@ -16,3 +16,5 @@ MonoBehaviour:
   maxParticleCount: 8
   autoSaveInterval: 15
   gulagDuration: 12
+  globalTimeInterval:
+    value: 3

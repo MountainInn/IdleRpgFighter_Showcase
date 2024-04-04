@@ -19,16 +19,8 @@ public abstract class Ability : Talent, ITickable
     public void SubscribeToCheats(Cheats cheats)
     {
         cheats.noCooldown
-            .WhereEqual(true)
-            .Subscribe(_ =>
-            {
-                cooldown
-                    .ObserveFull()
-                    .WhereEqual(false)
-                    .TakeUntil(cheats.noCooldown.WhereEqual(false))
-                    .Subscribe(_ => cooldown.Refill())
-                    .AddTo(abilityButton);
-            })
+            .SubToggle(cooldown.ObserveFull().WhereEqual(false),
+                            _ => cooldown.Refill())
             .AddTo(abilityButton);
     }
 

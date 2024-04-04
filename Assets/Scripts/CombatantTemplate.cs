@@ -25,6 +25,7 @@ public class CombatantTemplate : ScriptableObject
 
     Dictionary<string, bool> _toggles;
 
+    public bool HasNoSavedData => (names?.None() ?? false) ||  (bools?.None() ?? false);
     [SerializeField] public List<string> names;
     [SerializeField] public List<bool> bools;
 

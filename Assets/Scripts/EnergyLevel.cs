@@ -5,9 +5,10 @@ using UniRx;
 using Zenject;
 
 [CreateAssetMenu(fileName = "EnergyLevel", menuName = "SO/Talents/EnergyLevel")]
-public class EnergyLevel : Talent, ITickable
+public class EnergyLevel : Stat, ITickable
 {
-    [SerializeField] List<Field> fields;
+    [SerializeField] [HideInInspector] List<Field> maximumEnergy;
+    [SerializeField] [HideInInspector] List<Field> regenPerSecond;
 
     [Inject] Character character;
     [Inject]
@@ -21,31 +22,16 @@ public class EnergyLevel : Talent, ITickable
         return
             this.buyableLevel.ware.level
             .Select(l =>
-            {
-                int currentMaximum = fields[l].maximum;
-                string nextMaximum;
-
-                if (fields.Count > l + 1)
-                    nextMaximum = $"{fields[l+1].maximum}";
-                else
-                    nextMaximum = "MAX";
-
-                return $"Character energy max + regen {currentMaximum} -> {nextMaximum}";
-            });
+                    GetFieldDescriptions(l,
+                                         ("Maximum Energy", maximumEnergy),
+                                         ("Regen", regenPerSecond)
+                    ));
     }
 
     protected override void OnLevelUp(int level, Price price)
     {
-        price.cost.Value = fields[level].price;
-        character.energy.ResizeAndRefill(fields[level].maximum);
-    }
-
-    [Serializable]
-    struct Field
-    {
-        public int maximum;
-        public float regenPerSecond;
-        public int price;
+        CostUp(level, price);
+        character.energy.ResizeAndRefill(maximumEnergy[level]);
     }
 
     public void Tick()
@@ -53,7 +39,7 @@ public class EnergyLevel : Talent, ITickable
         if (!character.energy.IsFull)
         {
             float amount =
-                fields[buyableLevel.ware.level.Value].regenPerSecond
+                regenPerSecond[buyableLevel.ware.level.Value]
                 * Time.deltaTime;
 
             character.energy.Add(amount);

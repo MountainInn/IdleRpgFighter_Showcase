@@ -2,30 +2,25 @@ using UnityEngine;
 using System;
 using Zenject;
 using UniRx;
+using System.Collections.Generic;
+using System.Linq;
 
 [CreateAssetMenu(fileName = "RectuitAlly", menuName = "SO/Talents/RectuitAlly")]
 public class RecruitAlly : Talent
 {
-    [SerializeField] MobStatsSO allyStats;
+    [SerializeField] public List<MobStatsSO> allyStats;
 
-    // [Inject] Ally.Pool allyPool;
-    // [Inject] Gang gang;
-    // [Inject]
-    // public void Construct()
-    // {
-
-    // }
+    public IObservable<MobStatsSO> ObserveAllies()
+    {
+        return
+            buyableLevel.ware.level
+            .WhereNotEqual(0)
+            .Select(level => allyStats[level-1]);
+    }
 
     protected override void OnLevelUp(int level, Price price)
     {
-        // if (level == 0)
-        //     return;
-
-        // var newAlly = allyPool.Spawn();
-
-        // allyStats.Apply(newAlly);
-
-        // gang.Add(newAlly);
+        CostUp(level, price);
     }
 
     public override IObservable<string> ObserveDescription()

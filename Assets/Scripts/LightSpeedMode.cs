@@ -10,46 +10,27 @@ public class LightSpeedMode : Ability
     [SerializeField] public string noTimeAttack_AnimationTag = "no-time-attack-tag";
     [SerializeField] public string noTimeAttack_AnimationTrigger = "no-time-attack";
 
-    [SerializeField] List<Field> fields;
+    [SerializeField] [HideInInspector] List<Field> durations;
 
-    [Serializable]
-    struct Field
-    {
-        public float duration;
-        public int price;
-    }
 
-    float duration;
+    public BoolReactiveProperty enabled => buff.enabled;
 
-    [HideInInspector] public BoolReactiveProperty enabled = new();
-   
+    Buff buff = new();
+
     protected override void ConcreteSubscribe()
     {
         base.ConcreteSubscribe();
 
-        enabled
-            .WhereEqual(true)
-            .Subscribe(_ =>
-            {
-                character
-                    .onAttackPushed
-                    .AsObservable()
-                    .TakeUntil( enabled.WhereEqual(false) )
-                    .Subscribe(args =>
-                               args.animationTrigger = noTimeAttack_AnimationTrigger)
-                    .AddTo(abilityButton);
-            })
+        buff
+            .Subscribe(character.onAttackPushed.AsObservable(),
+                       (args, _mult) =>
+                       args.animationTrigger = noTimeAttack_AnimationTrigger)
             .AddTo(abilityButton);
     }
 
     protected override void Use()
     {
-        Observable
-            .Timer(TimeSpan.FromSeconds(duration))
-            .DoOnSubscribe(() => enabled.Value = true)
-            .DoOnCancel(() => enabled.Value = false)
-            .Subscribe()
-            .AddTo(abilityButton);
+        buff.StartBuff(abilityButton);
     }
 
     public override IObservable<string> ObserveDescription()
@@ -59,9 +40,9 @@ public class LightSpeedMode : Ability
 
     protected override void OnLevelUp(int level, Price price)
     {
-        price.cost.Value = fields[level].price;
+        CostUp(level, price);
 
-        duration = fields[level].duration;
+        buff.duration = durations[level];
     }
 }
 

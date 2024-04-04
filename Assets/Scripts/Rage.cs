@@ -6,29 +6,24 @@ using System.Collections.Generic;
 [CreateAssetMenu(fileName = "Rage", menuName = "SO/Abilities/Rage")]
 public class Rage : Ability
 {
-    [SerializeField] List<Field> fields;
+    [SerializeField] [HideInInspector] List<Field> damageMultipliers;
+    [SerializeField] [HideInInspector] List<Field> durations;
 
-    [Serializable]
-    struct Field
-    {
-        public float damageMultiplier;
-        public float duration;
-        public int price;
-    }
-
-    AttackBuff attackBuff = new();
-
+    Buff attackBuff = new();
 
     protected override void ConcreteSubscribe()
     {
         base.ConcreteSubscribe();
 
-        attackBuff.Subscribe(character);
+        attackBuff
+            .Subscribe(character.preAttack.AsObservable(),
+                       (args, mult) => args.damage *= mult)
+            .AddTo(abilityButton);
     }
 
     protected override void Use()
     {
-        attackBuff.StartBuff(character.gameObject);
+        attackBuff.StartBuff(character);
     }
 
     public override IObservable<string> ObserveDescription()
@@ -38,9 +33,9 @@ public class Rage : Ability
 
     protected override void OnLevelUp(int level, Price price)
     {
-        price.cost.Value = fields[level].price;
+        CostUp(level, price);
 
-        attackBuff.multiplier = fields[level].damageMultiplier;
-        attackBuff.duration = fields[level].duration;
+        attackBuff.multiplier = damageMultipliers[level];
+        attackBuff.duration = durations[level];
     }
 }

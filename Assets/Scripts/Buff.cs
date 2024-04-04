@@ -1,36 +1,49 @@
 using System;
 using UnityEngine;
 using UniRx;
+using UniRx.Diagnostics;
 using UniRx.Triggers;
 using Zenject;
 using System.Linq;
 
-public abstract class Buff
+public class Buff
 {
     public float duration;
     public float multiplier;
+    public BoolReactiveProperty enabled {get; protected set;} = new();
 
     protected float activeBonus = 1f;
 
-    abstract public void Subscribe(AnimatorCombatant combatant);
+    IDisposable buffSubscription;
 
-    public void StartBuff(GameObject holder)
+    public IDisposable Subscribe<T>(IObservable<T> stream,
+                                    Action<T, float> buffApplication)
     {
-        Observable
+        return
+            enabled
+            .SubToggle(stream,
+                       t => buffApplication.Invoke(t, multiplier));
+    }
+
+    public IDisposable Subscribe(Action<bool> onToggle)
+    {
+        return
+            enabled
+            .Subscribe(onToggle);
+    }
+
+    public void StartBuff<T>(T holder)
+        where T : Component
+    {
+        buffSubscription?.Dispose();
+       
+        buffSubscription =
+            Observable
             .Timer(TimeSpan.FromSeconds(duration))
-            .DoOnSubscribe( ActivateBonus )
-            .DoOnCompleted( DeactivateBonus )
+            .DoOnSubscribe( () => enabled.Value = true )
+            .DoOnCompleted( () => enabled.Value = false )
+            .Debug("Buff")
             .Subscribe()
             .AddTo(holder);
-    }
-
-    protected virtual void ActivateBonus()
-    {
-        activeBonus = multiplier;
-    }
-
-    protected virtual void DeactivateBonus()
-    {
-        activeBonus = 1f;
     }
 }

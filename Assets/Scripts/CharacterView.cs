@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class CharacterView : MobView
 {
-    [SerializeField] ProgressBar energyBar;
-
     [Inject]
     public void Subscribe(Character character)
     {

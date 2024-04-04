@@ -14,23 +14,26 @@ public class MobQueue : ScriptableObject
     {
         return
             queueSegments
-            .Select(segment =>
-                    segment
+            .Select(mobsInSegment =>
+                    mobsInSegment
                     .GetShuffled()
-                    .Select(so =>
+                    .Select(mobStat =>
                     {
-                        so = Instantiate(so);
-                        so.Multiply(powerMultiplier * segment.powerMultiplier);
+                        mobStat = Instantiate(mobStat);
+                        mobStat.Multiply(powerMultiplier * mobsInSegment.powerMultiplier);
 
-                        so.dropList = Instantiate(so.dropList);
+                        if (mobStat.dropList)
+                            mobStat.dropList = Instantiate(mobStat.dropList);
+                        else
+                            mobStat.dropList = new DropList();
+
+                        if (mobsInSegment.dropList?.entries.Any() ?? false)
+                            mobStat.dropList.entries.AddRange(mobsInSegment.dropList.entries);
 
                         if (dropList?.entries.Any() ?? false)
-                            so.dropList.entries.AddRange(dropList.entries);
+                            mobStat.dropList.entries.AddRange(dropList.entries);
 
-                        if (segment.dropList?.entries.Any() ?? false)
-                            so.dropList.entries.AddRange(segment.dropList.entries);
-
-                        return so;
+                        return mobStat;
                     })
             );
     }

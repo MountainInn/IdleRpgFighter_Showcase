@@ -4,6 +4,7 @@ public class MobView : MonoBehaviour
 {
     [SerializeField] protected ProgressBar healthBar;
     [SerializeField] protected ProgressBar attackTimerBar;
+    [SerializeField] protected ProgressBar energyBar;
 
     public void Subscribe(Rock rock)
     {
@@ -13,12 +14,12 @@ public class MobView : MonoBehaviour
 
     public void SubscribeGulagTimer(Gulag gulag, Volume timer)
     {
-        attackTimerBar.Subscribe(gulag.gameObject, timer);
+        energyBar.Subscribe(gulag.gameObject, timer);
     }
 
     public void Subscribe(Mob mob)
     {
         healthBar.Subscribe(mob.gameObject, mob.health);
-        attackTimerBar.Subscribe(mob.gameObject, mob.attackTimer);
+        energyBar.Subscribe(mob.gameObject, mob.energy);
     }
 }

@@ -13,9 +13,21 @@ MonoBehaviour:
   m_Name: Fortification
   m_EditorClassIdentifier: 
   sprite: {fileID: 0}
+  maxLevel: 4
+  cost:
+  - intValue: 0
+  - intValue: 0
+  - intValue: 0
+  - intValue: 0
   _cooldown: 6
   energyCost: 3
-  fields:
-  - multiplier: 2
-    duration: 6
-    price: 1
+  blockMultipliers:
+  - intValue: 0
+  - intValue: 0
+  - intValue: 0
+  - intValue: 0
+  durations:
+  - intValue: 0
+  - intValue: 0
+  - intValue: 0
+  - intValue: 0

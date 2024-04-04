@@ -1,13 +1,11 @@
 using UnityEngine;
 using Zenject;
 
-public class CharacterSpawnPoint : MonoBehaviour
+public class CharacterSpawnPoint : SpawnPoint
 {
     [Inject]
     public void Construct(Character character)
     {
-        transform.GetPositionAndRotation(out Vector3 position, out Quaternion rotation);
-
-        character.transform.SetPositionAndRotation(position, rotation);
+        ApplyPosition(character.transform);
     }
 }

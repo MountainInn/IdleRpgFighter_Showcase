@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using Zenject;
+using System.Linq;
 
 [CreateAssetMenu(fileName = "AttackLevel", menuName = "SO/Talents/AttackLevel")]
-public class AttackLevel : Talent
+public class AttackLevel : Stat
 {
-    [SerializeField] List<Field> fields;
+    [SerializeField] [HideInInspector] List<Field> attackPower = new();
 
     [Inject] Character character;
 
@@ -16,28 +17,14 @@ public class AttackLevel : Talent
         return
             this.buyableLevel.ware.level
             .Select(l =>
-            {
-                int currentDamage = fields[l].attack;
-                string nextDamage;
-
-                if (fields.Count > l + 1)
-                    nextDamage = $"{fields[l+1].attack}";
-                else
-                    nextDamage = "MAX";
-
-                return $"Character damage {currentDamage} -> {nextDamage}";
-            });
+                    GetFieldDescriptions(l,
+                                         ("Attack Power", attackPower)
+                    ));
     }
 
     protected override void OnLevelUp(int level, Price price)
     {
-        price.cost.Value = fields[level].price;
-        character.Stats.attackDamage = fields[level].attack;
-    }
-
-    [Serializable]
-    struct Field
-    {
-        public int attack, price;
+        CostUp(level, price);
+        character.Stats.attackDamage = attackPower[level];
     }
 }

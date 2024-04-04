@@ -13,4 +13,11 @@ MonoBehaviour:
   m_Name: RectuitAlly
   m_EditorClassIdentifier: 
   sprite: {fileID: 21300000, guid: 7520fcf7aae0f459994c20f72a0abd52, type: 3}
-  allyStats: {fileID: 11400000, guid: b55b80b2174a3ff49a0ba403fbd00b4d, type: 2}
+  maxLevel: 4
+  cost:
+  - intValue: 0
+  - intValue: 0
+  - intValue: 0
+  - intValue: 0
+  allyStats:
+  - {fileID: 11400000, guid: 12769762912fb2946aacd9bdcd8fe475, type: 2}

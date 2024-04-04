@@ -13,10 +13,14 @@ MonoBehaviour:
   m_Name: AttackLevel
   m_EditorClassIdentifier: 
   sprite: {fileID: 21300000, guid: 3eea92b60b81945068925f98ef44b940, type: 3}
-  fields:
-  - attack: 10
-    price: 10
-  - attack: 15
-    price: 15
-  - attack: 19
-    price: 20
+  maxLevel: 4
+  cost:
+  - intValue: 123
+  - intValue: 0
+  - intValue: 0
+  - intValue: 0
+  attackPower:
+  - intValue: 290
+  - intValue: 0
+  - intValue: 0
+  - intValue: 0
