@@ -95,15 +95,15 @@ public class Journey : MonoBehaviour
 
     public void StartQueue()
     {
-        Debug.Log($"Start Queue");
         queueCoroutine = StartCoroutine( Mobs() );
     }
 
     IEnumerator Mobs()
     {
-        for (; saveState.queueIndex < journeySO.queues.Count; saveState.queueIndex++)
+
+        foreach (var (q, journeyField) in journeySO.queues.Enumerate())
         {
-            JourneySO.Field journeyField = journeySO.queues[saveState.queueIndex];
+            saveState.queueIndex = q;
 
             yield return
                 LevelSwitcher
@@ -117,15 +117,14 @@ public class Journey : MonoBehaviour
 
             SubscribeArenaProgress(mobQueue);
 
-            for (; saveState.segmentIndex < queue.Count(); saveState.segmentIndex++)
+            foreach (var (s, segment) in queue.Enumerate())
             {
-                IEnumerable<MobStatsSO> segment = queue.ElementAt(saveState.segmentIndex);
-
-                for (; saveState.mobStatIndex < segment.Count(); saveState.mobStatIndex++)
+                saveState.segmentIndex = s;
+                foreach (var (m, mobStat) in segment.Enumerate())
                 {
-                    MobStatsSO so = segment.ElementAt(saveState.mobStatIndex);
+                    saveState.mobStatIndex = m;
 
-                    so.Apply(mob);
+                    mobStat.Apply(mob);
 
                     yield return mob.onDie.TakeYield(1);
 
@@ -140,6 +139,8 @@ public class Journey : MonoBehaviour
         }
 
         queueCoroutine = null;
+
+        StartQueue();
     }
 
     public void LoadSaveData(SaveState saveState)
