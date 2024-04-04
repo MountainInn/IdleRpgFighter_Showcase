@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: AttackPower
   m_EditorClassIdentifier: 
   sprite: {fileID: 0}
-  maxLevel: 6
+  maxLevel: 5
   cost:
   - intValue: 0
   - intValue: 0
@@ -27,4 +27,4 @@ MonoBehaviour:
   - intValue: 3
   - intValue: 4
   - intValue: 5
-  - intValue: 6
+  - intValue: 5

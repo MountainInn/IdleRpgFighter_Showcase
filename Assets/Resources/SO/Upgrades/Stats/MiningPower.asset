@@ -20,9 +20,11 @@ MonoBehaviour:
   - intValue: 0
   - intValue: 0
   - intValue: 0
+  - intValue: 0
   miningPowers:
   - intValue: 1
   - intValue: 2
   - intValue: 3
   - intValue: 4
+  - intValue: 5
   - intValue: 5

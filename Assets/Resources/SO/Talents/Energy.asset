@@ -20,13 +20,16 @@ MonoBehaviour:
   - intValue: 0
   - intValue: 0
   - intValue: 0
+  - intValue: 0
   maximumEnergy:
   - intValue: 100
   - intValue: 100
   - intValue: 100
   - intValue: 100
   - intValue: 100
+  - intValue: 100
   regenPerSecond:
+  - intValue: 20
   - intValue: 20
   - intValue: 20
   - intValue: 20

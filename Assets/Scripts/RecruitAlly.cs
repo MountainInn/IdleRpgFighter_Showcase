@@ -13,9 +13,9 @@ public class RecruitAlly : Talent
     public IObservable<MobStatsSO> ObserveAllies()
     {
         return
-            buyableLevel.ware.level
+            buyableLevel.ware.level.current
             .WhereNotEqual(0)
-            .Select(level => allyStats[level-1]);
+            .Select(level => allyStats[(int)level-1]);
     }
 
     protected override void OnLevelUp(int level, Price price)

@@ -20,7 +20,7 @@ public abstract class Ability : Talent, ITickable
     {
         cheats.noCooldown
             .SubToggle(cooldown.ObserveFull().WhereEqual(false),
-                            _ => cooldown.Refill())
+                       _ => cooldown.Refill())
             .AddTo(abilityButton);
     }
 

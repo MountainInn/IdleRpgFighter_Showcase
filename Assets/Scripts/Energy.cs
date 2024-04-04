@@ -22,9 +22,9 @@ public class Energy : Stat, ITickable
     public override IObservable<string> ObserveDescription()
     {
         return
-            this.buyableLevel.ware.level
+            this.buyableLevel.ware.level.current
             .Select(l =>
-                    GetFieldDescriptions(l,
+                    GetFieldDescriptions((int)l,
                                          ("Maximum Energy", maximumEnergy),
                                          ("Regen", regenPerSecond)
                     ));
@@ -41,7 +41,7 @@ public class Energy : Stat, ITickable
         if (!character.energy.IsFull)
         {
             float amount =
-                regenPerSecond[buyableLevel.ware.level.Value]
+                regenPerSecond[Level]
                 * Time.deltaTime;
 
             character.energy.Add(amount);

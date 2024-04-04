@@ -16,8 +16,8 @@ public class GlobalPower : Stat
     public override IObservable<string> ObserveDescription()
     {
         return
-            this.buyableLevel.ware.level
-            .Select(l => GetFieldDescriptions(l, ("Global Power", globalPowers)));
+            this.buyableLevel.ware.level.current
+            .Select(l => GetFieldDescriptions((int)l, ("Global Power", globalPowers)));
     }
 
     protected override void OnLevelUp(int level, Price price)

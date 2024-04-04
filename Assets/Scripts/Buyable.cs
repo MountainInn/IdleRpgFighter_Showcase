@@ -2,8 +2,10 @@ using System.Linq;
 using UniRx;
 using System.Collections.Generic;
 using System;
+using UniRx.Diagnostics;
 
 public class Buyable<T>
+    where T : Buyable<T>.IWare
 {
     public List<Price> prices;
     public Action<T> onBuy;
@@ -28,8 +30,10 @@ public class Buyable<T>
             .CombineLatest(
                 prices
                 .Select(price => price.IsAffordableObservable())
+                .Append(ware.ObserveIsAffordable().Debug("Ware Affordable"))
             )
-            .Select(affordables => affordables.All(a => a == true));
+            .Select(affordables => affordables.All(a => a == true))
+            .Debug("All Affordable");
     }
 
     public IObservable<float> SavingProgressObservable()
@@ -48,5 +52,10 @@ public class Buyable<T>
     {
         prices.Map(price => price.Pay());
         onBuy?.Invoke(ware);
+    }
+
+    public interface IWare
+    {
+        public IObservable<bool> ObserveIsAffordable();
     }
 }

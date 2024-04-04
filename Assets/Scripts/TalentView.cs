@@ -35,8 +35,8 @@ public class TalentView : MonoBehaviour
             .Subscribe( SetDescription )
             .AddTo(this);
 
-        talent.buyableLevel.ware.level
-            .Subscribe(l => levelLabel.text = $"Lvl {l}")
+        talent.buyableLevel.ware.level.current
+            .Subscribe(l => levelLabel.text = $"Lvl {l:0}")
             .AddTo(this);
        
         priceView

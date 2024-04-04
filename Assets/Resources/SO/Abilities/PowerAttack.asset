@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PowerAttack
   m_EditorClassIdentifier: 
   sprite: {fileID: 21300000, guid: f025e35f2893c4aaca2f83bdadd519e1, type: 3}
-  maxLevel: 4
+  maxLevel: 3
   cost:
   - intValue: 0
   - intValue: 0

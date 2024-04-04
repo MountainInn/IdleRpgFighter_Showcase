@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SimpleAttack
   m_EditorClassIdentifier: 
   sprite: {fileID: 21300000, guid: 3eea92b60b81945068925f98ef44b940, type: 3}
-  maxLevel: 4
+  maxLevel: 3
   cost:
   - intValue: 0
   - intValue: 0

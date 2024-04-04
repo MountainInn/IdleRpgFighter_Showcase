@@ -17,9 +17,9 @@ public class MiningPower : Stat
     public override IObservable<string> ObserveDescription()
     {
         return
-            this.buyableLevel.ware.level
+            this.buyableLevel.ware.level.current
             .Select(l =>
-                    GetFieldDescriptions(l,
+                    GetFieldDescriptions((int)l,
                                          ("Mining Power", miningPowers)
                     ));
     }

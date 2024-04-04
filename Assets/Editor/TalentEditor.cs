@@ -18,6 +18,7 @@ public class TalentEditor : Editor
 
         EditorGUILayout.PropertyField(maxLevelProp);
 
+        int targetLength = maxLevelProp.intValue + 1;
 
         SerializedProperty item = serializedObject.GetIterator();
 
@@ -29,7 +30,7 @@ public class TalentEditor : Editor
         {
             if (item.isArray && item.type == "Field")
             {
-                int diff = (maxLevelProp.intValue - item.arraySize);
+                int diff = (targetLength - item.arraySize);
 
                 Mathf
                     .Abs(diff)
@@ -49,7 +50,7 @@ public class TalentEditor : Editor
 
                 statLists.Add(item.name, new());
 
-                maxLevelProp.intValue
+                targetLength
                     .ForLoop(i =>
                     {
                         statLists[item.name].Add(item
@@ -72,7 +73,7 @@ public class TalentEditor : Editor
 
         EditorGUILayout.EndHorizontal();
 
-        maxLevelProp.intValue
+        targetLength
             .ForLoop(i =>
             {
                 EditorGUILayout.BeginHorizontal();

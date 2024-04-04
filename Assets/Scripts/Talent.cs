@@ -11,7 +11,7 @@ public abstract class Talent : ScriptableObject
 
     [HideInInspector] public Buyable<Level> buyableLevel;
 
-    public int Level => buyableLevel.ware.level.Value;
+    public int Level => (int)buyableLevel.ware.level.current.Value;
 
     protected abstract void OnLevelUp(int level, Price price);
 
@@ -26,10 +26,10 @@ public abstract class Talent : ScriptableObject
     public void RegisterWithSaveSystem(SaveSystem saveSystem)
     {
         saveSystem
-            .MaybeRegister<int>(this,
-                                $"{name}:level",
-                                () => buyableLevel.ware.level.Value,
-                                (val) => buyableLevel.ware.SetLevel(val));
+            .MaybeRegister<float>(this,
+                                  $"{name}:level",
+                                  () => buyableLevel.ware.level.current.Value,
+                                  (val) => buyableLevel.ware.SetLevel((int)val));
     }
 
     [Inject]
@@ -44,6 +44,7 @@ public abstract class Talent : ScriptableObject
                                           level => level.Up(),
                                           price);
 
+        level.SetMaximum(maxLevel);
         level.SetLevel(0);
     }
 

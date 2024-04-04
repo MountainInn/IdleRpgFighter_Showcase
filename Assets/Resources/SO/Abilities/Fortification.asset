@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Fortification
   m_EditorClassIdentifier: 
   sprite: {fileID: 0}
-  maxLevel: 4
+  maxLevel: 3
   cost:
   - intValue: 0
   - intValue: 0
