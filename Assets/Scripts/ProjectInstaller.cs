@@ -45,6 +45,7 @@ public class ProjectInstaller : MonoInstaller
         Container
             .Bind(
                 typeof(Vault),
+                typeof(AudioManager),
                 typeof(LootManager),
                 typeof(DPSMeter),
                 typeof(LevelSwitcher),

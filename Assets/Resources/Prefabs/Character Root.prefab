@@ -1347,6 +1347,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7742388400055726337, guid: c9fd4e2aec3475748818bd634ce450ec, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7751852115917238466}
+    - targetCorrespondingSourceObject: {fileID: 7742388400055726337, guid: c9fd4e2aec3475748818bd634ce450ec, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1308343683793043625}
   m_SourcePrefab: {fileID: 100100000, guid: c9fd4e2aec3475748818bd634ce450ec, type: 3}
 --- !u!95 &6114950618859518629 stripped
 Animator:
@@ -1380,6 +1383,11 @@ MonoBehaviour:
       value: 0
     _maximum:
       value: 0
+  energy:
+    _current:
+      value: 0
+    _maximum:
+      value: 0
   attackTimer:
     _current:
       value: 0
@@ -1392,6 +1400,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   onKill:
+    m_PersistentCalls:
+      m_Calls: []
+  onStatsApplied:
     m_PersistentCalls:
       m_Calls: []
   dropList: {fileID: 0}
@@ -1411,17 +1422,40 @@ MonoBehaviour:
       m_Calls: []
   combatantAnimator: {fileID: 6114950618859518629}
   attackTriggerName: attackTrigger
+  getHitTriggerName: get damage Trigger
   afterDeathAnimation:
     m_PersistentCalls:
       m_Calls: []
   onAttackAnimEvent:
     m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1308343683793043625}
+        m_TargetAssemblyTypeName: SimplePlayerSFX, MyScripts
+        m_MethodName: PlaySfx
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 11400000, guid: 623860578d70e2b4cad82e88c8ed54e8, type: 2}
+          m_ObjectArgumentAssemblyTypeName: AudioCueSO, MyScripts
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onAttackPushed:
+    m_PersistentCalls:
       m_Calls: []
   _ObserveStateMachine: {fileID: 7322797450304259237, guid: 845f9e4beb4cd9042b630c8d1dfb9d40, type: 2}
   characterStatsSO: {fileID: 11400000, guid: a83359df9a11fda47aa36db8666b76d8, type: 2}
-  energy:
-    _current:
-      value: 0
-    _maximum:
-      value: 0
   pickaxeInput: {fileID: 0}
+--- !u!114 &1308343683793043625
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6164108629560562059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08b4fbbeb387ccc41999be5bf4fd240a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
