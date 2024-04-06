@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c868fdbe2d910594fb5aaec08baab823, type: 3}
   m_Name: DeathSFX
   m_EditorClassIdentifier: 
-  Audio: {fileID: 8300000, guid: 2904e9e923bd1c04bbcf1f493312e1e5, type: 3}
-  Loop: 0
-  Volume: 1
+  _audioClipData:
+    Audio: {fileID: 8300000, guid: 2904e9e923bd1c04bbcf1f493312e1e5, type: 3}
+    Loop: 0
+    Volume: 0

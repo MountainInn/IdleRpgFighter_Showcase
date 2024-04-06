@@ -13,6 +13,15 @@ MonoBehaviour:
   m_Name: Random_Swoosh
   m_EditorClassIdentifier: 
   _audioClipDatas:
-  - Audio: {fileID: 0}
+  - Audio: {fileID: 8300000, guid: e8112445718ff834bbf377a071d64807, type: 3}
+    Loop: 0
+    Volume: 1
+  - Audio: {fileID: 8300000, guid: ae4f6ffc01dee944e822a4486037bc5a, type: 3}
+    Loop: 0
+    Volume: 1
+  - Audio: {fileID: 8300000, guid: 5245372b1d5733e439ed9a078bad8d9e, type: 3}
+    Loop: 0
+    Volume: 1
+  - Audio: {fileID: 8300000, guid: 5f9265ab97d98f84c8af5ac14bacefbc, type: 3}
     Loop: 0
     Volume: 1
