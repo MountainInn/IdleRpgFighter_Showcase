@@ -42,7 +42,6 @@ public class Buff
             .Timer(TimeSpan.FromSeconds(duration))
             .DoOnSubscribe( () => enabled.Value = true )
             .DoOnCompleted( () => enabled.Value = false )
-            .Debug("Buff")
             .Subscribe()
             .AddTo(holder);
     }

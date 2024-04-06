@@ -30,10 +30,9 @@ public class Buyable<T>
             .CombineLatest(
                 prices
                 .Select(price => price.IsAffordableObservable())
-                .Append(ware.ObserveIsAffordable().Debug("Ware Affordable"))
+                .Append(ware.ObserveIsAffordable())
             )
-            .Select(affordables => affordables.All(a => a == true))
-            .Debug("All Affordable");
+            .Select(affordables => affordables.All(a => a == true));
     }
 
     public IObservable<float> SavingProgressObservable()
