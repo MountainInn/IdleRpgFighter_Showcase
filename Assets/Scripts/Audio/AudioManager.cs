@@ -12,23 +12,23 @@ public class AudioManager : MonoBehaviour
     {
         _source = _source?? GetComponent<AudioSource>();
     }
-    public void PlaySFX(AudioCueSO audioCue)
+    public void PlaySFX(AudioClipData audioData)
     {
-        if (audioCue == null || audioCue.Audio == null) return;
-        _source.PlayOneShot(audioCue.Audio,audioCue.Volume);
+        if (audioData.Audio == null) return;
+        _source.PlayOneShot(audioData.Audio, audioData.Volume);
     }
-    public void PlayMusic(AudioCueSO audioCue)
+    public void PlayMusic(AudioClipData audioData)
     {
-        if (audioCue == null || audioCue.Audio == null) return;
+        if (audioData.Audio == null) return;
 
-        if (_playingName == audioCue.name)
+        if (_playingName == audioData.Audio.name)
             return;
 
-        _playingName = audioCue.name;
+        _playingName = audioData.Audio.name;
 
-        _source.clip = audioCue.Audio;
-        _source.volume = audioCue.Volume;
-        _source.loop = audioCue.Loop ;
+        _source.clip = audioData.Audio;
+        _source.volume = audioData.Volume;
+        _source.loop = audioData.Loop ;
         _source.Play();
     }
 
