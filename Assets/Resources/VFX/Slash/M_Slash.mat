@@ -75,7 +75,7 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     - _RectHeight: 0.05
-    - _RectWidth: 0.25
+    - _RectWidth: 1
     - _Scroll: 0
     - _SrcBlend: 5
     - _Surface: 1
