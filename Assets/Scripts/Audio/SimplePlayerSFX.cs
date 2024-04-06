@@ -12,7 +12,7 @@ public class SimplePlayerSFX : MonoBehaviour
     {
         _audioManager = manager;
     }
-    public void PlaySfx(IAudioClipProvider clip)
+    public void PlaySfx(AudioCueSOBase clip)
     {
         _audioManager.PlaySFX(clip.GetAudioClip());
     }

@@ -4,11 +4,11 @@ using UnityEngine;
 using Zenject;
 
 [CreateAssetMenu(fileName ="Audio Clip settings", menuName ="SO/Audio/Clip")]
-public class AudioCueSO : ScriptableObject,IAudioClipProvider
+public class AudioCueSO : AudioCueSOBase
 {
     [SerializeField] AudioClipData _audioClipData = new AudioClipData() { Volume = 1f};
 
-    public AudioClipData GetAudioClip()
+    public override AudioClipData GetAudioClip()
     {
         return _audioClipData;
     }
