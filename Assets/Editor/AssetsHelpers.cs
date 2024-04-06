@@ -124,7 +124,7 @@ public static void SwichAllMatToBaked()
         var allObjects = curScene.GetRootGameObjects();
         foreach (var item in allObjects)
         {
-            var mr = item.GetComponentsInChildren<MeshRenderer>(true).WhereCast<MeshRenderer>().Where(m => !m.material.name.StartsWith(BAKED_PREF) || !m.material.name.StartsWith(LIT_PREF));
+            var mr = item.GetComponentsInChildren<MeshRenderer>(true).WhereCast<MeshRenderer>().Where(m => !m.sharedMaterial.name.StartsWith(BAKED_PREF) || !m.sharedMaterial.name.StartsWith(LIT_PREF));
             meshes.AddRange(mr);
 
         }
@@ -132,16 +132,21 @@ public static void SwichAllMatToBaked()
 
         foreach (var item in meshes)
         {
-            var curMats = item.materials;
+            var curMats = item.sharedMaterials;
             List<Material> newMaterials = new List<Material>(curMats);
-            for (int j = 0; j < curMats.Length; i++)
+            for (int j = 0; j < curMats.Length; j++)
             {
-                var oldMat = curMats[j];
 
-                string name = oldMat.name.Insert(0, BAKED_PREF).Remove(oldMat.name.IndexOf(UnityPostfix));
+                var oldMat = curMats[j];
+                string oldName = oldMat.name;
+                if (oldName.StartsWith(BAKED_PREF)) continue;
+                if (oldName.StartsWith(LIT_PREF))
+                {
+                    oldName = oldName.Replace(LIT_PREF, BAKED_PREF);
+                }
+                string name = oldName.Remove(oldName.IndexOf(UnityPostfix)).Insert(0, BAKED_PREF);
                 var mater = materials.Where(m => m.name == name && m.mainTexture == oldMat.mainTexture)?
                          .FirstOrDefault();
-                string path = AssetDatabase.GetAssetPath(item.material);
 
                 if (mater == null)
                 {
@@ -166,7 +171,7 @@ private static void ReplcaseMaterials(string loadPath, string cutMatPref, string
 
     foreach (var item in instanses)
     {
-        var curMats = item.materials;
+        var curMats = item.sharedMaterials;
         List<Material> newMaterials = new List<Material>(curMats);
         for (int i = 0; i < curMats.Length; i++)
         {
