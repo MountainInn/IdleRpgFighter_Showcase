@@ -71,3 +71,6 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 utils/
+
+/[Aa]ssets/[Dd]ump/
+/[Aa]ssets/[Dd]ump.meta
