@@ -107,44 +107,85 @@ public static class AssetsHelpers
             meshes[0].GetSharedMaterials(mates);
             path = AssetDatabase.GetAssetPath(mates[0]);
 
-            
+
         }
     }
 
 
-[MenuItem("Tools/Utils/ Change materials to our materials")]
-public static void SwichAllMatToBaked()
-{
-    int sceneCount = SceneManager.sceneCount;
-    for (int i = 0; i < sceneCount; i++)
+    [MenuItem("Tools/Utils/ Change materials to our materials")]
+    public static void SwichAllMatToBaked()
     {
-
-        List<MeshRenderer> meshes = new List<MeshRenderer>();
-        Scene curScene = SceneManager.GetSceneAt(i);
-        var allObjects = curScene.GetRootGameObjects();
-        foreach (var item in allObjects)
+        int sceneCount = SceneManager.sceneCount;
+        for (int i = 0; i < sceneCount; i++)
         {
-            var mr = item.GetComponentsInChildren<MeshRenderer>(true).WhereCast<MeshRenderer>().Where(m => !m.sharedMaterial.name.StartsWith(BAKED_PREF) || !m.sharedMaterial.name.StartsWith(LIT_PREF));
-            meshes.AddRange(mr);
+
+            List<MeshRenderer> meshes = new List<MeshRenderer>();
+            Scene curScene = SceneManager.GetSceneAt(i);
+            var allObjects = curScene.GetRootGameObjects();
+            foreach (var item in allObjects)
+            {
+                var mr = item.GetComponentsInChildren<MeshRenderer>(true).WhereCast<MeshRenderer>().Where(m => !m.sharedMaterial.name.StartsWith(BAKED_PREF) || !m.sharedMaterial.name.StartsWith(LIT_PREF));
+                meshes.AddRange(mr);
+
+            }
+            var materials = Resources.LoadAll(BAKED_MATERIALS_PATH).WhereCast<Material>().ToList();
+
+            foreach (var item in meshes)
+            {
+                var curMats = item.sharedMaterials;
+                List<Material> newMaterials = new List<Material>(curMats);
+                for (int j = 0; j < curMats.Length; j++)
+                {
+
+                    var oldMat = curMats[j];
+                    string name = oldMat.name;
+                    if (name.StartsWith(BAKED_PREF)) continue;
+                    if (name.StartsWith(LIT_PREF))
+                    {
+                        name = name.Replace(LIT_PREF, BAKED_PREF);
+                    }
+                    else
+                    {
+                        name = name.Insert(0, BAKED_PREF);
+                    }
+                    if (name.Contains(UnityPostfix))
+                    {
+                        name = name.Remove(name.IndexOf(UnityPostfix));
+                    }
+                    var mater = materials.Where(m => m.name == name && m.mainTexture == oldMat.mainTexture)?
+                             .FirstOrDefault();
+
+                    if (mater == null)
+                    {
+                        Debug.LogError($"Cant find material with name {name}");
+                        continue;
+                    }
+                    Debug.Log($"Loaded material for {item.gameObject.name}");
+                    newMaterials[i] = mater;
+                }
+
+                item.SetMaterials(newMaterials);
+            }
+
+
 
         }
-        var materials = Resources.LoadAll(BAKED_MATERIALS_PATH).WhereCast<Material>().ToList();
+        Debug.Log("Done");
+    }
+    private static void ReplcaseMaterials(string loadPath, string cutMatPref, string matPref, List<MeshRenderer> instanses)
+    {
+        var materials = Resources.LoadAll(loadPath).WhereCast<Material>().ToList();
 
-        foreach (var item in meshes)
+        foreach (var item in instanses)
         {
             var curMats = item.sharedMaterials;
             List<Material> newMaterials = new List<Material>(curMats);
-            for (int j = 0; j < curMats.Length; j++)
+            for (int i = 0; i < curMats.Length; i++)
             {
-
-                var oldMat = curMats[j];
-                string oldName = oldMat.name;
-                if (oldName.StartsWith(BAKED_PREF)) continue;
-                if (oldName.StartsWith(LIT_PREF))
-                {
-                    oldName = oldName.Replace(LIT_PREF, BAKED_PREF);
-                }
-                string name = oldName.Remove(oldName.IndexOf(UnityPostfix)).Insert(0, BAKED_PREF);
+                var oldMat = curMats[i];
+                if (oldMat.name.StartsWith(matPref)) continue;
+                string name = oldMat.name.Replace(cutMatPref, matPref);
+                name = name.Remove(name.IndexOf(UnityPostfix));
                 var mater = materials.Where(m => m.name == name && m.mainTexture == oldMat.mainTexture)?
                          .FirstOrDefault();
 
@@ -159,41 +200,7 @@ public static void SwichAllMatToBaked()
 
             item.SetMaterials(newMaterials);
         }
-
-
-
     }
-    Debug.Log("Done");
-}
-private static void ReplcaseMaterials(string loadPath, string cutMatPref, string matPref, List<MeshRenderer> instanses)
-{
-    var materials = Resources.LoadAll(loadPath).WhereCast<Material>().ToList();
-
-    foreach (var item in instanses)
-    {
-        var curMats = item.sharedMaterials;
-        List<Material> newMaterials = new List<Material>(curMats);
-        for (int i = 0; i < curMats.Length; i++)
-        {
-            var oldMat = curMats[i];
-            if (oldMat.name.StartsWith(matPref)) continue;
-            string name = oldMat.name.Replace(cutMatPref, matPref);
-            name = name.Remove(name.IndexOf(UnityPostfix));
-            var mater = materials.Where(m => m.name == name && m.mainTexture == oldMat.mainTexture)?
-                     .FirstOrDefault();
-
-            if (mater == null)
-            {
-                Debug.LogError($"Cant find material with name {name}");
-                continue;
-            }
-            Debug.Log($"Loaded material for {item.gameObject.name}");
-            newMaterials[i] = mater;
-        }
-
-        item.SetMaterials(newMaterials);
-    }
-}
 }
 
 #endif
