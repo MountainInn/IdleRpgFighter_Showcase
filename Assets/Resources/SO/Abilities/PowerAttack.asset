@@ -15,15 +15,15 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: f025e35f2893c4aaca2f83bdadd519e1, type: 3}
   maxLevel: 3
   cost:
-  - intValue: 0
-  - intValue: 0
-  - intValue: 0
-  - intValue: 0
+  - intValue: 5
+  - intValue: 5
+  - intValue: 5
+  - intValue: 5
   _cooldown: 10
   energyCost: 10
   attackAnimationTrigger: super attack Trigger
   damages:
-  - intValue: 0
-  - intValue: 0
-  - intValue: 0
-  - intValue: 0
+  - intValue: 20
+  - intValue: 20
+  - intValue: 20
+  - intValue: 20
