@@ -15,6 +15,7 @@ MonoBehaviour:
   intervalBetweenDrops: 0.15
   maxParticleCount: 8
   autoSaveInterval: 15
-  gulagDuration: 12
+  gulagDuration:
+    value: 15
   globalTimeInterval:
     value: 3

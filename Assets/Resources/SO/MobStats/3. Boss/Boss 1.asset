@@ -21,5 +21,5 @@ MonoBehaviour:
   energyRegen: 10
   energyDrainPerAttack: 20
   template: {fileID: 11400000, guid: 66e9fdec7796b224487e9874ca4078ff, type: 2}
-  dropList: {fileID: 11400000, guid: e23400b5d934108419e44342a2bbd564, type: 2}
+  dropList: {fileID: 11400000, guid: bd07a9960762d634b85a0a4e70016cb4, type: 2}
   icon: {fileID: 21300000, guid: e647e2cb0c034451cbda84e72e6ad296, type: 3}
